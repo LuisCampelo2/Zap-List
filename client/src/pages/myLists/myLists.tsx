@@ -39,25 +39,25 @@ export const MyLists = () => {
 
   return (
     <>
-      <section>
-        <div className="container text-center">
-          <h1>Histórico de listas</h1>
-        </div>
-      </section>
       {loading && <Loader />}
       {lists.length === 0 && !loading ? (
-        <p className="container text-center">
-          Não existem listas no momento
-        </p>
+        <p className="container text-center">Não existem listas no momento</p>
       ) : (
         !loading && (
-          <ul className="list-group">
-            {lists.map((listName, index) => (
-              <li key={index} className="list-group-item">
-                {listName.name}
-              </li>
-            ))}
-          </ul>
+          <>
+            <section>
+              <div className="container text-center">
+                <h1>Histórico de listas</h1>
+              </div>
+            </section>
+            <ul className="list-group">
+              {lists.map((listName, index) => (
+                <li key={index} className="list-group-item">
+                  {listName.name}
+                </li>
+              ))}
+            </ul>
+          </>
         )
       )}
     </>

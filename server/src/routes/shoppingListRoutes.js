@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const getShoppingList  = require('../controllers/shoppingList');
+const shoppingListController = require('../controllers/shoppingList');
 
-router.get('/lists', getShoppingList);
+router.get('/lists', shoppingListController.getAllShoppingList);
+router.post('/shopping-lists',shoppingListController.createShoppingList)
 
 
 
