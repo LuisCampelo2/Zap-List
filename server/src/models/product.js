@@ -6,10 +6,25 @@ const Product = sequelize.define("Product", {
   name: { type: DataTypes.STRING, allowNull: false },
   category: {
     type: DataTypes.ENUM,
-    values: ['Material de higiene', 'Material de limpeza', 'Frutas', 'Carne', 'Outros'],
+    values: [
+      'Material de higiene',
+      'Material de limpeza',
+      'Frutas',
+      'Legumes e verdura',
+      'Carne',
+      'Itens pra cachorro',
+      'Alimentos nao pereciveis',
+      'Bebidas',
+      'Laticinios',
+      'Outros'
+    ],
     allowNull: false
   },
-  
-});
+},
+  {
+    timestamps: false,
+  }
+    
+);
 
 module.exports = { Product };

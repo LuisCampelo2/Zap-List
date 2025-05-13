@@ -7,7 +7,6 @@ const ShoppingListProduct = require('./src/models/shoppingListProducts');
 
 async function syncDatabase() {
   try {
-    await sequelize.sync({ force: true }); // force: true recria as tabelas do zero
     console.log('Tabelas criadas com sucesso!');
     process.exit();
   } catch (error) {

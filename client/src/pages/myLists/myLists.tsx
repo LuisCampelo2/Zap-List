@@ -41,14 +41,14 @@ export const MyLists = () => {
     <>
       <section>
         <div className="container text-center">
-          <div className="row">
-            <h1>Histórico de listas</h1>
-          </div>
+          <h1>Histórico de listas</h1>
         </div>
       </section>
       {loading && <Loader />}
       {lists.length === 0 ? (
-        <p>Não tem listas no momento</p>
+        <p className="container text-center">
+          Não existem listas no momento
+        </p>
       ) : (
         !loading && (
           <ul className="list-group">

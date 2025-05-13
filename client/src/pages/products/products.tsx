@@ -22,11 +22,36 @@ export const Products = () => {
       }
     };
 
-    fetchProdutos(); 
+    fetchProdutos();
   }, []);
+  
   return (
     <>
-      <p>teste</p>
+      <div
+        className="container">
+        <div
+          style={{rowGap:"40px", display: "flex", flexWrap: "wrap",marginTop:"30px" }}
+          className="row">
+          {products.map((productItem, index) => (
+            <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
+              <div className="card" style={{ width: "100%" }}>
+                <img
+                  style={{width:'100%',height:'214px',objectFit:"cover",objectPosition:"center"}}
+                  src={`http://localhost:3000/imgs/${productItem.photo}`}
+                  className="card-img-top"
+                  alt={productItem.name}
+                />
+                {console.log(productItem.photo)}
+                <div className="card-body">
+                  <h5 className="card-title">{productItem.name}</h5>
+                  <p className="card-text">Categoria: <strong>{productItem.category}</strong></p>
+                  <button>Adicionar a lista</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   );
 };
