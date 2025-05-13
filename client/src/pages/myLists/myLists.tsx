@@ -1,0 +1,65 @@
+import { useEffect, useState } from "react";
+import { type ShoppingList } from "../../types/shoppingList";
+import { Loader } from "../../components/loader";
+
+export const MyLists = () => {
+  const [lists, setLists] = useState<ShoppingList[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  function wait(delay: number) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, delay);
+    });
+  }
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchLists = async () => {
+      await wait(4000);
+      try {
+        const res = await fetch("http://localhost:3000/api/lists");
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+        const data = await res.json();
+        console.log("Resposta da API:", data);
+
+        if (Array.isArray(data)) {
+          setLists(data);
+        } else {
+          console.error("Resposta da API não é um array:", data);
+          setLists([]);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar listas:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLists();
+  }, []);
+
+  return (
+    <>
+      <section>
+        <div className="container text-center">
+          <div className="row">
+            <h1>Histórico de listas</h1>
+          </div>
+        </div>
+      </section>
+      {loading && <Loader />}
+      {lists.length === 0 ? (
+        <p>Não tem listas no momento</p>
+      ) : (
+        !loading && (
+          <ul className="list-group">
+            {lists.map((listName, index) => (
+              <li key={index} className="list-group-item">
+                {listName.name}
+              </li>
+            ))}
+          </ul>
+        )
+      )}
+    </>
+  );
+};
