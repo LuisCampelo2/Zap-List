@@ -45,7 +45,7 @@ export const MyLists = () => {
         </div>
       </section>
       {loading && <Loader />}
-      {lists.length === 0 ? (
+      {lists.length === 0 && !loading ? (
         <p className="container text-center">
           Não existem listas no momento
         </p>
