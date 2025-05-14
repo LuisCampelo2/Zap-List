@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { type ShoppingList } from "../../types/shoppingList";
 import { Loader } from "../../components/loader";
+import { Link } from "react-router-dom";
 
 export const MyLists = () => {
   const [lists, setLists] = useState<ShoppingList[]>([]);
@@ -53,7 +54,7 @@ export const MyLists = () => {
             <ul className="list-group">
               {lists.map((listName, index) => (
                 <li key={index} className="list-group-item">
-                  {listName.name}
+                  <Link to={`/lists/${listName.id}`}>{listName.name}</Link>
                 </li>
               ))}
             </ul>

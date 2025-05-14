@@ -3,8 +3,11 @@ import { type Product } from "../../types/product";
 import { useSearchParams } from "react-router-dom";
 import { ProductsFilter } from "../../components/productsFilter";
 import { Loader } from "../../components/loader";
+import { AddProductToShoppingList } from "../../components/addProductToShoppingList";
 
 export const Products = () => {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [addProductModal, setAddProductModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [searchParams] = useSearchParams();
@@ -45,8 +48,19 @@ export const Products = () => {
     return matchesCategory && matchesName;
   });
 
+  const handleAddProductModal = (product: Product) => {
+    setSelectedProduct(product);
+    setAddProductModal(true);
+  };
+
   return (
     <>
+      {addProductModal && selectedProduct && (
+        <AddProductToShoppingList
+          product={selectedProduct}
+          onClose={() => setAddProductModal(false)}
+        />
+      )}
       {loading ? (
         <Loader />
       ) : (
@@ -81,7 +95,11 @@ export const Products = () => {
                       <p className="card-text">
                         Categoria: <strong>{productItem.category}</strong>
                       </p>
-                      <button>Adicionar a lista</button>
+                      <button
+                        onClick={() => handleAddProductModal(productItem)}
+                      >
+                        Adicionar a lista
+                      </button>
                     </div>
                   </div>
                 </div>
