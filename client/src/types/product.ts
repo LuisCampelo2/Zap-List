@@ -12,4 +12,5 @@ export interface Product {
   category: string;
   quantity: number;
   isChecked: boolean;
+   Product: Product;
 }
