@@ -25,7 +25,9 @@ export const Products = () => {
     const fetchProdutos = async () => {
       await wait(1000);
       try {
-        const res = await fetch("http://localhost:3000/api/products");
+        const res = await fetch(
+          "https://project-list-3.onrender.com/api/products"
+        );
         const data = await res.json();
         setProducts(data);
       } catch (error) {
@@ -86,7 +88,7 @@ export const Products = () => {
                         objectFit: "cover",
                         objectPosition: "center",
                       }}
-                      src={`http://localhost:3000/imgs/${productItem.photo}`}
+                      src={`https://project-list-3.onrender.com/imgs/${productItem.photo}`}
                       className="card-img-top"
                       alt={productItem.name}
                     />

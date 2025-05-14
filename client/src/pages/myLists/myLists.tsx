@@ -18,7 +18,9 @@ export const MyLists = () => {
     const fetchLists = async () => {
       await wait(4000);
       try {
-        const res = await fetch("http://localhost:3000/api/lists");
+        const res = await fetch(
+          "https://project-list-3.onrender.com/api/lists"
+        );
         if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
         const data = await res.json();
         console.log("Resposta da API:", data);

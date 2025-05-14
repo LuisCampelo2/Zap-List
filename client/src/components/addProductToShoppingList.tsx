@@ -19,7 +19,9 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
     setProductId(product.id);
     const fetchLists = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/lists");
+        const res = await fetch(
+          "https://project-list-3.onrender.com/api/lists"
+        );
         if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
         const data = await res.json();
         console.log("Resposta da API:", data);
@@ -40,11 +42,14 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/shopping-list-add-product", {
-        shoppingListId,
-        productId,
-        quantity,
-      });
+      await axios.post(
+        "https://project-list-3.onrender.com/api/shopping-list-add-product",
+        {
+          shoppingListId,
+          productId,
+          quantity,
+        }
+      );
       alert("Produto adicionado com sucesso");
       setShoppingListId(null);
       setProductId(null);
@@ -72,7 +77,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
             <div className="modal-body">
               <img
                 style={{ objectFit: "cover", width: "100%" }}
-                src={`http://localhost:3000/imgs/${product.photo}`}
+                src={`https://project-list-3.onrender.com/imgs/${product.photo}`}
                 alt=""
               />
               {product.name}
