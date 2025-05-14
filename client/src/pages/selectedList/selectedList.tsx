@@ -11,9 +11,7 @@ export const SelectedList = () => {
   const categoryFilter = searchParams.get("category");
   const nameFilter = searchParams.get("name");
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null
-  );
+  const [selectedProductIds, setSelectedProductIds] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchProdutos = async () => {
@@ -40,6 +38,15 @@ export const SelectedList = () => {
     return matchesCategory && matchesName;
   });
 
+  const toggleSelection = (productId: number) => {
+    setSelectedProductIds(
+      (prevSelected) =>
+        prevSelected.includes(productId)
+          ? prevSelected.filter((id) => id !== productId) 
+          : [...prevSelected, productId] 
+    );
+  };
+
   return (
     <>
       <ProductsFilter />
@@ -48,11 +55,11 @@ export const SelectedList = () => {
           <li key={productItem.id} className="list-group-item">
             <input
               className="form-check-input me-1"
-              type="radio"
+              type="checkbox"
               name="listGroupRadio"
               id={`product-${productItem.id}`}
-              onChange={() => setSelectedProductId(productItem.id)}
-              checked={selectedProductId === productItem.id}
+              onChange={() => toggleSelection(productItem.id)}
+              checked={selectedProductIds.includes(productItem.id)}
             />
             <img
               style={{
