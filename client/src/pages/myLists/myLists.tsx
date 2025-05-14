@@ -16,7 +16,7 @@ export const MyLists = () => {
   useEffect(() => {
     setLoading(true);
     const fetchLists = async () => {
-      await wait(4000);
+      await wait(1000);
       try {
         const res = await fetch(
           "https://project-list-3.onrender.com/api/lists"
