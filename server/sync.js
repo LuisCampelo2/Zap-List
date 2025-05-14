@@ -1,4 +1,4 @@
-const sequelize = require('./src/db');
+const sequelize = require('./db');
 const  Product  = require('./src/models/product');
 const  ShoppingList  = require('./src/models/shoppingList');
 
