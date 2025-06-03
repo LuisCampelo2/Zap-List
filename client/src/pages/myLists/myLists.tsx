@@ -16,10 +16,10 @@ export const MyLists = () => {
   useEffect(() => {
     setLoading(true);
     const fetchLists = async () => {
-      await wait(1000);
+      await wait(500);
       try {
         const res = await fetch(
-          "https://project-list-3.onrender.com/api/lists"
+          "http://localhost:3000/api/lists"
         );
         if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
         const data = await res.json();

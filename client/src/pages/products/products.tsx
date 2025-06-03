@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { ProductsFilter } from "../../components/productsFilter";
 import { Loader } from "../../components/loader";
 import { AddProductToShoppingList } from "../../components/addProductToShoppingList";
+import axios from "axios";
 
 export const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -23,13 +24,11 @@ export const Products = () => {
   useEffect(() => {
     setLoading(true);
     const fetchProdutos = async () => {
-      await wait(1000);
+      await wait(500);
       try {
-        const res = await fetch(
-          "https://project-list-3.onrender.com/api/products"
-        );
-        const data = await res.json();
-        setProducts(data);
+        const res = await axios.get("http://localhost:3000/api/products");
+
+        setProducts(res.data);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
       } finally {
