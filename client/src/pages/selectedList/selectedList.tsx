@@ -17,7 +17,7 @@ export const SelectedList = () => {
     const fetchProdutos = async () => {
       try {
         const response = await axios.get(
-          `https://project-list-3.onrender.com/api/list/${id}/productsList`
+          `http://localhost:3000/api/list/${id}/productsList`
         );
         setProducts(response.data);
         console.log("Dados recebidos:", response.data);
@@ -67,7 +67,7 @@ export const SelectedList = () => {
                 objectFit: "cover",
                 objectPosition: "center",
               }}
-              src={`https://project-list-3.onrender.com/imgs/${productItem.Product.photo}`}
+              src={`http://localhost:3000/imgs/${productItem.Product.photo}`}
               alt=""
             />
             <label

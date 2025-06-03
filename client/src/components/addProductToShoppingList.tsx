@@ -19,18 +19,13 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
     setProductId(product.id);
     const fetchLists = async () => {
       try {
-        const res = await fetch(
-          "https://project-list-3.onrender.com/api/lists"
-        );
-        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
-        const data = await res.json();
-        console.log("Resposta da API:", data);
-
-        if (Array.isArray(data)) {
-          setLists(data);
+        const res = await axios.get("http://localhost:3000/api/lists",{
+          withCredentials:true,
+        });
+         if (!res) {
+          throw new Error(`Erro HTTP: ${res.status}`);
         } else {
-          console.error("Resposta da API não é um array:", data);
-          setLists([]);
+           setLists(res.data);
         }
       } catch (error) {
         console.error("Erro ao buscar listas:", error);
@@ -43,7 +38,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
     e.preventDefault();
     try {
       await axios.post(
-        "https://project-list-3.onrender.com/api/shopping-list-add-product",
+        "http://localhost:3000/api/shopping-list-add-product",
         {
           shoppingListId,
           productId,
@@ -77,7 +72,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
             <div className="modal-body">
               <img
                 style={{ objectFit: "cover", width: "100%" }}
-                src={`https://project-list-3.onrender.com/imgs/${product.photo}`}
+                src={`http://localhost:3000/imgs/${product.photo}`}
                 alt=""
               />
               {product.name}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { type ShoppingList } from "../../types/shoppingList";
 import { Loader } from "../../components/loader";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export const MyLists = () => {
   const [lists, setLists] = useState<ShoppingList[]>([]);
@@ -18,18 +19,13 @@ export const MyLists = () => {
     const fetchLists = async () => {
       await wait(500);
       try {
-        const res = await fetch(
-          "http://localhost:3000/api/lists"
-        );
-        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
-        const data = await res.json();
-        console.log("Resposta da API:", data);
-
-        if (Array.isArray(data)) {
-          setLists(data);
+        const res = await axios.get("http://localhost:3000/api/lists", {
+          withCredentials:true,
+        });
+        if (!res) {
+          throw new Error(`Erro HTTP: ${res.status}`);
         } else {
-          console.error("Resposta da API não é um array:", data);
-          setLists([]);
+           setLists(res.data);
         }
       } catch (error) {
         console.error("Erro ao buscar listas:", error);

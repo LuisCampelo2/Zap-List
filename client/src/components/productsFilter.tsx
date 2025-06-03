@@ -32,7 +32,7 @@ export const ProductsFilter = () => {
         className="container">
         <form className="d-flex" role="search">
           <input
-            className="form-control me-2"
+            className="form-control "
             type="search"
             onChange={handleInputChange}
             value={searchParams.get("name") || ""}

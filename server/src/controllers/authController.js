@@ -10,7 +10,7 @@ const register = async (req, res) => {
   const { email, password, name, lastName, } = req.body;
   const activationToken = uuidv4();
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = await User.create({ email, password: hashedPassword, activationToken, name, last_name:lastName });
+  const newUser = await User.create({ email, password: hashedPassword, activationToken, name, last_name: lastName });
   await emailService.sendActivationEmail(email, activationToken);
   res.send(newUser);
 }
@@ -34,7 +34,7 @@ const login = async (req, res) => {
     const user = await userService.findByEmail(email);
 
     if (user.activationToken !== null) {
-      return res.json({message:'Conta precisa ser ativada'})
+      return res.json({ message: 'Conta precisa ser ativada' })
     }
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
@@ -47,10 +47,11 @@ const login = async (req, res) => {
 
     const accessToken = jwtService.sign(normalizedUser);
 
-    return res.json({
-      accessToken,
-      user: normalizedUser,
-    });
+    res.cookie('accessToken', accessToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    })
+    return res.json({ accessToken, user: normalizedUser, message: 'Login realizado com sucesso' });
 
   } catch (error) {
     console.log(error);
@@ -58,8 +59,21 @@ const login = async (req, res) => {
   }
 }
 
+const logout = async (req, res) => {
+  try {
+     res.clearCookie('accessToken', {
+      httpOnly: true,
+    });
+
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(401).send({ message: error.message });
+  }
+}
+
 export const authController = {
   register,
   activate,
   login,
+  logout,
 }

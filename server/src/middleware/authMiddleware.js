@@ -1,9 +1,11 @@
-import { jwtService }  from "../services/jwt.service.js";
+import { jwtService } from "../services/jwt.service.js";
 
 const middleWare = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader.split(" ")[1];
+  const token = req.cookies.accessToken;
 
+  if (!token) {
+    return res.status(401).json({ error: "Token não fornecido" });
+  }
 
   try {
     const decoded = jwtService.verify(token);
@@ -14,7 +16,4 @@ const middleWare = (req, res, next) => {
   }
 };
 
-
-export const authMiddleWare = {
-  middleWare
-}
+export const authMiddleWare = { middleWare };

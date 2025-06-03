@@ -1,9 +1,29 @@
-import { Navigate } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export const PrivateRoute = () => {
-  const accessToken = localStorage.getItem("accessToken");
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  return accessToken ? <Outlet /> : <Navigate to="/login" replace />;
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await axios.get("http://localhost:3000/api/me", {
+          withCredentials: true, 
+        });
+        setAuthenticated(true);
+      } catch (err) {
+        console.log(err);
+        setAuthenticated(false);
+      }  finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
+  }, []);
 
+  if (loading) return <div>Carregando...</div>;
+
+  return authenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };

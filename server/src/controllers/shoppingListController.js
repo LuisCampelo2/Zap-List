@@ -1,10 +1,14 @@
 import ShoppingList from "../models/shoppingList.js";
 import Product from "../models/product.js";
-import shoppingListProduct from '../models/shoppingListProducts.js'
+import ShoppingListProduct from '../models/shoppingListProducts.js'
+
 
 const getAllShoppingList = async (req, res) => {
+  console.log(req.user)
   try {
-    const shoppingList = await ShoppingList.findAll();
+    const shoppingList = await ShoppingList.findAll({
+       where: { userId: req.user.id }
+    });
     res.status(200).json(shoppingList);
   } catch (error) {
     console.error(error);
@@ -13,12 +17,14 @@ const getAllShoppingList = async (req, res) => {
 };
 
 const createShoppingList = async (req, res) => {
+  console.log(req.user)
   try {
     const { name } = req.body;
 
-    const newList = await ShoppingList.create({ name });
+    const newList = await ShoppingList.create({ name,userId:req.user.id });
     res.status(201).json(newList);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Erro ao criar lista de compras." });
   }
 };
@@ -60,6 +66,7 @@ const getProductsShoppingList = async (req, res) => {
         {
           model: Product,
           attributes: ["id", "name", "photo", "category"],
+          required:false
         },
       ],
     });

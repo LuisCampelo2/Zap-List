@@ -41,4 +41,7 @@ const ShoppingListProduct = sequelize.define(
   }
 );
 
+ShoppingListProduct.belongsTo(Product, { foreignKey: "productId"});
+ShoppingListProduct.belongsTo(ShoppingList, { foreignKey: "shoppingListId" });
+
 export default ShoppingListProduct;

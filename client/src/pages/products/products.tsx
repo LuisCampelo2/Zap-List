@@ -87,7 +87,7 @@ export const Products = () => {
                         objectFit: "cover",
                         objectPosition: "center",
                       }}
-                      src={`https://project-list-3.onrender.com/imgs/${productItem.photo}`}
+                      src={`http://localhost:3000/imgs/${productItem.photo}`}
                       className="card-img-top"
                       alt={productItem.name}
                     />

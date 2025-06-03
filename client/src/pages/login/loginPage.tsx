@@ -2,30 +2,21 @@ import type React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../slices/userSlice";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/login", {
-        email,
-        password,
-      });
-
-      if (res.data?.accessToken && res.data?.user) {
-        localStorage.setItem("accessToken", res.data.accessToken);
-        localStorage.setItem("userEmail",  JSON.stringify(res.data.user));
-
-        navigate("/");
-      } else {
-        setErrorMessage('Credenciais inválidas');
-      }
+      const res = await axios.post("http://localhost:3000/api/login", { email, password },{
+        withCredentials: true,
+      })
+      dispatch(setUser(res.data.user));
     } catch (error) {
       alert(error);
     }
@@ -74,7 +65,6 @@ export const LoginPage = () => {
           </div>
         </form>
       </div>
-      {errorMessage && errorMessage}
     </div>
   );
 };

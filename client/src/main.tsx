@@ -9,23 +9,27 @@ import { SelectedList } from "./pages/selectedList/selectedList.tsx";
 import { PrivateRoute } from "./components/privateRoute.tsx";
 import { LoginPage } from "./pages/login/loginPage.tsx";
 import { RegisterPage } from "./pages/register/registerPage.tsx";
+import { store } from "./store/store.ts";
+import { Provider } from "react-redux";
 
 createRoot(document.getElementById("root")!).render(
   <>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route index element={<HomePage />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/lists" element={<MyLists />} />
-            <Route path="/lists/:id" element={<SelectedList />} />
-            <Route path="/createList" element={<ShoppingListForm />} />
-            <Route path="/products" element={<Products />} />
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route index element={<HomePage />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/lists" element={<MyLists />} />
+              <Route path="/lists/:id" element={<SelectedList />} />
+              <Route path="/createList" element={<ShoppingListForm />} />
+              <Route path="/products" element={<Products />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   </>
 );

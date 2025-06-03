@@ -9,8 +9,9 @@ export const ShoppingListForm = () => {
 
     try {
       await axios.post(
-        "https://project-list-3.onrender.com/api/shopping-lists",
-        { name }
+        "http://localhost:3000/api/shopping-lists",
+        { name },
+        {withCredentials:true}
       );
       alert("Lista criada com sucesso!");
       setName("");
