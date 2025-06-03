@@ -1,6 +1,6 @@
-const { ShoppingList } = require("../models/shoppingList");
-const { Product } = require("../models/product");
-const { ShoppingListProduct } = require("../models/shoppingListProducts");
+import ShoppingList from "../models/shoppingList.js";
+import Product from "../models/product.js";
+import shoppingListProduct from '../models/shoppingListProducts.js'
 
 const getAllShoppingList = async (req, res) => {
   try {
@@ -68,16 +68,6 @@ const getProductsShoppingList = async (req, res) => {
         .status(404)
         .json({ message: "Nenhum produto encontrado para essa lista" });
     }
-
-    const produtosComStatus = produtos.map((item) => ({
-      id: item.Product.id,
-      name: item.Product.name,
-      photo: item.Product.photo,
-      category: item.Product.category,
-      quantity: item.quantity,
-      isChecked: item.isChecked,
-    }));
-
     return res.status(200).json(produtos);
   } catch (error) {
     console.error("Erro ao buscar produtos da lista:", error);
@@ -85,7 +75,7 @@ const getProductsShoppingList = async (req, res) => {
   }
 };
 
-module.exports = {
+export const shoppingListController={
   getProductsShoppingList,
   addProductToShopping,
   getAllShoppingList,

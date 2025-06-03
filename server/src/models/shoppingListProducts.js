@@ -1,7 +1,7 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../../db");
-const { ShoppingList } = require("./shoppingList");
-const { Product } = require("./product");
+import { DataTypes } from "sequelize";
+import sequelize from "../utils/db.js";
+import ShoppingList from "./shoppingList.js";
+import Product from "./product.js";
 
 const ShoppingListProduct = sequelize.define(
   "ShoppingListProduct",
@@ -41,7 +41,4 @@ const ShoppingListProduct = sequelize.define(
   }
 );
 
-ShoppingListProduct.belongsTo(ShoppingList, { foreignKey: "shoppingListId" });
-ShoppingListProduct.belongsTo(Product, { foreignKey: "productId" });
-
-module.exports = { ShoppingListProduct };
+export default ShoppingListProduct;

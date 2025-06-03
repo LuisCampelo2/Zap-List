@@ -1,18 +1,14 @@
-const sequelize = require('./db');
-const  Product  = require('./src/models/product');
-const  ShoppingList  = require('./src/models/shoppingList');
+import sequelize from './src/utils/db.js';
+import User from './src/models/user.js';
+import Product from './src/models/product.js';
+import ShoppingList from './src/models/shoppingList.js';
+import ShoppingListProduct from './src/models/shoppingListProducts.js';
 
 
-const ShoppingListProduct = require('./src/models/shoppingListProducts');
+ShoppingListProduct.belongsTo(ShoppingList, { foreignKey: "shoppingListId" });
+ShoppingListProduct.belongsTo(Product, { foreignKey: "productId" });
 
-async function syncDatabase() {
-  try {
-    await sequelize.sync({alter:true}); 
-    console.log('Tabelas criadas com sucesso!');
-    process.exit();
-  } catch (error) {
-    console.error('Erro ao sincronizar:', error);
-  }
-}
+User.hasMany(ShoppingList, { foreignKey: 'userId' });
+ShoppingList.belongsTo(User, { foreignKey: 'userId' });
 
-syncDatabase();
+sequelize.sync({force:true})

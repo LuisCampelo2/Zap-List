@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const shoppingListController = require('../controllers/shoppingListController');
+import { shoppingListController } from '../controllers/shoppingListController.js';
 
 router.get('/lists', shoppingListController.getAllShoppingList);
 router.post('/shopping-lists', shoppingListController.createShoppingList)
@@ -9,4 +9,4 @@ router.get('/list/:id/productsList', shoppingListController.getProductsShoppingL
 
 
 
-module.exports = router;
+export default router;

@@ -6,17 +6,24 @@ import { MyLists } from "./pages/myLists/myLists.tsx";
 import { Products } from "./pages/products/products.tsx";
 import { ShoppingListForm } from "./pages/create-list/createList.tsx";
 import { SelectedList } from "./pages/selectedList/selectedList.tsx";
+import { PrivateRoute } from "./components/privateRoute.tsx";
+import { LoginPage } from "./pages/login/loginPage.tsx";
+import { RegisterPage } from "./pages/register/registerPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route index element={<HomePage />} />
-          <Route path="/lists" element={<MyLists />} />
-          <Route path="/lists/:id" element={<SelectedList />}/>
-          <Route path="/createList" element={<ShoppingListForm/>}/>
-          <Route path="/products" element={<Products />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/lists" element={<MyLists />} />
+            <Route path="/lists/:id" element={<SelectedList />} />
+            <Route path="/createList" element={<ShoppingListForm />} />
+            <Route path="/products" element={<Products />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

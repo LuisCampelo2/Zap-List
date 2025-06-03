@@ -1,9 +1,14 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require('../../db');
+import { DataTypes } from "sequelize";
+import sequelize from "../utils/db.js";
 
 const Product = sequelize.define("Product", {
-  photo: { type: DataTypes.STRING },
-  name: { type: DataTypes.STRING, allowNull: false },
+  photo: {
+    type: DataTypes.STRING
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   category: {
     type: DataTypes.ENUM,
     values: [
@@ -27,4 +32,4 @@ const Product = sequelize.define("Product", {
     
 );
 
-module.exports = { Product };
+export default Product;
