@@ -19,13 +19,16 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
     setProductId(product.id);
     const fetchLists = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/lists",{
-          withCredentials:true,
-        });
-         if (!res) {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/lists`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (!res) {
           throw new Error(`Erro HTTP: ${res.status}`);
         } else {
-           setLists(res.data);
+          setLists(res.data);
         }
       } catch (error) {
         console.error("Erro ao buscar listas:", error);
@@ -38,7 +41,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
     e.preventDefault();
     try {
       await axios.post(
-        "http://localhost:3000/api/shopping-list-add-product",
+        `${import.meta.env.VITE_API_URL}/api/shopping-list-add-product`,
         {
           shoppingListId,
           productId,
@@ -72,7 +75,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
             <div className="modal-body">
               <img
                 style={{ objectFit: "cover", width: "100%" }}
-                src={`http://localhost:3000/imgs/${product.photo}`}
+                src={`${import.meta.env.VITE_API_URL}/imgs/${product.photo}`}
                 alt=""
               />
               {product.name}

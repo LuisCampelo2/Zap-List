@@ -1,10 +1,11 @@
-import { useEffect  } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser, clearUser } from "../../slices/userSlice";
 import { useSelector } from "react-redux";
 import { type RootState } from "../../store/store";
+
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -13,9 +14,12 @@ export const Header = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/me", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/me`,
+          {
+            withCredentials: true,
+          }
+        );
         dispatch(setUser(res.data));
       } catch (error) {
         alert(error);
@@ -26,9 +30,13 @@ export const Header = () => {
 
   const logout = async () => {
     try {
-      await axios.post("http://localhost:3000/api/logout", null, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/logout`,
+        null,
+        {
+          withCredentials: true,
+        }
+      );
       dispatch(clearUser());
     } catch (error) {
       alert(error);
@@ -53,40 +61,35 @@ export const Header = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div
-            className="collapse navbar-collapse"
-            id="navbarSupportedContent"
-          >
-            
-              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                {user ? (
-                  <>
-                    <a onClick={logout} type="button" className="nav-link">
-                      Logout
-                    </a>
-                  </>
-                ) : (
-                  <>
-                    <Link className="nav-link" to="/register">
-                      Criar Conta
-                    </Link>
-                    <Link className="nav-link" to="/login">
-                      Entrar
-                    </Link>
-                  </>
-                )}
-                <li className="nav-item">
-                  <Link className="nav-link" to="/lists">
-                    Listas de compra
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              {user ? (
+                <>
+                  <a onClick={logout} type="button" className="nav-link">
+                    Logout
+                  </a>
+                </>
+              ) : (
+                <>
+                  <Link className="nav-link" to="/register">
+                    Criar Conta
                   </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/products">
-                    Produtos
+                  <Link className="nav-link" to="/login">
+                    Entrar
                   </Link>
-                </li>
-              </ul>
-          
+                </>
+              )}
+              <li className="nav-item">
+                <Link className="nav-link" to="/lists">
+                  Listas de compra
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/products">
+                  Produtos
+                </Link>
+              </li>
+            </ul>
 
             {user && <h1>Olá {user.name}</h1>}
           </div>

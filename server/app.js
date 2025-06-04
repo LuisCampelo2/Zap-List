@@ -17,7 +17,7 @@ dotenv.config();
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL,
   credentials:true,
 }));
 app.use('/imgs', express.static(path.join(__dirname, 'src', 'imgs')));
@@ -27,7 +27,6 @@ app.use("/api", shoppingListRoutes);
 app.use("/api", productsRoutes);
 
 
-
 app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
+  console.log(`Servidor rodando em ${process.env.BACKEND_URL}`);
 });

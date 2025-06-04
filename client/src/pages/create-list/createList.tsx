@@ -9,9 +9,9 @@ export const ShoppingListForm = () => {
 
     try {
       await axios.post(
-        "http://localhost:3000/api/shopping-lists",
+        `${import.meta.env.VITE_API_URL}/api/shopping-lists`,
         { name },
-        {withCredentials:true}
+        { withCredentials: true }
       );
       alert("Lista criada com sucesso!");
       setName("");

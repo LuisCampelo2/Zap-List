@@ -19,13 +19,16 @@ export const MyLists = () => {
     const fetchLists = async () => {
       await wait(500);
       try {
-        const res = await axios.get("http://localhost:3000/api/lists", {
-          withCredentials:true,
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/lists`,
+          {
+            withCredentials: true,
+          }
+        );
         if (!res) {
           throw new Error(`Erro HTTP: ${res.status}`);
         } else {
-           setLists(res.data);
+          setLists(res.data);
         }
       } catch (error) {
         console.error("Erro ao buscar listas:", error);

@@ -17,7 +17,7 @@ export const SelectedList = () => {
     const fetchProdutos = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/list/${id}/productsList`
+          `${import.meta.env.VITE_API_URL}/api/list/${id}/productsList`
         );
         setProducts(response.data);
         console.log("Dados recebidos:", response.data);
@@ -67,7 +67,9 @@ export const SelectedList = () => {
                 objectFit: "cover",
                 objectPosition: "center",
               }}
-              src={`http://localhost:3000/imgs/${productItem.Product.photo}`}
+              src={`${import.meta.env.VITE_API_URL}/imgs/${
+                productItem.Product.photo
+              }`}
               alt=""
             />
             <label

@@ -26,7 +26,9 @@ export const Products = () => {
     const fetchProdutos = async () => {
       await wait(500);
       try {
-        const res = await axios.get("http://localhost:3000/api/products");
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/products`
+        );
 
         setProducts(res.data);
       } catch (error) {
@@ -87,7 +89,9 @@ export const Products = () => {
                         objectFit: "cover",
                         objectPosition: "center",
                       }}
-                      src={`http://localhost:3000/imgs/${productItem.photo}`}
+                      src={`${import.meta.env.VITE_API_URL}/imgs/${
+                        productItem.photo
+                      }`}
                       className="card-img-top"
                       alt={productItem.name}
                     />
