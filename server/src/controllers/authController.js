@@ -50,8 +50,8 @@ const login = async (req, res) => {
 
     res.cookie('accessToken', accessToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      secure: isProduction, 
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: true,
+      sameSite: true,
       httpOnly: true,
     })
     return res.json({ accessToken, user: normalizedUser, message: 'Login realizado com sucesso' });
