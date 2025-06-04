@@ -32,7 +32,7 @@ const activate = async (req, res) => {
 
     user.activationToken = null;
     await user.save();
-    res.redirect(`${process.env.FRONTEND_URL}/activate`);
+    res.status(200).json({ success: true });
   } catch (error) {
     console.log(error);
   };

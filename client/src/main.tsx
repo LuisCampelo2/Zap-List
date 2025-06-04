@@ -11,8 +11,8 @@ import { LoginPage } from "./pages/login/loginPage.tsx";
 import { RegisterPage } from "./pages/register/registerPage.tsx";
 import { store } from "./store/store.ts";
 import { Provider } from "react-redux";
-import { AcctivationAccount } from "./pages/acctivationAccount/acctivationAccount.tsx";
 import { AcctivateAccount } from "./pages/acctivateAccount/acctivateAccount.tsx";
+import { ActivationAccount } from "./pages/acctivationAccount/acctivationAccount.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <>
@@ -23,8 +23,8 @@ createRoot(document.getElementById("root")!).render(
             <Route index element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/activation" element={<AcctivationAccount />} />
-            <Route path="/activate" element={<AcctivateAccount/>}/>
+            <Route path="/activation" element={<ActivationAccount/>}/>
+            <Route path="/activate/:token" element={<AcctivateAccount />} />
             <Route element={<PrivateRoute />}>
               <Route path="/lists" element={<MyLists />} />
               <Route path="/lists/:id" element={<SelectedList />} />

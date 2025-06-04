@@ -1,6 +1,7 @@
-export const AcctivationAccount = () => {
-    return (
-        <>
+export const ActivationAccount = () => {
+
+  return (
+    <>
             <div className="container">
                 <div className="card">
                     <div className="card-header">
@@ -11,6 +12,6 @@ export const AcctivationAccount = () => {
                     </div>
                 </div>
             </div>
-        </>
-    )
-}
+    </>
+  )
+};

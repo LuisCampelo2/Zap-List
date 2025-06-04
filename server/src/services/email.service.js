@@ -20,7 +20,7 @@ const send = async ({email,subject,html}) => {
 }
 
 const sendActivationEmail = (email, token) => {
-  const href = `${process.env.BACKEND_URL}/api/activation/${token}`
+  const href = `${process.env.FRONTEND_URL}/activate/${token}`
   const html = `<a href="${href}">${href}</a>`;
 
   return send({

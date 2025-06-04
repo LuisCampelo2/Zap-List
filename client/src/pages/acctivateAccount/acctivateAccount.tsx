@@ -1,6 +1,27 @@
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+
 
 export const AcctivateAccount = () => {
+  const { token } = useParams();
+
+  useEffect(() => {
+    const activateUser = async () => {
+      try {
+        await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/activation/${token}`
+        );
+        
+      } catch (error) {
+        console.error("Erro na ativação:", error);
+      }
+    };
+
+    activateUser();
+  }, [token]);
+
   return (
     <>
       <div className="container">
