@@ -2,12 +2,14 @@ import { useState } from "react";
 import type React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
+  const navigate=useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +20,8 @@ export const RegisterPage = () => {
         name,
         lastName,
       });
+      console.log('Cadastro feito com sucesso!')
+      navigate('/activate');
     } catch (error) {
       alert(error);
     }

@@ -7,13 +7,17 @@ import { jwtService } from '../services/jwt.service.js';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const register = async (req, res) => {
+  try {
+    const { email, password, name, lastName, } = req.body;
+    const activationToken = uuidv4();
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({ email, password: hashedPassword, activationToken, name, last_name: lastName });
+    await emailService.sendActivationEmail(email, activationToken);
+    res.send(newUser);
+  } catch (err) {
+    console.log(err);
+  }
 
-  const { email, password, name, lastName, } = req.body;
-  const activationToken = uuidv4();
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = await User.create({ email, password: hashedPassword, activationToken, name, last_name: lastName });
-  await emailService.sendActivationEmail(email, activationToken);
-  res.send(newUser);
 }
 
 const activate = async (req, res) => {
