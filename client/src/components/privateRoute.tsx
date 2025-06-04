@@ -9,10 +9,14 @@ export const PrivateRoute = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
           withCredentials: true,
         });
-        setAuthenticated(true);
+        if (res.status===200) {
+          setAuthenticated(true);
+        } else {
+          setAuthenticated(false);
+        }
       } catch (err) {
         console.log(err);
         setAuthenticated(false);
