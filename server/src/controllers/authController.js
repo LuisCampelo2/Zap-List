@@ -76,7 +76,7 @@ const activate = async (req, res) => {
       res.clearCookie('accessToken', {
         httpOnly: true,
         secure: isProduction,
-        sameSite: 'strict',
+        sameSite: isProduction ? 'none' : 'lax',
       });
 
       res.sendStatus(204);
