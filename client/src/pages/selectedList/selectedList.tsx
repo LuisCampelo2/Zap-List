@@ -16,9 +16,9 @@ export const SelectedList = () => {
   useEffect(() => {
     const fetchProdutos = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/list/${id}/productsList`
-        );
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/list/${id}/productsList`, {
+          withCredentials:true
+        });
         setProducts(response.data);
         console.log("Dados recebidos:", response.data);
       } catch (err) {

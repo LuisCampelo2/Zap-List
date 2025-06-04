@@ -5,11 +5,13 @@ import { useDispatch } from "react-redux";
 import { setUser, clearUser } from "../../slices/userSlice";
 import { useSelector } from "react-redux";
 import { type RootState } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 
 export const Header = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -38,8 +40,9 @@ export const Header = () => {
         }
       );
       dispatch(clearUser());
+      navigate('/');
     } catch (error) {
-      alert(error);
+      console.log(error)
     }
   };
 

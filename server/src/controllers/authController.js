@@ -28,7 +28,7 @@ const activate = async (req, res) => {
   user.activationToken = null;
   await user.save();
 
-  res.status(200).json({ message: "Conta ativada com sucesso!", user });
+  res.redirect(`${process.env.FRONTEND_URL}/activate`);
 };
 
 
@@ -71,7 +71,7 @@ const logout = async (req, res) => {
     res.clearCookie('accessToken', {
       httpOnly: true,
       secure: isProduction,
-      httpOnly: true,
+      sameSite: 'strict',
     });
 
     res.sendStatus(204);

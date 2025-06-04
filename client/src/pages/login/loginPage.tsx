@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +23,7 @@ export const LoginPage = () => {
         }
       );
       dispatch(setUser(res.data.user));
+      navigate('/')
     } catch (error) {
       alert(error);
     }

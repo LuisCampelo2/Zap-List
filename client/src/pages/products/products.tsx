@@ -26,10 +26,9 @@ export const Products = () => {
     const fetchProdutos = async () => {
       await wait(500);
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products`
-        );
-
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`, {
+          withCredentials:true
+        });
         setProducts(res.data);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);

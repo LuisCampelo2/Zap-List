@@ -21,7 +21,7 @@ export const RegisterPage = () => {
         lastName,
       });
       console.log('Cadastro feito com sucesso!')
-      navigate('/activate');
+      navigate('/activation');
     } catch (error) {
       alert(error);
     }
