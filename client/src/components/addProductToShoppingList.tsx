@@ -25,8 +25,8 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
             withCredentials: true,
           }
         );
-        if (!res) {
-          throw new Error(`Erro HTTP: ${res.status}`);
+        if (!res || res.status !== 200) {
+          throw new Error(`Erro HTTP: ${res?.status}`);
         } else {
           setLists(res.data);
         }
