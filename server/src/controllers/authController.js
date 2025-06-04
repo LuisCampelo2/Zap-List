@@ -50,8 +50,8 @@ const login = async (req, res) => {
 
     res.cookie('accessToken', accessToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      secure: true,
-      sameSite: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       httpOnly: true,
     })
     return res.json({ accessToken, user: normalizedUser, message: 'Login realizado com sucesso' });
@@ -64,10 +64,9 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-     res.clearCookie('accessToken', {
+    res.clearCookie('accessToken', {
       httpOnly: true,
-      secure: isProduction, 
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction,
       httpOnly: true,
     });
 

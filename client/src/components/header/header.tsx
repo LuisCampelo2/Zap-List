@@ -22,7 +22,7 @@ export const Header = () => {
         );
         dispatch(setUser(res.data));
       } catch (error) {
-        alert(error);
+        console.log(error); 
       }
     };
     fetchUser();
