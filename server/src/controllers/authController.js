@@ -21,68 +21,73 @@ const register = async (req, res) => {
 }
 
 const activate = async (req, res) => {
-  const { activationToken } = req.params;
-
-  const user = await User.findOne({ where: { activationToken } });
-
-  user.activationToken = null;
-  await user.save();
-
-  res.redirect(`${process.env.FRONTEND_URL}/activate`);
-};
-
-
-const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { activationToken } = req.params;
 
-    const user = await userService.findByEmail(email);
+    const user = await User.findOne({ where: { activationToken } });
 
-    if (user.activationToken !== null) {
-      return res.json({ message: 'Conta precisa ser ativada' })
+    if (!user) {
+      return res.status(404).send('Token de ativação inválido ou expirado.');
     }
 
-    const passwordIsValid = await bcrypt.compare(password, user.password);
-
-    if (!passwordIsValid) {
-      return res.status(401).json({ message: 'Senha inválida' });
-    }
-
-    const normalizedUser = userService.normalizedUser(user);
-
-    const accessToken = jwtService.sign(normalizedUser);
-
-    res.cookie('accessToken', accessToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
-      httpOnly: true,
-    })
-    return res.json({ accessToken, user: normalizedUser, message: 'Login realizado com sucesso' });
-
+    user.activationToken = null;
+    await user.save();
+    res.redirect(`${process.env.FRONTEND_URL}/activate`);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: 'Erro interno no servidor' });
+  };
+}
+  const login = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      const user = await userService.findByEmail(email);
+
+      if (user.activationToken !== null) {
+        return res.json({ message: 'Conta precisa ser ativada' })
+      }
+
+      const passwordIsValid = await bcrypt.compare(password, user.password);
+
+      if (!passwordIsValid) {
+        return res.status(401).json({ message: 'Senha inválida' });
+      }
+
+      const normalizedUser = userService.normalizedUser(user);
+
+      const accessToken = jwtService.sign(normalizedUser);
+
+      res.cookie('accessToken', accessToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        httpOnly: true,
+      })
+      return res.json({ accessToken, user: normalizedUser, message: 'Login realizado com sucesso' });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Erro interno no servidor' });
+    }
   }
-}
 
-const logout = async (req, res) => {
-  try {
-    res.clearCookie('accessToken', {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'strict',
-    });
+  const logout = async (req, res) => {
+    try {
+      res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: 'strict',
+      });
 
-    res.sendStatus(204);
-  } catch (error) {
-    res.status(401).send({ message: error.message });
+      res.sendStatus(204);
+    } catch (error) {
+      res.status(401).send({ message: error.message });
+    }
   }
-}
 
-export const authController = {
-  register,
-  activate,
-  login,
-  logout,
-}
+  export const authController = {
+    register,
+    activate,
+    login,
+    logout,
+  }
