@@ -23,13 +23,13 @@ export const LoginPage = () => {
         }
       );
       dispatch(setUser(res.data.user));
-      navigate('/')
+      navigate("/");
     } catch (error) {
       alert(error);
     }
   };
   return (
-    <div className="container">
+    <div className="container container-auth">
       <div className="card">
         <div className="card-header">
           <h1>Login</h1>
@@ -37,8 +37,8 @@ export const LoginPage = () => {
         <form onSubmit={handleSubmit}>
           <div className="card-body">
             <div className="row">
-              <label htmlFor="">Email:</label>
               <input
+                placeholder="Email:"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 className="form-control"
@@ -46,8 +46,8 @@ export const LoginPage = () => {
               />
             </div>
             <div className="row">
-              <label htmlFor="">Senha:</label>
               <input
+                placeholder="Senha:"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 className="form-control"
@@ -57,17 +57,14 @@ export const LoginPage = () => {
           </div>
           <div className="card-footer">
             <div className="row">
-              <div className="col-6 d-flex gap-2">
-                <button type="submit" className="btn btn-success">
-                  Entrar
-                </button>
-                <button type="reset" className="btn btn-danger">
-                  Cancelar
-                </button>
-              </div>
-              <div className="col-6 d-flex justify-content-end align-items-center">
-                Nao tem conta? <Link to="/register">Criar conta</Link>
-              </div>
+              <button type="submit" className="btn btn-submit">
+                Login
+              </button>
+            </div>
+            <div className="row">
+                <Link className="btn btn-all" to="/register">
+                  Criar conta
+                </Link>
             </div>
           </div>
         </form>

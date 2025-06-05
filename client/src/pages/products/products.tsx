@@ -26,9 +26,12 @@ export const Products = () => {
     const fetchProdutos = async () => {
       await wait(500);
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`, {
-          withCredentials:true
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/products`,
+          {
+            withCredentials: true,
+          }
+        );
         setProducts(res.data);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
@@ -69,31 +72,25 @@ export const Products = () => {
         <>
           <ProductsFilter />
           <div className="container">
-            <div
-              style={{
-                rowGap: "40px",
-                display: "flex",
-                flexWrap: "wrap",
-                marginTop: "30px",
-              }}
-              className="row"
-            >
+            <div className="row">
               {filteredProducts.map((productItem, index) => (
                 <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
-                  <div className="card" style={{ width: "100%" }}>
-                    <img
-                      style={{
-                        width: "100%",
-                        height: "214px",
-                        objectFit: "cover",
-                        objectPosition: "center",
-                      }}
-                      src={`${import.meta.env.VITE_API_URL}/imgs/${
-                        productItem.photo
-                      }`}
-                      className="card-img-top"
-                      alt={productItem.name}
-                    />
+                  <div className="card">
+                    <div className="card-header">
+                      <img
+                        style={{
+                          width: "100%",
+                          height: "214px",
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                        src={`${import.meta.env.VITE_API_URL}/imgs/${
+                          productItem.photo
+                        }`}
+                        className="card-img-top"
+                        alt={productItem.name}
+                      />
+                    </div>
                     <div className="card-body">
                       <h5 className="card-title">{productItem.name}</h5>
                       <p className="card-text">

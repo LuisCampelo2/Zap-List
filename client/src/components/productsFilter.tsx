@@ -27,39 +27,41 @@ export const ProductsFilter = () => {
   };
   return (
     <>
-      <div
-        style={{marginTop:"10px"}}
-        className="container">
-        <form className="d-flex" role="search">
-          <input
-            className="form-control "
-            type="search"
-            onChange={handleInputChange}
-            value={searchParams.get("name") || ""}
-            placeholder="Pesquise o nome do produto..."
-            aria-label="Search"
-          />
-        </form>
-        <select
-          className="form-select"
-          aria-label="Default select example"
-          onChange={handleSelectChange}
-          value={searchParams.get("category") || ""}
-        >
-          <option value="">Selecione categoria de Produtos</option>
-          <option value="Material de higiene">Material de higiene</option>
-          <option value="Material de limpeza">Material de limpeza</option>
-          <option value="Frutas">Frutas</option>
-          <option value="Legumes e verdura">Legumes e verdura</option>
-          <option value="Carne">Carne</option>
-          <option value="Itens pra cachorro">Itens pra cachorro</option>
-          <option value="Alimentos nao pereciveis">
-            Alimentos nao pereciveis
-          </option>
-          <option value="Bebidas">Bebidas</option>
-          <option value="Laticinios">Laticinios</option>
-          <option value="Outros">Outros</option>
-        </select>
+      <div className="container">
+          <div className="row">
+            <form role="search">
+              <input
+                className="form-control mt-4"
+                type="search"
+                onChange={handleInputChange}
+                value={searchParams.get("name") || ""}
+                placeholder="Pesquise o nome do produto..."
+                aria-label="Search"
+              />
+            </form>
+          </div>
+          <div className="row">
+            <select
+              className="form-select"
+              aria-label="Default select example"
+              onChange={handleSelectChange}
+              value={searchParams.get("category") || ""}
+            >
+              <option value="">Selecione categoria de Produtos</option>
+              <option value="Material de higiene">Material de higiene</option>
+              <option value="Material de limpeza">Material de limpeza</option>
+              <option value="Frutas">Frutas</option>
+              <option value="Legumes e verdura">Legumes e verdura</option>
+              <option value="Carne">Carne</option>
+              <option value="Itens pra cachorro">Itens pra cachorro</option>
+              <option value="Alimentos nao pereciveis">
+                Alimentos nao pereciveis
+              </option>
+              <option value="Bebidas">Bebidas</option>
+              <option value="Laticinios">Laticinios</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
       </div>
     </>
   );

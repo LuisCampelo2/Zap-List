@@ -6,6 +6,7 @@ import { setUser, clearUser } from "../../slices/userSlice";
 import { useSelector } from "react-redux";
 import { type RootState } from "../../store/store";
 import { useNavigate } from "react-router-dom";
+import logo from '../../imgs/logo.png'
 
 
 export const Header = () => {
@@ -48,10 +49,13 @@ export const Header = () => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            Home
+            <img
+              className="rounded-circle logo-img"
+              src={logo}
+              alt="logo" />
           </Link>
           <button
             className="navbar-toggler"
