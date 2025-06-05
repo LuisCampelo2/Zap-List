@@ -1,56 +1,12 @@
 @import 'header';
+@import 'cards';
+
+body{
+  font-family: 'Roboto Mono',monospace;
+}
 
 .main {
   height: 100vh;
 }
 
-.container-auth {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
 
-.card {
-  border: none;
-
-  &-header {
-    background: none;
-    text-align: center;
-    border: none;
-  }
-
-
-  &-footer {
-    background: none;
-    border: none;
-  }
-}
-
-.form-control {
-  border: none;
-  border-bottom: 1px solid white;
-  border-radius: 0px;
-  margin-bottom: 2rem;
-
-  &:focus{
-    box-shadow: none;
-  }
-}
-
-.btn-submit {
-  &:hover {
-    color: white;
-    background-color: green;
-  }
-}
-
-.btn-all {
-  background-color: rgb(255, 100, 10);
-  margin-top: 2rem;
-
-  &:hover{
-    background-color: rgb(177, 67, 3);
-    color: white;
-  }
-}

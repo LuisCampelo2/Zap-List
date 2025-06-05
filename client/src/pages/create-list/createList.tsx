@@ -33,7 +33,7 @@ export const ShoppingListForm = () => {
           required
         />
       </div>
-      <button type="submit" className="btn btn-primary">
+      <button type="submit" className="btn btn-all">
         Criar Lista
       </button>
     </form>

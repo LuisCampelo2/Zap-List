@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import logo from '../../imgs/logo.png'
 
 
-export const Header = () => {
+export const HeaderTop = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();

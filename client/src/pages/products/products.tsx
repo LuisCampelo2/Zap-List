@@ -97,6 +97,7 @@ export const Products = () => {
                         Categoria: <strong>{productItem.category}</strong>
                       </p>
                       <button
+                        className="btn btn-all"
                         onClick={() => handleAddProductModal(productItem)}
                       >
                         Adicionar a lista
