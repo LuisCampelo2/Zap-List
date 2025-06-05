@@ -43,5 +43,3 @@ Este projeto é uma aplicação web completa de **gerenciamento de listas de com
 
 ---
 
-## 📁 Estrutura do Projeto
-
