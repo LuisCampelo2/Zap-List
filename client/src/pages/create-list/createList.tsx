@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const ShoppingListForm = () => {
   const [name, setName] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,7 +15,7 @@ export const ShoppingListForm = () => {
         { name },
         { withCredentials: true }
       );
-      alert("Lista criada com sucesso!");
+      navigate('/lists')
       setName("");
     } catch (erro) {
       alert(erro);
@@ -23,11 +25,11 @@ export const ShoppingListForm = () => {
   return (
     <form onSubmit={handleSubmit} className="container mt-4">
       <div className="mb-3">
-        <label className="form-label">Nome da Lista</label>
+        <h1>Vamos Criar sua lista?</h1>
         <input
           type="text"
           className="form-control"
-          placeholder="Ex: Lista da semana"
+          placeholder="Como gostaria de chamar sua lista?"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
