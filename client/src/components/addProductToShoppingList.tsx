@@ -48,7 +48,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
           quantity,
         }
       );
-      alert("Produto adicionado com sucesso");
+      onClose();
       setShoppingListId(null);
       setProductId(null);
       setQuantity(null);

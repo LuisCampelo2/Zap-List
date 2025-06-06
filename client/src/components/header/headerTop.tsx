@@ -1,107 +1,46 @@
-import { useEffect } from "react";
+import { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { setUser, clearUser } from "../../slices/userSlice";
-import { useSelector } from "react-redux";
-import { type RootState } from "../../store/store";
-import { useNavigate } from "react-router-dom";
-import logo from '../../imgs/logo.png'
-
+import logo from "../../imgs/logo.png";
+import { Aside } from "../aside/aside";
+import { useLocation } from "react-router-dom";
 
 export const HeaderTop = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.user);
-  const navigate = useNavigate();
+  const [aside, setAside] = useState(false);
+  const location = useLocation();
+
+  const handleAside = () => {
+    setAside((prev) => !prev);
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/me`,
-          {
-            withCredentials: true,
-          }
-        );
-        dispatch(setUser(res.data));
-      } catch (error) {
-        console.log(error); 
-      }
-    };
-    fetchUser();
-  }, [dispatch]);
-
-  const logout = async () => {
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/logout`,
-        null,
-        {
-          withCredentials: true,
-        }
-      );
-      dispatch(clearUser());
-      navigate('/');
-    } catch (error) {
-      console.log(error)
-    }
-  };
+    setAside(false);
+  }, [location.pathname]);
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            <img
-              className="rounded-circle logo-img"
-              src={logo}
-              alt="logo" />
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+      {aside && <Aside onClose={handleAside} />}
+      <ul className="nav nav-tabs">
+        <li className="nav-item">
+          <svg
+            onClick={handleAside}
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-list"
+            viewBox="0 0 16 16"
           >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {user ? (
-                <>
-                  <a onClick={logout} type="button" className="nav-link">
-                    Logout
-                  </a>
-                </>
-              ) : (
-                <>
-                  <Link className="nav-link" to="/register">
-                    Criar Conta
-                  </Link>
-                  <Link className="nav-link" to="/login">
-                    Entrar
-                  </Link>
-                </>
-              )}
-              <li className="nav-item">
-                <Link className="nav-link" to="/lists">
-                  Listas de compra
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/products">
-                  Produtos
-                </Link>
-              </li>
-            </ul>
+            <path
+              fillRule="evenodd"
+              d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+            />
+          </svg>
+        </li>
 
-            {user && <h1>Olá {user.name}</h1>}
-          </div>
-        </div>
-      </nav>
+        <Link className="navbar-brand" to="/">
+          <img className="rounded-circle logo-img" src={logo} alt="logo" />
+        </Link>
+      </ul>
     </>
   );
 };

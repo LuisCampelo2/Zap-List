@@ -1,9 +1,30 @@
-.navbar {
+.nav {
+  display: flex;
+  border: none;
+  align-items: center;
+  height: 70px;
+  padding-left: 20px;
+  padding-right: 20px;
   background-color: rgb(255, 100, 10);
   box-shadow: 6px 20px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .logo-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 30px;
+  transform: translate(-50%, -50%);
 }
 
+.nav-link {
+  color: black;
+}
+
+.bi-list {
+  cursor: pointer;
+  font-size: 70px;
+  width: 32px;
+  height: 32px;
+}

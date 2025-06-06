@@ -1,0 +1,22 @@
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  background: white;
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.aside.closed {
+  transform: translateX(-100%);
+}
+
+.aside.open {
+  transform: translateX(0);
+}
