@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { type Product } from "../../types/product";
 import axios from "axios";
@@ -16,9 +16,12 @@ export const SelectedList = () => {
   useEffect(() => {
     const fetchProdutos = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/list/${id}/productsList`, {
-          withCredentials:true
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/list/${id}/productsList`,
+          {
+            withCredentials: true,
+          }
+        );
         setProducts(response.data);
         console.log("Dados recebidos:", response.data);
       } catch (err) {
@@ -48,40 +51,59 @@ export const SelectedList = () => {
 
   return (
     <>
-      <ProductsFilter />
-      <ul className="list-group">
-        {filteredProducts.map((productItem) => (
-          <li key={productItem.id} className="list-group-item">
-            <input
-              className="form-check-input me-1"
-              type="checkbox"
-              name="listGroupRadio"
-              id={`product-${productItem.id}`}
-              onChange={() => toggleSelection(productItem.id)}
-              checked={selectedProductIds.includes(productItem.id)}
-            />
-            <img
-              style={{
-                width: "40px",
-                height: "40px",
-                objectFit: "cover",
-                objectPosition: "center",
-              }}
-              src={`${import.meta.env.VITE_API_URL}/imgs/${
-                productItem.Product.photo
-              }`}
-              alt=""
-            />
-            <label
-              className="form-check-label"
-              htmlFor={`product-${productItem.id}`}
-            >
-              {productItem.Product.name}
-            </label>{" "}
-            <strong>Qntd:{productItem.quantity}</strong>
-          </li>
-        ))}
-      </ul>
+      {products.length === 0 ? (
+        <>
+          <div className="container">
+            <div className="card">
+              <div className="card-header">
+                <h1>Esta lista está vazia</h1>
+              </div>
+              <div className="card-body d-flex justify-content-center">
+                <Link className="btn btn-all" to="/products">
+                  Adicionar Produto
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <ProductsFilter />
+          <ul className="list-group">
+            {filteredProducts.map((productItem) => (
+              <li key={productItem.id} className="list-group-item">
+                <input
+                  className="form-check-input me-1"
+                  type="checkbox"
+                  name="listGroupRadio"
+                  id={`product-${productItem.id}`}
+                  onChange={() => toggleSelection(productItem.id)}
+                  checked={selectedProductIds.includes(productItem.id)}
+                />
+                <img
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    objectFit: "cover",
+                    objectPosition: "center",
+                  }}
+                  src={`${import.meta.env.VITE_API_URL}/imgs/${
+                    productItem.Product.photo
+                  }`}
+                  alt=""
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor={`product-${productItem.id}`}
+                >
+                  {productItem.Product.name}
+                </label>{" "}
+                <strong>Qntd:{productItem.quantity}</strong>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </>
   );
 };
