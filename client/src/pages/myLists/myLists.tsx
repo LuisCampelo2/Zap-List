@@ -3,10 +3,12 @@ import { type ShoppingList } from "../../types/shoppingList";
 import { Loader } from "../../components/loader";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { ModalConfirmation } from "../../components/modalConfirmation";
 
 export const MyLists = () => {
   const [lists, setLists] = useState<ShoppingList[]>([]);
   const [loading, setLoading] = useState(false);
+  const [modalConfirmation, setModalConfirmation] = useState(false);
 
   function wait(delay: number) {
     return new Promise((resolve) => {
@@ -39,6 +41,10 @@ export const MyLists = () => {
     fetchLists();
   }, []);
 
+  const handleDelete = () => {
+    setModalConfirmation(true);
+  };
+
   return (
     <>
       {loading && <Loader />}
@@ -53,14 +59,17 @@ export const MyLists = () => {
               </div>
             </section>
             <ul className="list-group">
-              {lists.map((listName, index) => (
-                <li key={index} className="list-group-item">
-                  <Link className="lists-link" to={`/lists/${listName.id}`}>
-                    {listName.name}
-                  </Link>
-                 <i className="bi bi-trash"></i>
-                </li>
-              ))}
+                {lists.map((listName, index) => (
+                  <li key={index} className="list-group-item">
+                    <Link className="lists-link" to={`/lists/${listName.id}`}>
+                      {listName.name}
+                    </Link>
+                    <i onClick={handleDelete} className="bi bi-trash"></i>
+                  </li>
+                ))}
+                {modalConfirmation && <ModalConfirmation
+                  onClose={()=>setModalConfirmation(false)}
+                />}
             </ul>
           </>
         )
