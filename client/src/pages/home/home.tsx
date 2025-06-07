@@ -1,5 +1,5 @@
 import videoDesktop from "../../videos/VamosAsComprasDesktop.mp4";
-import videoMobile from '../../videos/VamosAsComprasMobile.mp4';
+import videoMobile from '../../videos/VamosAsComprasMobile.gif';
 import { Link } from "react-router-dom";
 
 export const HomePage = () => {
@@ -14,14 +14,10 @@ export const HomePage = () => {
           muted
           playsInline
         />
-        <video
+        <img
           className="video-mobile"
           src={videoMobile}
-          autoPlay
-          loop
-          muted
-          playsInline
-        />
+          alt="" />
         <Link className="btn btn-video" to="/createList">
           Começar Agora
         </Link>
