@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Loader } from "./loader";
 
 export const PrivateRoute = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -27,7 +28,7 @@ export const PrivateRoute = () => {
     checkAuth();
   }, []);
 
-  if (loading) return <div>Carregando...</div>;
+  if (loading) return <Loader/>;
 
   return authenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };

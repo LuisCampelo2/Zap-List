@@ -55,7 +55,10 @@ export const MyLists = () => {
             <ul className="list-group">
               {lists.map((listName, index) => (
                 <li key={index} className="list-group-item">
-                  <Link to={`/lists/${listName.id}`}>{listName.name}</Link>
+                  <Link className="lists-link" to={`/lists/${listName.id}`}>
+                    {listName.name}
+                  </Link>
+                 <i className="bi bi-trash"></i>
                 </li>
               ))}
             </ul>

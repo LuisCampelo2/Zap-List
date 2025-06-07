@@ -10,7 +10,7 @@
   background: white;
   transition: transform 0.3s ease;
   z-index: 1000;
-  padding: 20px;
+  padding: 10px;
 }
 
 .aside.closed {
@@ -19,4 +19,32 @@
 
 .aside.open {
   transform: translateX(0);
+}
+
+.nav-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nav-item-aside {
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+
+  &:hover {
+    padding: 10px;
+    background-color: rgb(255, 100, 10);
+    color: black;
+  }
+}
+
+.bi-x-lg {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+
+  &:hover {
+    color: red;
+  }
 }

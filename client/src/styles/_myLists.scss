@@ -1,0 +1,20 @@
+.lists-link{
+  text-decoration: none;
+  color: black;
+  font-size: 30px;
+}
+
+.list-group-item{
+  display: flex;
+  justify-content: space-between;
+}
+
+.bi-trash{
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+
+  &:hover{
+    color: red;
+  }
+}

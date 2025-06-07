@@ -15,7 +15,7 @@ export const ShoppingListForm = () => {
         { name },
         { withCredentials: true }
       );
-      navigate('/lists')
+      navigate("/lists");
       setName("");
     } catch (erro) {
       alert(erro);
@@ -28,8 +28,7 @@ export const ShoppingListForm = () => {
         <h1>Vamos Criar sua lista?</h1>
         <input
           type="text"
-          className="form-control"
-          placeholder="Como gostaria de chamar sua lista?"
+          placeholder="Digite aqui:"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
