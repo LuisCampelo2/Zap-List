@@ -9,6 +9,7 @@ export const MyLists = () => {
   const [lists, setLists] = useState<ShoppingList[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalConfirmation, setModalConfirmation] = useState(false);
+  const [selectedList, setSelectList] = useState<number | null>(null);
 
   function wait(delay: number) {
     return new Promise((resolve) => {
@@ -41,7 +42,8 @@ export const MyLists = () => {
     fetchLists();
   }, []);
 
-  const handleDelete = () => {
+  const handleDelete = (id: number) => {
+    setSelectList(id);
     setModalConfirmation(true);
   };
 
@@ -49,7 +51,20 @@ export const MyLists = () => {
     <>
       {loading && <Loader />}
       {lists.length === 0 && !loading ? (
-        <p className="container text-center">Não existem listas no momento</p>
+        <>
+            <div className="container">
+            <div className="card">
+              <div className="card-header">
+                <h1>Voce não tem listas no momento</h1>
+              </div>
+              <div className="card-body d-flex justify-content-center">
+                <Link className="btn btn-all" to="/createList">
+                  Criar Lista
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>
       ) : (
         !loading && (
           <>
@@ -59,17 +74,23 @@ export const MyLists = () => {
               </div>
             </section>
             <ul className="list-group">
-                {lists.map((listName, index) => (
-                  <li key={index} className="list-group-item">
-                    <Link className="lists-link" to={`/lists/${listName.id}`}>
-                      {listName.name}
-                    </Link>
-                    <i onClick={handleDelete} className="bi bi-trash"></i>
-                  </li>
-                ))}
-                {modalConfirmation && <ModalConfirmation
-                  onClose={()=>setModalConfirmation(false)}
-                />}
+              {lists.map((listName, index) => (
+                <li key={index} className="list-group-item">
+                  <Link className="lists-link" to={`/lists/${listName.id}`}>
+                    {listName.name}
+                  </Link>
+                  <i
+                    onClick={() => handleDelete(listName.id)}
+                    className="bi bi-trash"
+                  ></i>
+                </li>
+              ))}
+              {modalConfirmation && (
+                <ModalConfirmation
+                  listId={selectedList}
+                  onClose={() => setModalConfirmation(false)}
+                />
+              )}
             </ul>
           </>
         )

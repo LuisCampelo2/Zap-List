@@ -1,8 +1,23 @@
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 interface Props {
+  listId:number | null
   onClose: () => void;
 }
-
-export const ModalConfirmation = ({ onClose }: Props) => {
+export const ModalConfirmation = ({ onClose, listId }: Props) => {
+  const navigate = useNavigate();
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/list-delete/${listId}`,
+          { withCredentials: true }
+      )
+      navigate(0);
+    } catch (error) {
+      console.log(error);
+    }
+}
+  
   return (
     <>
       <div className="modal show d-block">
@@ -31,6 +46,7 @@ export const ModalConfirmation = ({ onClose }: Props) => {
                 Cancelar
               </button>
               <button
+                onClick={handleDelete}
                 type="button"
                 className="btn btn-success">
                 Excluir

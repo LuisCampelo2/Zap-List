@@ -6,7 +6,8 @@ import { authMiddleWare } from '../middleware/authMiddleware.js';
 router.get('/lists', authMiddleWare.middleWare, shoppingListController.getAllShoppingList);
 router.post('/shopping-lists',authMiddleWare.middleWare, shoppingListController.createShoppingList)
 router.post('/shopping-list-add-product', shoppingListController.addProductToShopping);
-router.get('/list/:id/productsList',authMiddleWare.middleWare, shoppingListController.getProductsShoppingList);
+router.get('/list/:id/productsList', authMiddleWare.middleWare, shoppingListController.getProductsShoppingList);
+router.delete('/list-delete/:id', authMiddleWare.middleWare, shoppingListController.deleteList);
 
 
 

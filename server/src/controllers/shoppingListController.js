@@ -1,13 +1,14 @@
 import ShoppingList from "../models/shoppingList.js";
 import Product from "../models/product.js";
 import ShoppingListProduct from '../models/shoppingListProducts.js'
+import { where } from "sequelize";
 
 
 const getAllShoppingList = async (req, res) => {
   console.log(req.user)
   try {
     const shoppingList = await ShoppingList.findAll({
-       where: { userId: req.user.id }
+      where: { userId: req.user.id }
     });
     res.status(200).json(shoppingList);
   } catch (error) {
@@ -21,7 +22,7 @@ const createShoppingList = async (req, res) => {
   try {
     const { name } = req.body;
 
-    const newList = await ShoppingList.create({ name,userId:req.user.id });
+    const newList = await ShoppingList.create({ name, userId: req.user.id });
     res.status(201).json(newList);
   } catch (error) {
     console.log(error);
@@ -66,7 +67,7 @@ const getProductsShoppingList = async (req, res) => {
         {
           model: Product,
           attributes: ["id", "name", "photo", "category"],
-          required:false
+          required: false
         },
       ],
     });
@@ -82,9 +83,25 @@ const getProductsShoppingList = async (req, res) => {
   }
 };
 
-export const shoppingListController={
+const deleteList = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await ShoppingListProduct.destroy({
+      where:{shoppingListId:id}
+    })
+    const list = await ShoppingList.findByPk(id)
+    await list.destroy();
+    return res.status(200).json({message:"Lista deletada"});
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const shoppingListController = {
   getProductsShoppingList,
   addProductToShopping,
   getAllShoppingList,
   createShoppingList,
+  deleteList,
 };
