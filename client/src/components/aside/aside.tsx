@@ -51,7 +51,7 @@ export const Aside = ({ onClose }: Props) => {
             <h4>Olá, {user.name}</h4>
 
             <Link className="nav-item-aside" to="/lists">
-              Listas de compra
+              Minhas listas
             </Link>
 
             <Link className="nav-item-aside" to="/products">

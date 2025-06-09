@@ -4,6 +4,7 @@
 @import "aside";
 @import "myLists";
 
+
 html,
 body,
 #root {
@@ -11,4 +12,8 @@ body,
   margin: 0;
   padding: 0;
   font-family: "Kaushan Script", cursive;
+}
+
+main{
+   min-height: 100vh;
 }

@@ -91,7 +91,10 @@ export const MyLists = () => {
                   onClose={() => setModalConfirmation(false)}
                 />
               )}
-            </ul>
+              </ul>
+               <Link className="btn btn-all" to="/createList">
+                  Criar Lista nova
+                </Link>
           </>
         )
       )}

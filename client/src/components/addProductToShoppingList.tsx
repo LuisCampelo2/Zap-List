@@ -81,6 +81,8 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
               {product.name}
               <form onSubmit={handleSubmit}>
                 <input
+                  style={{ width: '100px' }}
+                  placeholder="Quantidade:"
                   type="number"
                   min="1"
                   max="100"
