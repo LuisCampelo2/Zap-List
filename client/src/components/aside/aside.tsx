@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { type RootState } from "../../store/store";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -9,11 +9,9 @@ import { useEffect } from "react";
 
 type Props = {
   onClose: () => void;
-}
+};
 
-
-
-export const Aside = ({onClose}:Props) => {
+export const Aside = ({ onClose }: Props) => {
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,7 +30,6 @@ export const Aside = ({onClose}:Props) => {
     fetchUser();
   }, [dispatch]);
 
-  
   const logout = async () => {
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/api/logout`, null, {
@@ -45,44 +42,46 @@ export const Aside = ({onClose}:Props) => {
     }
   };
 
-
   return (
-     <aside className="aside open">
-      <i
-        onClick={onClose}
-        className="bi bi-x-lg"></i>
-          <nav className="nav-aside">
-            {user ? (
-           <>
+    <aside className="aside open">
+      <i onClick={onClose} className="bi bi-x-lg"></i>
+      <nav className="nav-aside">
+        {user ? (
+          <>
             <h4>Olá, {user.name}</h4>
-                <a
-                  onClick={logout}
-                  className="nav-item-aside"
-                  aria-current="page"
-                  href="#"
-                >
-                  Logout
-                </a>
-              
-                <Link className="nav-item-aside" to="/lists">
-                  Listas de compra
-                </Link>
 
-                <Link className="nav-item-aside" to="/products">
-                  Produtos
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link className="nav-item-aside" to="/register">
-                  Criar Conta
-                </Link>
-                <Link className="nav-item-aside" to="/login">
-                  Entrar
-                </Link>
-              </>
-            )}
-          </nav>
-        </aside>
-  )
-}
+            <Link className="nav-item-aside" to="/lists">
+              Listas de compra
+            </Link>
+
+            <Link className="nav-item-aside" to="/products">
+              Produtos
+            </Link>
+            <Link
+              className="nav-item-aside"
+              to="createList">
+              Criar Lista
+            </Link>
+             <a
+              onClick={logout}
+              className="nav-item-aside"
+              aria-current="page"
+              href="#"
+            >
+              Sair da conta
+            </a>
+          </>
+        ) : (
+          <>
+            <Link className="nav-item-aside" to="/register">
+              Criar Conta
+            </Link>
+            <Link className="nav-item-aside" to="/login">
+              Entrar
+            </Link>
+          </>
+        )}
+      </nav>
+    </aside>
+  );
+};

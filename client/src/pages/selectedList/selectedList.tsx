@@ -77,11 +77,15 @@ export const SelectedList = () => {
         </>
       ) : (
         <>
-          <Link className="btn btn-all" to="/products">
-            Adicionar Produto
-          </Link>
           <ProductsFilter />
           <div className="container d-flex justify-content-center">
+            <div className="card">
+              <div className="card-body">
+                <Link className="btn btn-all" to="/products">
+                  Adicionar Produto
+                </Link>
+              </div>
+            </div>
             <ul
               className="list-group mt-2"
               style={{ width: "300px", overflowY: "auto", maxHeight: "700px" }}
