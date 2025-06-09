@@ -36,7 +36,7 @@ export const ProductsFilter = () => {
             >
               <i className="bi bi-search"></i>
               <input
-                style={{width:'300px',border: 'none'}}
+                style={{width:'300px',border: 'none',background: 'none'}}
                 type="search"
                 onChange={handleInputChange}
                 value={searchParams.get("name") || ""}
