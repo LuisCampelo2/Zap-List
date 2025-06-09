@@ -83,47 +83,52 @@ export const SelectedList = () => {
               <div className="card-body">
                 <Link className="btn btn-all" to="/products">
                   Adicionar Produto
-                </Link>
+                  </Link>
+                  
+                   <ul
+                className="list-group mt-2"
+                style={{
+                  width: "300px",
+                  overflowY: "auto",
+                  maxHeight: "700px",
+                }}
+              >
+                {filteredProducts.map((productItem) => (
+                  <li key={productItem.id} className="list-group-item">
+                    <input
+                      className="form-check-input me-1"
+                      type="checkbox"
+                      name="listGroupRadio"
+                      id={`product-${productItem.id}`}
+                    />
+                    <img
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        objectFit: "cover",
+                        objectPosition: "center",
+                      }}
+                      src={`${import.meta.env.VITE_API_URL}/imgs/${
+                        productItem.Product.photo
+                      }`}
+                      alt=""
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor={`product-${productItem.id}`}
+                    >
+                      {productItem.Product.name}
+                    </label>{" "}
+                    <strong>Qntd:{productItem.quantity}</strong>
+                    <i
+                      onClick={() => handleDelete(productItem.Product.id)}
+                      className="bi bi-trash"
+                    ></i>
+                  </li>
+                ))}
+              </ul>
               </div>
             </div>
-            <ul
-              className="list-group mt-2"
-              style={{ width: "300px", overflowY: "auto", maxHeight: "700px" }}
-            >
-              {filteredProducts.map((productItem) => (
-                <li key={productItem.id} className="list-group-item">
-                  <input
-                    className="form-check-input me-1"
-                    type="checkbox"
-                    name="listGroupRadio"
-                    id={`product-${productItem.id}`}
-                  />
-                  <img
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      objectFit: "cover",
-                      objectPosition: "center",
-                    }}
-                    src={`${import.meta.env.VITE_API_URL}/imgs/${
-                      productItem.Product.photo
-                    }`}
-                    alt=""
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor={`product-${productItem.id}`}
-                  >
-                    {productItem.Product.name}
-                  </label>{" "}
-                  <strong>Qntd:{productItem.quantity}</strong>
-                  <i
-                    onClick={() => handleDelete(productItem.Product.id)}
-                    className="bi bi-trash"
-                  ></i>
-                </li>
-              ))}
-            </ul>
           </div>
         </>
       )}
