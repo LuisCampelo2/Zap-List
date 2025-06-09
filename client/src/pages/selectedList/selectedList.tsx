@@ -4,6 +4,7 @@ import { type Product } from "../../types/product";
 import axios from "axios";
 import { ProductsFilter } from "../../components/productsFilter";
 import { useSearchParams } from "react-router-dom";
+import { ModalConfirmationProduct } from "../../components/modalConfirmationDeleteProduct";
 
 export const SelectedList = () => {
   const { id } = useParams();
@@ -11,7 +12,11 @@ export const SelectedList = () => {
   const categoryFilter = searchParams.get("category");
   const nameFilter = searchParams.get("name");
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedProductIds, setSelectedProductIds] = useState<number[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null
+  );
+  const [modalConfirmation, setModalConfirmation] = useState(false);
+  const listId = Number(id);
 
   useEffect(() => {
     const fetchProdutos = async () => {
@@ -41,16 +46,20 @@ export const SelectedList = () => {
     return matchesCategory && matchesName;
   });
 
-  const toggleSelection = (productId: number) => {
-    setSelectedProductIds((prevSelected) =>
-      prevSelected.includes(productId)
-        ? prevSelected.filter((id) => id !== productId)
-        : [...prevSelected, productId]
-    );
+  const handleDelete = (productId: number) => {
+    setSelectedProductId(productId);
+    setModalConfirmation(true);
   };
 
   return (
     <>
+      {modalConfirmation && (
+        <ModalConfirmationProduct
+          productId={selectedProductId}
+          listId={listId}
+          onClose={() => setModalConfirmation(false)}
+        />
+      )}
       {products.length === 0 ? (
         <>
           <div className="container">
@@ -68,40 +77,50 @@ export const SelectedList = () => {
         </>
       ) : (
         <>
+          <Link className="btn btn-all" to="/products">
+            Adicionar Produto
+          </Link>
           <ProductsFilter />
-          <ul className="list-group">
-            {filteredProducts.map((productItem) => (
-              <li key={productItem.id} className="list-group-item">
-                <input
-                  className="form-check-input me-1"
-                  type="checkbox"
-                  name="listGroupRadio"
-                  id={`product-${productItem.id}`}
-                  onChange={() => toggleSelection(productItem.id)}
-                  checked={selectedProductIds.includes(productItem.id)}
-                />
-                <img
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    objectFit: "cover",
-                    objectPosition: "center",
-                  }}
-                  src={`${import.meta.env.VITE_API_URL}/imgs/${
-                    productItem.Product.photo
-                  }`}
-                  alt=""
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor={`product-${productItem.id}`}
-                >
-                  {productItem.Product.name}
-                </label>{" "}
-                <strong>Qntd:{productItem.quantity}</strong>
-              </li>
-            ))}
-          </ul>
+          <div className="container d-flex justify-content-center">
+            <ul
+              className="list-group mt-2"
+              style={{ width: "300px", overflowY: "auto", maxHeight: "700px" }}
+            >
+              {filteredProducts.map((productItem) => (
+                <li key={productItem.id} className="list-group-item">
+                  <input
+                    className="form-check-input me-1"
+                    type="checkbox"
+                    name="listGroupRadio"
+                    id={`product-${productItem.id}`}
+                  />
+                  <img
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      objectFit: "cover",
+                      objectPosition: "center",
+                    }}
+                    src={`${import.meta.env.VITE_API_URL}/imgs/${
+                      productItem.Product.photo
+                    }`}
+                    alt=""
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor={`product-${productItem.id}`}
+                  >
+                    {productItem.Product.name}
+                  </label>{" "}
+                  <strong>Qntd:{productItem.quantity}</strong>
+                  <i
+                    onClick={() => handleDelete(productItem.Product.id)}
+                    className="bi bi-trash"
+                  ></i>
+                </li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
     </>

@@ -5,7 +5,7 @@ interface Props {
   listId:number | null
   onClose: () => void;
 }
-export const ModalConfirmation = ({ onClose, listId }: Props) => {
+export const ModalConfirmationList = ({ onClose, listId }: Props) => {
   const navigate = useNavigate();
   const handleDelete = async () => {
     try {
@@ -34,7 +34,7 @@ export const ModalConfirmation = ({ onClose, listId }: Props) => {
               ></button>
             </div>
             <div className="modal-body">
-              <p>Tem certeza que deseja excluir este item?</p>
+              <p>Tem certeza que deseja excluir esta lista?</p>
             </div>
             <div className="modal-footer">
               <button

@@ -3,7 +3,7 @@ import { type ShoppingList } from "../../types/shoppingList";
 import { Loader } from "../../components/loader";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { ModalConfirmation } from "../../components/modalConfirmation";
+import { ModalConfirmationList } from "../../components/modalConfirmationDeleteList";
 
 export const MyLists = () => {
   const [lists, setLists] = useState<ShoppingList[]>([]);
@@ -86,7 +86,7 @@ export const MyLists = () => {
                 </li>
               ))}
               {modalConfirmation && (
-                <ModalConfirmation
+                <ModalConfirmationList
                   listId={selectedList}
                   onClose={() => setModalConfirmation(false)}
                 />

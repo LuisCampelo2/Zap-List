@@ -8,7 +8,6 @@ router.post('/shopping-lists',authMiddleWare.middleWare, shoppingListController.
 router.post('/shopping-list-add-product', shoppingListController.addProductToShopping);
 router.get('/list/:id/productsList', authMiddleWare.middleWare, shoppingListController.getProductsShoppingList);
 router.delete('/list-delete/:id', authMiddleWare.middleWare, shoppingListController.deleteList);
-
-
+router.delete('/product-list-delete/:listId/:productId', authMiddleWare.middleWare, shoppingListController.deleteProductList);
 
 export default router;

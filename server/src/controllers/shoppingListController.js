@@ -98,10 +98,27 @@ const deleteList = async (req, res) => {
   }
 }
 
+const deleteProductList = async (req, res) => {
+  const {listId,productId} = req.params;
+
+  try {
+    const deleted = await ShoppingListProduct.destroy({
+      where: {
+        shoppingListId: listId,
+        productId: productId,
+      },
+    })
+     return res.status(200).json({ message: 'Produto removido da lista com sucesso' });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const shoppingListController = {
   getProductsShoppingList,
   addProductToShopping,
   getAllShoppingList,
   createShoppingList,
   deleteList,
+  deleteProductList,
 };
