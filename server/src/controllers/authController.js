@@ -62,6 +62,7 @@ const activate = async (req, res) => {
         secure: isProduction,
         sameSite: isProduction ? 'none' : 'lax',
         httpOnly: true,
+        domain: process.env.FRONTEND_DOMAIN,
       })
       return res.json({ accessToken, user: normalizedUser, message: 'Login realizado com sucesso' });
 
@@ -77,6 +78,7 @@ const activate = async (req, res) => {
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction ? 'none' : 'lax',
+        domain: process.env.FRONTEND_DOMAIN,
       });
 
       res.sendStatus(204);
