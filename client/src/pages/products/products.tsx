@@ -72,7 +72,10 @@ export const Products = () => {
         <>
           <ProductsFilter />
           <div className="container">
-            <div className="row">
+              <div className="row">
+                 <a href="#" className="upHeaderPage">
+              <i className="bi bi-arrow-up"></i>
+            </a>
               {filteredProducts.map((productItem, index) => (
                 <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
                   <div className="card">

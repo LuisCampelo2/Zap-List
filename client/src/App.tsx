@@ -8,7 +8,7 @@ import { Footer } from "./components/footer";
 function App() {
   return (
     <>
-      <header>
+      <header id="#">
         <HeaderTop />
       </header>
       <main>

@@ -1,0 +1,15 @@
+.upHeaderPage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 40px;
+  right: 10px;
+  background-color: rgb(255, 100, 10);
+  border-radius: 150px;
+  color: black;
+  width: 40px;
+  height: 40px;
+  z-index: 1001;
+}
+
