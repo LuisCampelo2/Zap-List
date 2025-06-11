@@ -31,7 +31,7 @@ const createShoppingList = async (req, res) => {
 };
 
 const addProductToShopping = async (req, res) => {
-  const { shoppingListId, productId, quantity } = req.body;
+  const { shoppingListId, productId, quantity,observation } = req.body;
 
   try {
     const shoppingList = await ShoppingList.findByPk(shoppingListId);
@@ -47,6 +47,7 @@ const addProductToShopping = async (req, res) => {
       shoppingListId,
       productId,
       quantity: quantity || 1,
+      observation
     });
     return res.status(200).json({
       message: "Produto adicionado à lista de compras",

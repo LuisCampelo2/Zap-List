@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { type Product } from "../types/product";
 import { type ShoppingList } from "../types/shoppingList";
+import { type ShoppingListProducts } from "../types/shoppingListProduct";
 import { useEffect } from "react";
 
 interface Props {
@@ -14,6 +15,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
   const [productId, setProductId] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
   const [lists, setLists] = useState<ShoppingList[]>([]);
+  const [observation, setObservation] = useState<string | null>(null);
 
   useEffect(() => {
     setProductId(product.id);
@@ -39,19 +41,24 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const payload: ShoppingListProducts = {
+      shoppingListId,
+      productId,
+      quantity,
+      observation: observation ?? null,
+    };
+    
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/shopping-list-add-product`,
-        {
-          shoppingListId,
-          productId,
-          quantity,
-        }
+        payload
       );
       onClose();
       setShoppingListId(null);
       setProductId(null);
       setQuantity(null);
+      setObservation("");
     } catch (error) {
       alert(error);
     }
@@ -81,7 +88,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
               {product.name}
               <form onSubmit={handleSubmit}>
                 <input
-                  style={{ width: '100px' }}
+                  style={{ width: "100px" }}
                   placeholder="Quantidade:"
                   type="number"
                   min="1"
@@ -104,6 +111,15 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
                     </option>
                   ))}
                 </select>
+                <label htmlFor="">Deseja fazer observações?</label>
+                <textarea
+                  style={{ width: "100%", height: "200px", marginTop: "3px" }}
+                  placeholder={`Observações:\nEx: preferência de marca,\npeso do alimento que deseja...`}
+                  value={observation ?? ""}
+                  onChange={(e) => setObservation(e.target.value)}
+                  name=""
+                  id=""
+                ></textarea>
                 <div className="modal-footer">
                   <button type="submit" className="btn btn-primary">
                     Salvar

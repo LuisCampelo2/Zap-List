@@ -94,7 +94,9 @@ export const SelectedList = () => {
                 }}
               >
                 {filteredProducts.map((productItem) => (
-                  <li key={productItem.id} className="list-group-item">
+                  <li
+                    key={productItem.id}
+                    className="list-group-item">
                     <input
                       className="form-check-input me-1"
                       type="checkbox"

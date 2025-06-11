@@ -19,6 +19,9 @@ const ShoppingListProduct = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    observation: {
+      type:DataTypes.TEXT
+    },
     shoppingListId: {
       type: DataTypes.INTEGER,
       allowNull: false,
