@@ -5,16 +5,15 @@
 @import "myLists";
 @import "products";
 
-
 html,
 body,
 #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Kaushan Script", cursive;
+  font-family: "Roboto", sans-serif;
 }
 
-main{
-   min-height: 100vh;
+main {
+  min-height: 100vh;
 }

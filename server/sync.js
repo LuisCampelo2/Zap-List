@@ -7,4 +7,4 @@ import ShoppingListProduct from './src/models/shoppingListProducts.js';
 User.hasMany(ShoppingList, { foreignKey: 'userId' });
 ShoppingList.belongsTo(User, { foreignKey: 'userId' });
 
-sequelize.sync({ force: true })
+sequelize.sync({ alter: true })
