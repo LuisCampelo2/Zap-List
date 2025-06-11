@@ -67,6 +67,7 @@ export const ProductsFilter = () => {
             <option value="Temperos e especiarias">Temperos e especiarias</option>
             <option value="Doces e guloseimas">Doces e guloseimas</option>
             <option value="Laticinios e ovos">Laticinios e ovos</option>
+            <option value="Outros">Outros</option>
           </select>
         </div>
       </div>

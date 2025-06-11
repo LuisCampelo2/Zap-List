@@ -23,6 +23,7 @@ const Product = sequelize.define("Product", {
       'Material de higiene',
       'Material de limpeza',
       'Itens pra cachorro',
+      'Outros',
     ],
     allowNull: false
   },

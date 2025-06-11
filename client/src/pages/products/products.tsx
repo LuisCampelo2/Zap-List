@@ -84,7 +84,6 @@ export const Products = () => {
                         style={{
                           width: "100%",
                           height: "214px",
-                          objectFit: "cover",
                           objectPosition: "center",
                         }}
                         src={`${import.meta.env.VITE_API_URL}/imgs/${
