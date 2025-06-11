@@ -12,16 +12,17 @@ const Product = sequelize.define("Product", {
   category: {
     type: DataTypes.ENUM,
     values: [
+      'Hortifruti',
+      'Carnes',
+      'Laticinios e ovos',
+      'Padaria',
+      'Temperos e especiarias',
+      'Alimentos não pereciveis',
+      'Doces e guloseimas',
+      'Bebidas',
       'Material de higiene',
       'Material de limpeza',
-      'Frutas',
-      'Legumes e verdura',
-      'Carne',
       'Itens pra cachorro',
-      'Alimentos nao pereciveis',
-      'Bebidas',
-      'Laticinios',
-      'Outros'
     ],
     allowNull: false
   },

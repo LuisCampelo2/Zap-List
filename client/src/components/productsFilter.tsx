@@ -56,16 +56,17 @@ export const ProductsFilter = () => {
             <option value="">Selecione categoria de Produtos</option>
             <option value="Material de higiene">Material de higiene</option>
             <option value="Material de limpeza">Material de limpeza</option>
-            <option value="Frutas">Frutas</option>
-            <option value="Legumes e verdura">Legumes e verdura</option>
-            <option value="Carne">Carne</option>
+            <option value="Hortifruti">Hortifruti</option>
+            <option value="Carnes">Carnes</option>
             <option value="Itens pra cachorro">Itens pra cachorro</option>
-            <option value="Alimentos nao pereciveis">
+            <option value="Alimentos não pereciveis">
               Alimentos nao pereciveis
             </option>
             <option value="Bebidas">Bebidas</option>
-            <option value="Laticinios">Laticinios</option>
-            <option value="Outros">Outros</option>
+            <option value="Padaria">Padaria</option>
+            <option value="Temperos e especiarias">Temperos e especiarias</option>
+            <option value="Doces e guloseimas">Doces e guloseimas</option>
+            <option value="Laticinios e ovos">Laticinios e ovos</option>
           </select>
         </div>
       </div>
