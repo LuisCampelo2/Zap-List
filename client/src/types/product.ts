@@ -1,10 +1,3 @@
-export type Category =
-  | "Material de higiene"
-  | "Material de limpeza"
-  | "Frutas"
-  | "Carne"
-  | "Outros";
-
 export interface Product {
   id: number;
   name: string;
@@ -12,5 +5,6 @@ export interface Product {
   category: string;
   quantity: number;
   isChecked: boolean;
-   Product: Product;
+  Product: Product;
+  observation: string | null;
 }

@@ -17,6 +17,7 @@ export const SelectedList = () => {
   );
   const [modalConfirmation, setModalConfirmation] = useState(false);
   const listId = Number(id);
+  const [modalObservation, setModalObservation] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchProdutos = async () => {
@@ -51,6 +52,10 @@ export const SelectedList = () => {
     setModalConfirmation(true);
   };
 
+  const openObservation = (productId: number) => {
+    setModalObservation((prev) => (prev === productId ? null : productId));
+  };
+
   return (
     <>
       {modalConfirmation && (
@@ -80,55 +85,83 @@ export const SelectedList = () => {
           <ProductsFilter />
           <div className="container d-flex justify-content-center">
             <div className="card">
-              <div className="card-body">
-                <Link className="btn btn-all" to="/products">
-                  Adicionar Produto
+              <div className="card-header">
+                <div className="row">
+                  <Link className="btn btn-all col-6" to="/products">
+                    Adicionar Produto
                   </Link>
-                  
-                   <ul
-                className="list-group mt-2"
-                style={{
-                  width: "300px",
-                  overflowY: "auto",
-                  maxHeight: "700px",
-                }}
-              >
-                {filteredProducts.map((productItem) => (
-                  <li
-                    key={productItem.id}
-                    className="list-group-item">
-                    <input
-                      className="form-check-input me-1"
-                      type="checkbox"
-                      name="listGroupRadio"
-                      id={`product-${productItem.id}`}
-                    />
-                    <img
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        objectFit: "cover",
-                        objectPosition: "center",
-                      }}
-                      src={`${import.meta.env.VITE_API_URL}/imgs/${
-                        productItem.Product.photo
-                      }`}
-                      alt=""
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor={`product-${productItem.id}`}
-                    >
-                      {productItem.Product.name}
-                    </label>{" "}
-                    <strong>Qntd:{productItem.quantity}</strong>
-                    <i
-                      onClick={() => handleDelete(productItem.Product.id)}
-                      className="bi bi-trash"
-                    ></i>
-                  </li>
-                ))}
-              </ul>
+                  <div className="d-flex align-items-center col-6">
+                    {filteredProducts.map((productItem) => 
+                      modalObservation === productItem.id && (
+                        <div className="alert alert-warning">
+                          <i onClick={()=>setModalObservation(null)} className="bi bi-x-lg"></i>
+                          {productItem.observation}
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="card-body">
+                <div className="row">
+                  <ul
+                    className="list-group mt-2 col-6"
+                    style={{
+                      width: "400px",
+                      overflowY: "auto",
+                      maxHeight: "700px",
+                    }}
+                  >
+                    {filteredProducts.map((productItem) => (
+                      <li
+                        key={productItem.id}
+                        className={
+                          productItem.observation
+                            ? "list-group-item bg-success d-flex align-items-center"
+                            : "list-group-item d-flex align-items-center"
+                        }
+                      >
+                        <input
+                          className="form-check-input me-1"
+                          type="checkbox"
+                          name="listGroupRadio"
+                          id={`product-${productItem.id}`}
+                        />
+                        <img
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            objectFit: "cover",
+                            objectPosition: "center",
+                          }}
+                          src={`${import.meta.env.VITE_API_URL}/imgs/${
+                            productItem.Product.photo
+                          }`}
+                          alt=""
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`product-${productItem.id}`}
+                        >
+                          {productItem.Product.name}
+                        </label>{" "}
+                        <strong>Qntd:{productItem.quantity}</strong>
+                        {productItem.observation && (
+                          <button
+                            onClick={() => openObservation(productItem.id)}
+                            className="btn"
+                          >
+                            <i className="bi bi-envelope"></i>
+                          </button>
+                        )}
+                        <i
+                          onClick={() => handleDelete(productItem.Product.id)}
+                          className="bi bi-trash"
+                        ></i>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
