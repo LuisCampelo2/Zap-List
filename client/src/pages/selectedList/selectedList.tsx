@@ -85,7 +85,6 @@ export const SelectedList = () => {
           <ProductsFilter />
           <div className="container d-flex justify-content-center">
             <div className="card">
-              <div className="card-header">
                 <div className="row">
                   <Link className="btn btn-all col-6" to="/products">
                     Adicionar Produto
@@ -101,7 +100,6 @@ export const SelectedList = () => {
                     )}
                   </div>
                 </div>
-              </div>
               <div className="card-body">
                 <div className="row">
                   <ul
