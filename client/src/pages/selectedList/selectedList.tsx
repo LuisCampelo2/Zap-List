@@ -107,7 +107,7 @@ export const SelectedList = () => {
                     style={{
                       width: "400px",
                       overflowY: "auto",
-                      maxHeight: "590px",
+                      maxHeight: "400px",
                     }}
                   >
                     {filteredProducts.map((productItem) => (
