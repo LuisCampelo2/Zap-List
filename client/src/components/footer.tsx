@@ -26,7 +26,7 @@ export const Footer = () => {
           </a>{" "}
           |
           <a
-            href="mailto:luisfilipecab@gmail.com"
+            href="mailto:zaplistbusiness@gmail.com"
           >
             Email
           </a>{" "}
