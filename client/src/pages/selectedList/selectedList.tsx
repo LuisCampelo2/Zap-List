@@ -56,6 +56,24 @@ export const SelectedList = () => {
     setModalObservation((prev) => (prev === productId ? null : productId));
   };
 
+  const handleCheckboxChange = async (id: number) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === id
+          ? { ...product, isChecked: !product.isChecked }
+          : product
+      )
+    );
+
+    try {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/api/checked/${id}`, {isChecked:true},
+        {withCredentials: true,}
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {modalConfirmation && (
@@ -85,21 +103,25 @@ export const SelectedList = () => {
           <ProductsFilter />
           <div className="container d-flex justify-content-center">
             <div className="card">
-                <div className="row">
-                  <Link className="btn btn-all col-6" to="/products">
-                    Adicionar Produto
-                  </Link>
-                  <div className="d-flex align-items-center col-6">
-                    {filteredProducts.map((productItem) => 
+              <div className="row">
+                <Link className="btn btn-all col-6" to="/products">
+                  Adicionar Produto
+                </Link>
+                <div className="d-flex align-items-center col-6">
+                  {filteredProducts.map(
+                    (productItem) =>
                       modalObservation === productItem.id && (
                         <div className="alert alert-warning">
-                          <i onClick={()=>setModalObservation(null)} className="bi bi-x-lg"></i>
+                          <i
+                            onClick={() => setModalObservation(null)}
+                            className="bi bi-x-lg"
+                          ></i>
                           {productItem.observation}
                         </div>
                       )
-                    )}
-                  </div>
+                  )}
                 </div>
+              </div>
               <div className="card-body">
                 <div className="row">
                   <ul
@@ -124,6 +146,8 @@ export const SelectedList = () => {
                           type="checkbox"
                           name="listGroupRadio"
                           id={`product-${productItem.id}`}
+                          checked={productItem.isChecked}
+                          onChange={() => handleCheckboxChange(productItem.id)}
                         />
                         <img
                           style={{
@@ -153,7 +177,7 @@ export const SelectedList = () => {
                           </button>
                         )}
                         <i
-                          onClick={() => handleDelete(productItem.Product.id)}
+                          onClick={() => handleDelete(productItem.id)}
                           className="bi bi-trash"
                         ></i>
                       </li>

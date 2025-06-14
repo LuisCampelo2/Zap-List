@@ -1,8 +1,21 @@
 import ShoppingList from "../models/shoppingList.js";
 import Product from "../models/product.js";
 import ShoppingListProduct from '../models/shoppingListProducts.js'
-import { where } from "sequelize";
 
+
+
+const updateCheck = async (req, res) => {
+  const { id } = req.params;
+  const { isChecked } = req.body;
+  try {
+    const product = await ShoppingListProduct.findByPk(id);
+
+    product.isChecked = isChecked;
+    await product.save();
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const getAllShoppingList = async (req, res) => {
   console.log(req.user)
@@ -122,4 +135,5 @@ export const shoppingListController = {
   createShoppingList,
   deleteList,
   deleteProductList,
+  updateCheck,
 };
