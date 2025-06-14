@@ -56,17 +56,19 @@ export const SelectedList = () => {
     setModalObservation((prev) => (prev === productId ? null : productId));
   };
 
-  const handleCheckboxChange = async (id: number) => {
+  const handleCheckboxChange = async (id: number, currentIsChecked: boolean) => {
+    const newIsChecked = !currentIsChecked;
+
     setProducts((prevProducts) =>
       prevProducts.map((product) =>
         product.id === id
-          ? { ...product, isChecked: !product.isChecked }
+          ? { ...product, isChecked: newIsChecked }
           : product
       )
     );
 
     try {
-      await axios.patch(`${import.meta.env.VITE_API_URL}/api/checked/${id}`, {isChecked:true},
+      await axios.patch(`${import.meta.env.VITE_API_URL}/api/checked/${id}`, {isChecked:newIsChecked},
         {withCredentials: true,}
       );
     } catch (error) {
@@ -147,7 +149,7 @@ export const SelectedList = () => {
                           name="listGroupRadio"
                           id={`product-${productItem.id}`}
                           checked={productItem.isChecked}
-                          onChange={() => handleCheckboxChange(productItem.id)}
+                          onChange={() => handleCheckboxChange(productItem.id,productItem.isChecked)}
                         />
                         <img
                           style={{
