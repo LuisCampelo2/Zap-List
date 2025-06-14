@@ -119,7 +119,7 @@ const deleteProductList = async (req, res) => {
     const deleted = await ShoppingListProduct.destroy({
       where: {
         shoppingListId: listId,
-        productId: productId,
+        id: productId,
       },
     })
      return res.status(200).json({ message: 'Produto removido da lista com sucesso' });
