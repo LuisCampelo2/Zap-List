@@ -9,10 +9,12 @@ export const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [loading, setLoading]=useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
         email,
@@ -24,6 +26,8 @@ export const RegisterPage = () => {
       navigate("/activation");
     } catch (error) {
       alert(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,8 +77,12 @@ export const RegisterPage = () => {
           </div>
           <div className="card-footer">
             <div className="row">
-              <button type="submit" className="btn btn-submit">
-                Criar Conta
+              <button
+                type="submit"
+                className="btn btn-submit"
+                disabled={loading}
+              >
+                {loading ? "Carregando..." : "Criar conta"}
               </button>
             </div>
             <div className="row">

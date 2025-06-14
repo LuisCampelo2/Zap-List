@@ -16,6 +16,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
   const [quantity, setQuantity] = useState<number | null>(null);
   const [lists, setLists] = useState<ShoppingList[]>([]);
   const [observation, setObservation] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setProductId(product.id);
@@ -41,6 +42,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     const payload: ShoppingListProducts = {
       shoppingListId,
@@ -61,6 +63,8 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
       setObservation("");
     } catch (error) {
       alert(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -121,9 +125,13 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
                   id=""
                 ></textarea>
                 <div className="modal-footer">
-                  <button type="submit" className="btn btn-primary">
-                    Salvar
-                  </button>
+                 <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? "Carregando..." : "Salvar"}
+              </button>
                 </div>
               </form>
             </div>
