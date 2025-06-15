@@ -56,20 +56,23 @@ export const SelectedList = () => {
     setModalObservation((prev) => (prev === productId ? null : productId));
   };
 
-  const handleCheckboxChange = async (id: number, currentIsChecked: boolean) => {
+  const handleCheckboxChange = async (
+    id: number,
+    currentIsChecked: boolean
+  ) => {
     const newIsChecked = !currentIsChecked;
 
     setProducts((prevProducts) =>
       prevProducts.map((product) =>
-        product.id === id
-          ? { ...product, isChecked: newIsChecked }
-          : product
+        product.id === id ? { ...product, isChecked: newIsChecked } : product
       )
     );
 
     try {
-      await axios.patch(`${import.meta.env.VITE_API_URL}/api/checked/${id}`, {isChecked:newIsChecked},
-        {withCredentials: true,}
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/api/checked/${id}`,
+        { isChecked: newIsChecked },
+        { withCredentials: true }
       );
     } catch (error) {
       console.log(error);
@@ -102,27 +105,34 @@ export const SelectedList = () => {
         </>
       ) : (
         <>
+          {modalObservation && (
+            <div className="container modal-observation">
+              <div className="card card-observation">
+                  <div className="d-flex card-header observation-header">
+                  <i
+                    onClick={() => setModalObservation(null)}
+                    className="bi bi-x-lg"
+                  ></i>
+                  Observações
+                </div>
+                <div className="card-body">
+                  {filteredProducts.map(
+                    (productItem) =>
+                      modalObservation === productItem.id && (
+                        <div>{productItem.observation}</div>
+                      )
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
           <ProductsFilter />
           <div className="container d-flex justify-content-center">
             <div className="card">
               <div className="row">
-                <Link className="btn btn-all col-6" to="/products">
+                <Link className="btn btn-all" to="/products">
                   Adicionar Produto
                 </Link>
-                <div className="d-flex align-items-center col-6">
-                  {filteredProducts.map(
-                    (productItem) =>
-                      modalObservation === productItem.id && (
-                        <div className="alert alert-warning">
-                          <i
-                            onClick={() => setModalObservation(null)}
-                            className="bi bi-x-lg"
-                          ></i>
-                          {productItem.observation}
-                        </div>
-                      )
-                  )}
-                </div>
               </div>
               <div className="card-body">
                 <div className="row">
@@ -139,7 +149,7 @@ export const SelectedList = () => {
                         key={productItem.id}
                         className={
                           productItem.observation
-                            ? "list-group-item bg-success d-flex align-items-center"
+                            ? "list-group-item observation d-flex align-items-center"
                             : "list-group-item d-flex align-items-center"
                         }
                       >
@@ -149,7 +159,12 @@ export const SelectedList = () => {
                           name="listGroupRadio"
                           id={`product-${productItem.id}`}
                           checked={productItem.isChecked}
-                          onChange={() => handleCheckboxChange(productItem.id,productItem.isChecked)}
+                          onChange={() =>
+                            handleCheckboxChange(
+                              productItem.id,
+                              productItem.isChecked
+                            )
+                          }
                         />
                         <img
                           style={{

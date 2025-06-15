@@ -1,0 +1,28 @@
+.observation {
+  background-color: rgba(245, 245, 4, 0.836);
+}
+
+.modal-observation {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+}
+
+.card-observation {
+  height: 200px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+}
+
+.observation-header {
+  background-color: rgb(255, 100, 10);
+}
