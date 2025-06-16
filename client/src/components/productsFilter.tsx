@@ -1,47 +1,52 @@
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-export const ProductsFilter = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+type ProductsFilterProps = {
+  nameFilter: string;
+  categoryFilter: string;
+  onFilterChange: (filters: { name: string; category: string }) => void;
+};
+
+export const ProductsFilter = ({
+  nameFilter,
+  categoryFilter,
+  onFilterChange,
+}: ProductsFilterProps) => {
+  const [localName, setLocalName] = useState(nameFilter);
+  const [localCategory, setLocalCategory] = useState(categoryFilter);
+
+    useEffect(() => {
+    setLocalName(nameFilter);
+  }, [nameFilter]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.value;
-
-    if (name === "") {
-      searchParams.delete("name");
-    } else {
-      searchParams.set("name", name);
-    }
-    setSearchParams(searchParams);
+    setLocalName(e.target.value)
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const category = e.target.value;
-
-    if (category === "") {
-      searchParams.delete("category");
-    } else {
-      searchParams.set("category", category);
-    }
-
-    setSearchParams(searchParams);
+    setLocalCategory(e.target.value)
   };
+
+  const handleSubmit = (e:React.FormEvent) => {
+    e.preventDefault();
+    onFilterChange({name:localName,category:localCategory})
+  }
+
   return (
     <>
       <div className="container container-filter mt-2">
         <div className="card card-filter">
           <div className="card-header card-header-filter">Buscar produto</div>
           <div className="card-body">
-            <form role="search">
+            <form onSubmit={handleSubmit} role="search">
               <div className="row">
-                <div
-                  className="container container-input"
-                >
-                  <i className="bi bi-search"></i>
+                <div className="container container-input">
+                  <i
+                    className="bi bi-search"></i>
                   <input
                     className="form-control input-search-products"
                     type="search"
                     onChange={handleInputChange}
-                    value={searchParams.get("name") || ""}
+                    value={localName}
                     placeholder="Pesquise o nome do produto..."
                     aria-label="Search"
                   />
@@ -52,7 +57,7 @@ export const ProductsFilter = () => {
                   className="form-select select-search-products"
                   aria-label="Default select example"
                   onChange={handleSelectChange}
-                  value={searchParams.get("category") || ""}
+                  value={localCategory}
                 >
                   <option value="">Selecione categoria de Produtos</option>
                   <option value="Material de higiene">
@@ -76,6 +81,13 @@ export const ProductsFilter = () => {
                   <option value="Laticinios e ovos">Laticinios e ovos</option>
                   <option value="Outros">Outros</option>
                 </select>
+              </div>
+              <div className="row">
+                <button
+                  className="btn btn-all"
+                  type="submit">
+                  Buscar...
+                </button>
               </div>
             </form>
           </div>

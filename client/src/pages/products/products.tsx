@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { type Product } from "../../types/product";
-import { useSearchParams } from "react-router-dom";
 import { ProductsFilter } from "../../components/productsFilter";
 import { Loader } from "../../components/loader";
 import { AddProductToShoppingList } from "../../components/addProductToShoppingList";
@@ -11,24 +10,26 @@ export const Products = () => {
   const [addProductModal, setAddProductModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
-  const [searchParams] = useSearchParams();
-  const categoryFilter = searchParams.get("category");
-  const nameFilter = searchParams.get("name");
+  const [filters, setFilters] = useState({ name: "", category: "" });
+  const [nameInput, setNameInput] = useState("");
 
-  function wait(delay: number) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, delay);
-    });
-  }
+  // function wait(delay: number) {
+  //   return new Promise((resolve) => {
+  //     setTimeout(resolve, delay);
+  //   });
+  // }
 
   useEffect(() => {
     setLoading(true);
     const fetchProdutos = async () => {
-      await wait(500);
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/products`,
           {
+            params: {
+              name: filters.name || undefined,
+              category: filters.category || undefined,
+            },
             withCredentials: true,
           }
         );
@@ -39,19 +40,31 @@ export const Products = () => {
         setLoading(false);
       }
     };
-
     fetchProdutos();
-  }, []);
+  }, [filters]);
 
-  const filteredProducts = products.filter((p) => {
-    const matchesCategory = categoryFilter
-      ? p.category === categoryFilter
-      : true;
-    const matchesName = nameFilter
-      ? p.name.toLowerCase().includes(nameFilter.toLowerCase())
-      : true;
-    return matchesCategory && matchesName;
-  });
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setFilters((oldFilters) => ({
+      ...oldFilters,
+      name: nameInput,
+    }));
+  }, 300);
+
+  return () => clearTimeout(timer); 
+}, [nameInput]);
+
+  const handleFilterChange = (newFilters: {
+    name: string;
+    category: string;
+  }) => {
+    setFilters((oldFilters) => ({
+      ...oldFilters,
+      category: newFilters.category,
+    }));
+    setNameInput(newFilters.name);
+  };
+
 
   const handleAddProductModal = (product: Product) => {
     setSelectedProduct(product);
@@ -70,13 +83,17 @@ export const Products = () => {
         <Loader />
       ) : (
         <>
-          <ProductsFilter />
+          <ProductsFilter
+            nameFilter={nameInput}
+            categoryFilter={filters.category}
+            onFilterChange={handleFilterChange}
+          />
           <div className="container">
-              <div className="row">
-                 <a href="#" className="upHeaderPage">
-              <i className="bi bi-arrow-up"></i>
-            </a>
-              {filteredProducts.map((productItem, index) => (
+            <div className="row">
+              <a href="#" className="upHeaderPage">
+                <i className="bi bi-arrow-up"></i>
+              </a>
+              {products.map((productItem, index) => (
                 <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
                   <div className="card">
                     <div className="card-header">
