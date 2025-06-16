@@ -17,8 +17,10 @@ export const SelectedList = () => {
   const [nameInput, setNameInput] = useState("");
   const [filters, setFilters] = useState({ name: "", category: "" });
   const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   useEffect(() => {
+    setLoadingSearch(true);
     const fetchProdutos = async () => {
       try {
         const response = await axios.get(
@@ -39,6 +41,8 @@ export const SelectedList = () => {
         console.log("Dados recebidos:", response.data);
       } catch (err) {
         console.log(err);
+      } finally {
+        setLoadingSearch(false)
       }
     };
     fetchProdutos();
@@ -137,7 +141,8 @@ export const SelectedList = () => {
           <ProductsFilter
             nameFilter={nameInput}
             categoryFilter={filters.category}
-            onFilterChange={handleFilterChange}
+              onFilterChange={handleFilterChange}
+              loading={loadingSearch}
           />
           <div className="container d-flex justify-content-center">
             <div className="card">

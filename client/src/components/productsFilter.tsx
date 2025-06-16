@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 type ProductsFilterProps = {
   nameFilter: string;
   categoryFilter: string;
+  loading:boolean
   onFilterChange: (filters: { name: string; category: string }) => void;
 };
 
@@ -10,6 +11,7 @@ export const ProductsFilter = ({
   nameFilter,
   categoryFilter,
   onFilterChange,
+  loading,
 }: ProductsFilterProps) => {
   const [localName, setLocalName] = useState(nameFilter);
   const [localCategory, setLocalCategory] = useState(categoryFilter);
@@ -85,8 +87,10 @@ export const ProductsFilter = ({
               <div className="row">
                 <button
                   className="btn btn-all"
-                  type="submit">
-                  Buscar...
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? "Buscando..." : "Buscar"}
                 </button>
               </div>
             </form>

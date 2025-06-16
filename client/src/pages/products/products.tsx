@@ -8,10 +8,11 @@ import axios from "axios";
 export const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [addProductModal, setAddProductModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [filters, setFilters] = useState({ name: "", category: "" });
   const [nameInput, setNameInput] = useState("");
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
 
   // function wait(delay: number) {
   //   return new Promise((resolve) => {
@@ -20,8 +21,10 @@ export const Products = () => {
   // }
 
   useEffect(() => {
-    setLoading(true);
     const fetchProdutos = async () => {
+      const isFirstLoad = loadingPage;
+      if (isFirstLoad) setLoadingPage(true);
+      setLoadingSearch(true);
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/products`,
@@ -37,22 +40,23 @@ export const Products = () => {
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
       } finally {
-        setLoading(false);
+       setLoadingSearch(false);
+      if (isFirstLoad) setLoadingPage(false);
       }
     };
     fetchProdutos();
-  }, [filters]);
+  }, [filters,loadingPage]);
 
   useEffect(() => {
-  const timer = setTimeout(() => {
-    setFilters((oldFilters) => ({
-      ...oldFilters,
-      name: nameInput,
-    }));
-  }, 300);
+    const timer = setTimeout(() => {
+      setFilters((oldFilters) => ({
+        ...oldFilters,
+        name: nameInput,
+      }));
+    }, 300);
 
-  return () => clearTimeout(timer); 
-}, [nameInput]);
+    return () => clearTimeout(timer);
+  }, [nameInput]);
 
   const handleFilterChange = (newFilters: {
     name: string;
@@ -64,7 +68,6 @@ export const Products = () => {
     }));
     setNameInput(newFilters.name);
   };
-
 
   const handleAddProductModal = (product: Product) => {
     setSelectedProduct(product);
@@ -79,7 +82,7 @@ export const Products = () => {
           onClose={() => setAddProductModal(false)}
         />
       )}
-      {loading ? (
+      {loadingPage ? (
         <Loader />
       ) : (
         <>
@@ -87,6 +90,7 @@ export const Products = () => {
             nameFilter={nameInput}
             categoryFilter={filters.category}
             onFilterChange={handleFilterChange}
+            loading={loadingSearch}
           />
           <div className="container">
             <div className="row">
