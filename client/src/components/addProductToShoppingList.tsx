@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 import { type Product } from "../types/product";
 import { type ShoppingList } from "../types/shoppingList";
-import { type ShoppingListProducts } from "../types/shoppingListProduct";
 import { useEffect } from "react";
 
 interface Props {
@@ -44,17 +43,15 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
     e.preventDefault();
     setLoading(true);
 
-    const payload: ShoppingListProducts = {
-      shoppingListId,
-      productId,
-      quantity,
-      observation: observation ?? null,
-    };
-    
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/shopping-list-add-product`,
-        payload
+        {
+          shoppingListId,
+          productId,
+          quantity,
+          observation,
+        }
       );
       onClose();
       setShoppingListId(null);
@@ -125,13 +122,13 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
                   id=""
                 ></textarea>
                 <div className="modal-footer">
-                 <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={loading}
-              >
-                {loading ? "Salvando..." : "Salvar"}
-              </button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={loading}
+                  >
+                    {loading ? "Salvando..." : "Salvar"}
+                  </button>
                 </div>
               </form>
             </div>
