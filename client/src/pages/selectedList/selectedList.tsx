@@ -3,14 +3,10 @@ import { useState, useEffect } from "react";
 import { type Product } from "../../types/product";
 import axios from "axios";
 import { ProductsFilter } from "../../components/productsFilter";
-import { useSearchParams } from "react-router-dom";
 import { ModalConfirmationProduct } from "../../components/modalConfirmationDeleteProduct";
 
 export const SelectedList = () => {
   const { id } = useParams();
-  const [searchParams] = useSearchParams();
-  const categoryFilter = searchParams.get("category");
-  const nameFilter = searchParams.get("name");
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null
@@ -18,6 +14,9 @@ export const SelectedList = () => {
   const [modalConfirmation, setModalConfirmation] = useState(false);
   const listId = Number(id);
   const [modalObservation, setModalObservation] = useState<number | null>(null);
+  const [nameInput, setNameInput] = useState("");
+  const [filters, setFilters] = useState({ name: "", category: "" });
+  const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProdutos = async () => {
@@ -25,27 +24,36 @@ export const SelectedList = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/list/${id}/productsList`,
           {
+            params: {
+              name: filters.name || undefined,
+              category: filters.category || undefined,
+            },
             withCredentials: true,
           }
         );
         setProducts(response.data);
+
+        if (filters.name === "" && filters.category === "") {
+          setOriginalProducts(response.data);
+        }
         console.log("Dados recebidos:", response.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchProdutos();
-  }, [id]);
+  }, [filters, id]);
 
-  const filteredProducts = products.filter((p) => {
-    const matchesCategory = categoryFilter
-      ? p.Product.category === categoryFilter
-      : true;
-    const matchesName = nameFilter
-      ? p.Product.name.toLowerCase().includes(nameFilter.toLowerCase())
-      : true;
-    return matchesCategory && matchesName;
-  });
+  const handleFilterChange = (newFilters: {
+    name: string;
+    category: string;
+  }) => {
+    setFilters({
+      name: newFilters.name,
+      category: newFilters.category,
+    });
+    setNameInput(newFilters.name);
+  };
 
   const handleDelete = (productId: number) => {
     setSelectedProductId(productId);
@@ -88,7 +96,7 @@ export const SelectedList = () => {
           onClose={() => setModalConfirmation(false)}
         />
       )}
-      {products.length === 0 ? (
+      {originalProducts.length === 0 ? (
         <>
           <div className="container">
             <div className="card">
@@ -116,7 +124,7 @@ export const SelectedList = () => {
                   Observações
                 </div>
                 <div className="card-body">
-                  {filteredProducts.map(
+                  {products.map(
                     (productItem) =>
                       modalObservation === productItem.id && (
                         <div>{productItem.observation}</div>
@@ -126,7 +134,11 @@ export const SelectedList = () => {
               </div>
             </div>
           )}
-          <ProductsFilter />
+          <ProductsFilter
+            nameFilter={nameInput}
+            categoryFilter={filters.category}
+            onFilterChange={handleFilterChange}
+          />
           <div className="container d-flex justify-content-center">
             <div className="card">
               <div className="row">
@@ -135,72 +147,76 @@ export const SelectedList = () => {
                 </Link>
               </div>
               <div className="card-body">
-                <div className="row">
-                  <ul
-                    className="list-group mt-2 col-6"
-                    style={{
-                      width: "400px",
-                      overflowY: "auto",
-                      maxHeight: "400px",
-                    }}
-                  >
-                    {filteredProducts.map((productItem) => (
-                      <li
-                        key={productItem.id}
-                        className={
-                          productItem.observation
-                            ? "list-group-item observation d-flex align-items-center"
-                            : "list-group-item d-flex align-items-center"
-                        }
-                      >
-                        <input
-                          className="form-check-input me-1"
-                          type="checkbox"
-                          name="listGroupRadio"
-                          id={`product-${productItem.id}`}
-                          checked={productItem.isChecked}
-                          onChange={() =>
-                            handleCheckboxChange(
-                              productItem.id,
-                              productItem.isChecked
-                            )
+                {products.length === 0 ? (
+                  <h1>Sem resultados</h1>
+                ) : (
+                  <div className="row">
+                    <ul
+                      className="list-group mt-2 col-6"
+                      style={{
+                        width: "400px",
+                        overflowY: "auto",
+                        maxHeight: "400px",
+                      }}
+                    >
+                      {products.map((productItem) => (
+                        <li
+                          key={productItem.id}
+                          className={
+                            productItem.observation
+                              ? "list-group-item observation d-flex align-items-center"
+                              : "list-group-item d-flex align-items-center"
                           }
-                        />
-                        <img
-                          style={{
-                            width: "40px",
-                            height: "40px",
-                            objectFit: "cover",
-                            objectPosition: "center",
-                          }}
-                          src={`${import.meta.env.VITE_API_URL}/imgs/${
-                            productItem.Product.photo
-                          }`}
-                          alt=""
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor={`product-${productItem.id}`}
                         >
-                          {productItem.Product.name}
-                        </label>{" "}
-                        <strong>Qntd:{productItem.quantity}</strong>
-                        {productItem.observation && (
-                          <button
-                            onClick={() => openObservation(productItem.id)}
-                            className="btn"
+                          <input
+                            className="form-check-input me-1"
+                            type="checkbox"
+                            name="listGroupRadio"
+                            id={`product-${productItem.id}`}
+                            checked={productItem.isChecked}
+                            onChange={() =>
+                              handleCheckboxChange(
+                                productItem.id,
+                                productItem.isChecked
+                              )
+                            }
+                          />
+                          <img
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              objectFit: "cover",
+                              objectPosition: "center",
+                            }}
+                            src={`${import.meta.env.VITE_API_URL}/imgs/${
+                              productItem.photo
+                            }`}
+                            alt=""
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor={`product-${productItem.id}`}
                           >
-                            <i className="bi bi-envelope"></i>
-                          </button>
-                        )}
-                        <i
-                          onClick={() => handleDelete(productItem.id)}
-                          className="bi bi-trash"
-                        ></i>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                            {productItem.name}
+                          </label>{" "}
+                          <strong>Qntd:{productItem.quantity}</strong>
+                          {productItem.observation && (
+                            <button
+                              onClick={() => openObservation(productItem.id)}
+                              className="btn"
+                            >
+                              <i className="bi bi-envelope"></i>
+                            </button>
+                          )}
+                          <i
+                            onClick={() => handleDelete(productItem.id)}
+                            className="bi bi-trash"
+                          ></i>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           </div>
