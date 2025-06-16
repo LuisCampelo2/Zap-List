@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 interface Props {
-  productId: number | null
-  listId:number | null
+  shoppingProductId: number | null
+  
   onClose: () => void;
 }
 
-export const ModalConfirmationProduct = ({ productId, listId, onClose }: Props) => {
+export const ModalConfirmationProduct = ({ shoppingProductId, onClose }: Props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +16,7 @@ export const ModalConfirmationProduct = ({ productId, listId, onClose }: Props) 
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/product-list-delete/${listId}/${productId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/product-list-delete/${shoppingProductId}`, {
         withCredentials:true
       })
       navigate(0);
@@ -44,7 +44,7 @@ export const ModalConfirmationProduct = ({ productId, listId, onClose }: Props) 
               ></button>
             </div>
             <div className="modal-body">
-              <p>Tem certeza que deseja excluir o produto da sual lista de compras?</p>
+              <p>Tem certeza que deseja excluir o produto da sua lista de compras?</p>
             </div>
             <div className="modal-footer">
               <button

@@ -1,22 +1,21 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { type Product } from "../../types/product";
+import { type ShoppingListProducts } from "../../types/shoppingListProduct";
 import axios from "axios";
 import { ProductsFilter } from "../../components/productsFilter";
 import { ModalConfirmationProduct } from "../../components/modalConfirmationDeleteProduct";
 
 export const SelectedList = () => {
   const { id } = useParams();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ShoppingListProducts[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null
   );
   const [modalConfirmation, setModalConfirmation] = useState(false);
-  const listId = Number(id);
   const [modalObservation, setModalObservation] = useState<number | null>(null);
   const [nameInput, setNameInput] = useState("");
   const [filters, setFilters] = useState({ name: "", category: "" });
-  const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
+  const [originalProducts, setOriginalProducts] = useState<ShoppingListProducts[]>([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
   useEffect(() => {
@@ -95,8 +94,7 @@ export const SelectedList = () => {
     <>
       {modalConfirmation && (
         <ModalConfirmationProduct
-          productId={selectedProductId}
-          listId={listId}
+          shoppingProductId={selectedProductId}
           onClose={() => setModalConfirmation(false)}
         />
       )}
@@ -194,7 +192,7 @@ export const SelectedList = () => {
                               objectPosition: "center",
                             }}
                             src={`${import.meta.env.VITE_API_URL}/imgs/${
-                              productItem.photo
+                              productItem.Product.photo
                             }`}
                             alt=""
                           />
@@ -202,7 +200,7 @@ export const SelectedList = () => {
                             className="form-check-label"
                             htmlFor={`product-${productItem.id}`}
                           >
-                            {productItem.name}
+                            {productItem.Product.name}
                           </label>{" "}
                           <strong>Qntd:{productItem.quantity}</strong>
                           {productItem.observation && (

@@ -2,7 +2,7 @@ import ShoppingList from "../models/shoppingList.js";
 import Product from "../models/product.js";
 import ShoppingListProduct from '../models/shoppingListProducts.js'
 import sequelize from "../utils/db.js";
-import { QueryTypes } from "sequelize";
+import { Op } from "sequelize";
 
 
 
@@ -78,22 +78,27 @@ const getProductsShoppingList = async (req, res) => {
   const { id } = req.params;
   const { name = '', category = '' } = req.query;
 
-  const query = `
-  SELECT * FROM ShoppingListProducts as slp
-  join Products as p ON p.id= slp.productId
-  WHERE p.name LIKE :name
-  AND (:category = '' OR p.category = :category) AND
-  slp.ShoppingListId=:id
-  ORDER BY p.category,p.name
-  `
   try {
-    const produtos = await sequelize.query(query, {
-      replacements: {
-        id,
-        name: `%${name}%`,
-        category,
+    const produtos = await ShoppingListProduct.findAll({
+      where: {
+        shoppingListId: id,
       },
-       type: QueryTypes.SELECT,
+      include: [
+        {
+          model: Product,
+          where: {
+            name: {
+              [Op.like]: `%${name}%`,
+            },
+            ...(category && { category }),
+          },
+          attributes: ["id", "name", "category", "photo"],
+        },
+      ],
+      order: [
+        [{ model: Product }, "category", "ASC"],
+        [{ model: Product }, "name", "ASC"],
+      ],
     });
     if (!produtos) {
       return res
@@ -123,13 +128,12 @@ const deleteList = async (req, res) => {
 }
 
 const deleteProductList = async (req, res) => {
-  const { listId, productId } = req.params;
+  const { id } = req.params;
 
   try {
     const deleted = await ShoppingListProduct.destroy({
       where: {
-        shoppingListId: listId,
-        id: productId,
+        id: id,
       },
     })
     return res.status(200).json({ message: 'Produto removido da lista com sucesso' });
