@@ -18,7 +18,7 @@ export const ShoppingListForm = () => {
       navigate("/lists");
       setName("");
     } catch (erro) {
-      alert(erro);
+      console.log(erro);
     }
   };
 

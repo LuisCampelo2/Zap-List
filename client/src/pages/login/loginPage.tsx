@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/userSlice";
 import { useNavigate } from "react-router-dom";
 
-
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +15,7 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/login`,
@@ -28,7 +27,7 @@ export const LoginPage = () => {
       dispatch(setUser(res.data.user));
       navigate("/");
     } catch (error) {
-      alert(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -67,13 +66,13 @@ export const LoginPage = () => {
                 className="btn btn-submit"
                 disabled={loading}
               >
-                {loading ? "Carregando..." : "Login"}
+                {loading ? "Entrando..." : "Login"}
               </button>
             </div>
             <div className="row">
-                <Link className="btn btn-all" to="/register">
-                  Criar conta
-                </Link>
+              <Link className="btn btn-all" to="/register">
+                Criar conta
+              </Link>
             </div>
           </div>
         </form>

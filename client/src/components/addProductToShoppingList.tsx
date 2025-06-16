@@ -62,7 +62,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
       setQuantity(null);
       setObservation("");
     } catch (error) {
-      alert(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -130,7 +130,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
                 className="btn btn-primary"
                 disabled={loading}
               >
-                {loading ? "Carregando..." : "Salvar"}
+                {loading ? "Salvando..." : "Salvar"}
               </button>
                 </div>
               </form>

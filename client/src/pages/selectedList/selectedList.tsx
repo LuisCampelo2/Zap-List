@@ -31,7 +31,7 @@ export const SelectedList = () => {
         setProducts(response.data);
         console.log("Dados recebidos:", response.data);
       } catch (err) {
-        alert(err);
+        console.log(err);
       }
     };
     fetchProdutos();
@@ -108,7 +108,7 @@ export const SelectedList = () => {
           {modalObservation && (
             <div className="container modal-observation">
               <div className="card card-observation">
-                  <div className="d-flex card-header observation-header">
+                <div className="d-flex card-header observation-header">
                   <i
                     onClick={() => setModalObservation(null)}
                     className="bi bi-x-lg"

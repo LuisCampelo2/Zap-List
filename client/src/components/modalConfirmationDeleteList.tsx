@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface Props {
   listId:number | null
@@ -7,7 +8,14 @@ interface Props {
 }
 export const ModalConfirmationList = ({ onClose, listId }: Props) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  // function wait(ms:number) {
+  // return new Promise(resolve => setTimeout(resolve, ms));
+  // }
+  
   const handleDelete = async () => {
+    setLoading(true);
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/list-delete/${listId}`,
           { withCredentials: true }
@@ -15,6 +23,8 @@ export const ModalConfirmationList = ({ onClose, listId }: Props) => {
       navigate(0);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
 }
   
@@ -48,8 +58,10 @@ export const ModalConfirmationList = ({ onClose, listId }: Props) => {
               <button
                 onClick={handleDelete}
                 type="button"
-                className="btn btn-success">
-                Excluir
+                className="btn btn-success"
+              disabled={loading}
+              >
+                 {loading ? "Excluindo..." : "Excluir"}
               </button>
             </div>
           </div>

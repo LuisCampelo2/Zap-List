@@ -9,7 +9,7 @@ export const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [loading, setLoading]=useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,7 +25,7 @@ export const RegisterPage = () => {
       console.log("Cadastro feito com sucesso!");
       navigate("/activation");
     } catch (error) {
-      alert(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ export const RegisterPage = () => {
                 className="btn btn-submit"
                 disabled={loading}
               >
-                {loading ? "Carregando..." : "Criar conta"}
+                {loading ? "Criando conta..." : "Criar conta"}
               </button>
             </div>
             <div className="row">
