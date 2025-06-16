@@ -1,0 +1,30 @@
+.card-filter{
+  border: 2px black solid;
+}
+.card-header-filter{
+  background-color: rgb(255, 100, 10);
+}
+
+.container-input{
+  display: flex;
+  align-items: center;
+  height: 30px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.input-search-products{
+  margin-bottom: 1px;
+  background: none;
+
+  &:focus{
+    background: none;
+    border-bottom: none;
+  }
+}
+
+.select-search-products{
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
