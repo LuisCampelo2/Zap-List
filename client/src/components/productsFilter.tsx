@@ -33,6 +33,12 @@ export const ProductsFilter = ({
     onFilterChange({name:localName,category:localCategory})
   }
 
+  const handleClearFilter = () => {
+    setLocalName('');
+    setLocalCategory('');
+    onFilterChange({ name: '', category: '' });
+  }
+
   return (
     <>
       <div className="container container-filter mt-2">
@@ -84,9 +90,16 @@ export const ProductsFilter = ({
                   <option value="Outros">Outros</option>
                 </select>
               </div>
-              <div className="row">
+              <div className="d-flex gap-2">
                 <button
-                  className="btn btn-all"
+                  type="button"
+                  onClick={handleClearFilter}
+                  className="btn btn-all flex-fill"
+                >
+                    Limpar Filtro
+                </button>
+                 <button
+                  className="btn btn-all flex-fill"
                   type="submit"
                   disabled={loading}
                 >
