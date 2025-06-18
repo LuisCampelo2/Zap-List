@@ -10,6 +10,7 @@ export const RegisterPage = () => {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,14 +66,29 @@ export const RegisterPage = () => {
                 className="form-control"
                 type="email"
               />
-
+            </div>
+            <div className="row">
               <input
                 placeholder="Senha:"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 className="form-control"
-                type="password"
+                type={showPassword ? "text" : "password"}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="btn btn-link d-flex position-absolute justify-content-end end-0"
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  width: "10px",
+                }}
+              >
+                <i
+                  className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+                ></i>
+              </button>
             </div>
           </div>
           <div className="card-footer">
