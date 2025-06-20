@@ -119,6 +119,10 @@ export const Products = () => {
                       <p className="card-text">
                         Categoria: <strong>{productItem.category}</strong>
                       </p>
+                      <p>
+                        <strong>Preço: R${productItem.price}</strong>
+                        <p>Preços podem varias por marca.</p>
+                      </p>
                       <button
                         className="btn btn-all"
                         onClick={() => handleAddProductModal(productItem)}

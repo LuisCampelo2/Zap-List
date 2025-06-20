@@ -14,6 +14,7 @@ const Product = sequelize.define("Product", {
     values: [
       'Hortifruti',
       'Carnes',
+      'Peixes',
       'Laticinios e ovos',
       'Padaria',
       'Temperos e especiarias',
@@ -27,6 +28,9 @@ const Product = sequelize.define("Product", {
     ],
     allowNull: false
   },
+  price: {
+    type:DataTypes.DOUBLE,
+  }
 },
   {
     timestamps: false,

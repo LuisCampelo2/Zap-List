@@ -76,6 +76,7 @@ export const ProductsFilter = ({
                   </option>
                   <option value="Hortifruti">Hortifruti</option>
                   <option value="Carnes">Carnes</option>
+                  <option value="Peixes">Peixes</option>
                   <option value="Itens pra cachorro">Itens pra cachorro</option>
                   <option value="Alimentos não pereciveis">
                     Alimentos nao pereciveis

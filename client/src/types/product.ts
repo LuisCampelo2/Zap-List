@@ -7,4 +7,5 @@ export interface Product {
   isChecked: boolean;
   Product: Product;
   observation: string | null;
+  price: number | null;
 }
