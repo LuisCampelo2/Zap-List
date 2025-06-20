@@ -14,6 +14,9 @@ const ShoppingList = sequelize.define("ShoppingList", {
       key: "id",
     },
   },
+  totalPrice: {
+    type: DataTypes.DECIMAL(10, 2)
+  }
 },
   {
     timestamps: false,

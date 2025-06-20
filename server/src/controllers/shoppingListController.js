@@ -3,6 +3,7 @@ import Product from "../models/product.js";
 import ShoppingListProduct from '../models/shoppingListProducts.js'
 import sequelize from "../utils/db.js";
 import { Op } from "sequelize";
+import QueryTypes from "sequelize";
 
 
 
@@ -79,7 +80,7 @@ const getProductsShoppingList = async (req, res) => {
   const { name = '', category = '' } = req.query;
 
   try {
-    const produtos = await ShoppingListProduct.findAll({
+    const products = await ShoppingListProduct.findAll({
       where: {
         shoppingListId: id,
       },
@@ -100,12 +101,40 @@ const getProductsShoppingList = async (req, res) => {
         [{ model: Product }, "name", "ASC"],
       ],
     });
-    if (!produtos) {
-      return res
-        .status(404)
-        .json({ message: "Nenhum produto encontrado para essa lista" });
-    }
-    return res.status(200).json(produtos);
+
+    const totalResult = await sequelize.query(`
+SELECT p.id, p.price, slp.quantity, (p.price * slp.quantity) AS total_item
+  FROM ShoppingListProducts as slp
+  JOIN Products p ON p.id = slp.productId
+  WHERE slp.shoppingListId = :id
+`, {
+      replacements: { id },
+      type: QueryTypes.SELECT,
+    });
+
+    console.log(totalResult);
+
+
+    const flatTotalResult = Array.isArray(totalResult[0]) ? totalResult[0] : totalResult;
+
+    const total_price = flatTotalResult.reduce((sum, item) => {
+      return sum + Number(item.total_item || 0);
+    }, 0);
+
+
+
+    await sequelize.query(`
+  UPDATE shoppinglists SET totalPrice = :totalPrice WHERE id = :id
+`, {
+      replacements: { totalPrice: total_price, id },
+    });
+
+    const updatedList = await ShoppingList.findByPk(id);
+
+    return res.status(200).json({
+      products: products || [],
+      updatedList: updatedList
+    });
   } catch (error) {
     console.error("Erro ao buscar produtos da lista:", error);
     return res.status(500).json({ message: "Erro ao buscar produtos", error });
