@@ -124,7 +124,7 @@ SELECT p.id, p.price, slp.quantity, (p.price * slp.quantity) AS total_item
 
 
     await sequelize.query(`
-  UPDATE shoppinglists SET totalPrice = :totalPrice WHERE id = :id
+  UPDATE ShoppingLists SET totalPrice = :totalPrice WHERE id = :id
 `, {
       replacements: { totalPrice: total_price, id },
     });
