@@ -1,6 +1,7 @@
 import { QueryTypes } from "sequelize";
 import sequelize from "../utils/db.js";
 import puppeteer from 'puppeteer';
+import cron from 'node-cron';
 
 const getAllProducts = async (req, res) => {
   try {
@@ -33,11 +34,15 @@ const getAllProducts = async (req, res) => {
 };
 
 const scrappingPrice = async (req, res) => {
+  await runsScraping();
+  res.send("Scraping manual executado com sucesso!");
+}
+const runScraping = async () => {
   let browser;
   try {
     browser = await puppeteer.launch();
     const page = await browser.newPage();
-    const [products] = await sequelize.query('SELECT id, name FROM products');
+    const [products] = await sequelize.query('SELECT id, name FROM Products');
 
     console.log('Produtos carregados:', products);
 
@@ -68,7 +73,7 @@ const scrappingPrice = async (req, res) => {
         const averagePrice = prices.reduce((sum, val) => sum + val, 0) / prices.length;
 
         await sequelize.query(
-          'UPDATE products SET price = ? WHERE id = ?',
+          'UPDATE Products SET price = ? WHERE id = ?',
           {
             replacements: [averagePrice.toFixed(2), product.id]
           }
@@ -87,8 +92,12 @@ const scrappingPrice = async (req, res) => {
   } finally {
     if (browser) await browser.close();
   }
-};
+}
 
+cron.schedule('0 3 * * *', async () => {
+  console.log('Rodando scraping agendado...');
+  await runScraping();
+});
 
 
 export const productController = {
