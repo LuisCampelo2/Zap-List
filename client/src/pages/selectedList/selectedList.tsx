@@ -22,6 +22,9 @@ export const SelectedList = () => {
     ShoppingListProducts[]
   >([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [modalFilter, setModalFilter] = useState(false);
 
   useEffect(() => {
     setLoadingSearch(true);
@@ -33,10 +36,13 @@ export const SelectedList = () => {
             params: {
               name: filters.name || undefined,
               category: filters.category || undefined,
+              page,
+              limit: 10,
             },
             withCredentials: true,
           }
         );
+        setTotalPages(response.data.totalPages);
         setProducts(response.data.products);
         setList(response.data.updatedList);
         if (filters.name === "" && filters.category === "") {
@@ -50,7 +56,7 @@ export const SelectedList = () => {
       }
     };
     fetchProdutos();
-  }, [filters, id]);
+  }, [page, filters, id]);
 
   const handleFilterChange = (newFilters: {
     name: string;
@@ -120,7 +126,6 @@ export const SelectedList = () => {
           </div>
         </>
       )}
-      ;
       {modalObservation && (
         <div className="container modal-observation">
           <div className="card card-observation">
@@ -143,16 +148,30 @@ export const SelectedList = () => {
         </div>
       )}
       <>
-        <ProductsFilter
-          nameFilter={nameInput}
-          categoryFilter={filters.category}
-          onFilterChange={handleFilterChange}
-          loading={loadingSearch}
-        />
-        <div className="d-flex justify-content-center">
-          <h1>Preço Estimado: R$ {list?.totalPrice}</h1>
-        </div>
+        {modalFilter && (
+          <ProductsFilter
+            nameFilter={nameInput}
+            categoryFilter={filters.category}
+            onFilterChange={handleFilterChange}
+            loading={loadingSearch}
+          />
+        )}
 
+        <div className="container d-flex gap-3 flex-column me-5">
+          <h1 className="mb-0">Preço Estimado: R$ {list?.totalPrice}</h1>
+          <div>
+            <button
+              onClick={() => setModalFilter((prev) => !prev)}
+              className="d-flex align-items-center button-filter"
+            >
+              <i className="bi bi-sliders me-2"></i>
+              <p className="mb-0">Buscar Produto</p>
+            </button>
+            <Link to="/products" className="btn btn-all">
+              <i className="bi bi-cart-plus"></i>Adicionar Produto
+            </Link>
+          </div>
+        </div>
         <div className="table-responsive">
           <table className="table border container" style={{ width: "30%" }}>
             <thead>
@@ -246,6 +265,46 @@ export const SelectedList = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="card-footer">
+          <nav aria-label="...">
+            <ul className="pagination d-flex justify-content-center">
+              <li className="page-item disabled">
+                <a className="page-link">Previous</a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" onClick={() => setPage(1)}>
+                  1
+                </a>
+              </li>
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  onClick={() => setPage(2)}
+                  aria-current="page"
+                >
+                  2
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" onClick={() => setPage(3)}>
+                  3
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" onClick={() => setPage(page + 1)}>
+                  Next
+                </a>
+              </li>
+              <li>
+                {" "}
+                <span>
+                  Página {page} de {totalPages}
+                </span>
+              </li>
+            </ul>
+          </nav>
         </div>
       </>
     </>
