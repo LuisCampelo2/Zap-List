@@ -231,7 +231,9 @@ export const SelectedList = () => {
                           </label>
                         </td>
                         <td>
-                          <strong>{productItem.quantity}</strong>
+                          <strong>{productItem.quantity}
+                             {['Carnes', 'Peixes'].includes(productItem.Product.category) ? ' KG' : ' Unidade(s)'}
+                          </strong>
                         </td>
                         <td>
                           <i
