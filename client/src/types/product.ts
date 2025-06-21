@@ -8,4 +8,5 @@ export interface Product {
   Product: Product;
   observation: string | null;
   price: number | null;
+  unitOFMeasure: number | null;
 }

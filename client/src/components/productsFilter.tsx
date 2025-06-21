@@ -83,6 +83,7 @@ export const ProductsFilter = ({
                   </option>
                   <option value="Bebidas">Bebidas</option>
                   <option value="Padaria">Padaria</option>
+                  <option value="Massas">Massas</option>
                   <option value="Temperos e especiarias">
                     Temperos e especiarias
                   </option>

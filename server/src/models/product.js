@@ -15,6 +15,7 @@ const Product = sequelize.define("Product", {
       'Hortifruti',
       'Carnes',
       'Peixes',
+      'Massas',
       'Laticinios e ovos',
       'Padaria',
       'Temperos e especiarias',
@@ -30,6 +31,14 @@ const Product = sequelize.define("Product", {
   },
   price: {
     type:DataTypes.DOUBLE,
+  },
+  unitOFMeasure: {
+    type: DataTypes.ENUM,
+    values: [
+      'KG',
+      'Unidade',
+      'Pacote'
+    ]
   }
 },
   {

@@ -120,7 +120,7 @@ export const Products = () => {
                         Categoria: <strong>{productItem.category}</strong>
                       </p>
                       <p>
-                        <strong>Preço: R${productItem.price}</strong>
+                        <strong>Preço: R${productItem.price} por {productItem.unitOFMeasure}</strong>
                         <p>Preços podem varias por marca.</p>
                       </p>
                       <button
