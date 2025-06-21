@@ -1,5 +1,6 @@
-.observation {
-  background-color: rgba(245, 245, 4, 0.836);
+.observation > td {
+  background-color: rgba(255, 255, 0, 0.3);
+  border: 1px solid rgba(255, 255, 0, 0.4);
 }
 
 .modal-observation {
@@ -26,4 +27,12 @@
 
 .observation-header {
   background-color: rgb(255, 100, 10);
+}
+
+.button-filter{
+  width: 200px;
+  height: 30px;
+  border: 2px solid black;
+  border-radius: 20px;
+  margin-bottom: 10px;
 }

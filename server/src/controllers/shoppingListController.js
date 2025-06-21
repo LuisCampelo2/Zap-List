@@ -77,10 +77,12 @@ const addProductToShopping = async (req, res) => {
 
 const getProductsShoppingList = async (req, res) => {
   const { id } = req.params;
-  const { name = '', category = '' } = req.query;
+  const { name = '', category = '', page = 1, limit = 7 } = req.query;
+  
+  const offset = (page - 1) * limit;
 
   try {
-    const products = await ShoppingListProduct.findAll({
+    const { count, rows: products } = await ShoppingListProduct.findAndCountAll({
       where: {
         shoppingListId: id,
       },
@@ -100,6 +102,8 @@ const getProductsShoppingList = async (req, res) => {
         [{ model: Product }, "category", "ASC"],
         [{ model: Product }, "name", "ASC"],
       ],
+      limit: Number(limit),
+      offset: Number(offset),
     });
 
     const totalResult = await sequelize.query(`
@@ -132,7 +136,10 @@ SELECT p.id, p.price, slp.quantity, (p.price * slp.quantity) AS total_item
     const updatedList = await ShoppingList.findByPk(id);
 
     return res.status(200).json({
-      products: products || [],
+      products:products,
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
+      currentPage: Number(page),
       updatedList: updatedList
     });
   } catch (error) {

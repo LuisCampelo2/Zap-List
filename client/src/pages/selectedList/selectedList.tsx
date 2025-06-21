@@ -10,10 +10,11 @@ export const SelectedList = () => {
   const { id } = useParams();
   const [products, setProducts] = useState<ShoppingListProducts[]>([]);
   const [list, setList] = useState<ShoppingList | null>(null);
+  const [options, setOptions] = useState<number | null>(null);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null
   );
-  const [modalConfirmation, setModalConfirmation] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
   const [modalObservation, setModalObservation] = useState<number | null>(null);
   const [nameInput, setNameInput] = useState("");
   const [filters, setFilters] = useState({ name: "", category: "" });
@@ -21,6 +22,9 @@ export const SelectedList = () => {
     ShoppingListProducts[]
   >([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [modalFilter, setModalFilter] = useState(false);
 
   useEffect(() => {
     setLoadingSearch(true);
@@ -32,14 +36,17 @@ export const SelectedList = () => {
             params: {
               name: filters.name || undefined,
               category: filters.category || undefined,
+              page,
+              limit: 10,
             },
             withCredentials: true,
           }
         );
+        setTotalPages(response.data.totalPages);
         setProducts(response.data.products);
         setList(response.data.updatedList);
         if (filters.name === "" && filters.category === "") {
-          setOriginalProducts(response.data);
+          setOriginalProducts(response.data.products);
         }
         console.log("Dados recebidos:", response.data);
       } catch (err) {
@@ -49,7 +56,7 @@ export const SelectedList = () => {
       }
     };
     fetchProdutos();
-  }, [filters, id]);
+  }, [page, filters, id]);
 
   const handleFilterChange = (newFilters: {
     name: string;
@@ -64,7 +71,7 @@ export const SelectedList = () => {
 
   const handleDelete = (productId: number) => {
     setSelectedProductId(productId);
-    setModalConfirmation(true);
+    setModalDelete(true);
   };
 
   const openObservation = (productId: number) => {
@@ -96,144 +103,217 @@ export const SelectedList = () => {
 
   return (
     <>
-      {modalConfirmation && (
+      {modalDelete && (
         <ModalConfirmationProduct
           shoppingProductId={selectedProductId}
-          onClose={() => setModalConfirmation(false)}
+          onClose={() => setModalDelete(false)}
         />
       )}
-      {originalProducts.length === 0 ? (
-        <>
-          <div className="container">
-            <div className="card">
-              <div className="card-header">
-                <h1>Esta lista está vazia</h1>
-              </div>
-              <div className="card-body d-flex justify-content-center">
-                <Link className="btn btn-all" to="/products">
-                  Adicionar Produto
-                </Link>
-              </div>
+      {modalObservation && (
+        <div className="container modal-observation">
+          <div className="card card-observation">
+            <div className="d-flex card-header observation-header">
+              <i
+                onClick={() => setModalObservation(null)}
+                className="bi bi-x-lg"
+              ></i>
+              Observações
+            </div>
+            <div className="card-body">
+              {products.map(
+                (productItem) =>
+                  modalObservation === productItem.id && (
+                    <div>{productItem.observation}</div>
+                  )
+              )}
             </div>
           </div>
-        </>
-      ) : (
-        <>
-          {modalObservation && (
-            <div className="container modal-observation">
-              <div className="card card-observation">
-                <div className="d-flex card-header observation-header">
-                  <i
-                    onClick={() => setModalObservation(null)}
-                    className="bi bi-x-lg"
-                  ></i>
-                  Observações
-                </div>
-                <div className="card-body">
-                  {products.map(
-                    (productItem) =>
-                      modalObservation === productItem.id && (
-                        <div>{productItem.observation}</div>
-                      )
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+        </div>
+      )}
+      <>
+        {modalFilter && (
           <ProductsFilter
             nameFilter={nameInput}
             categoryFilter={filters.category}
             onFilterChange={handleFilterChange}
             loading={loadingSearch}
           />
-          <div className="container d-flex justify-content-center">
-            <div className="card">
-              <div className="row">
-                <Link className="btn btn-all" to="/products">
-                  Adicionar Produto
-                </Link>
-              </div>
-              <div className="card-body">
-                {products.length === 0 ? (
-                  <h1>Sem resultados</h1>
-                ) : (
-                      <>
-                        <div className="row">
-                          <h1>Preço Estimado: R${list?.totalPrice}</h1>
-                        </div>
-                    <div className="row">
-                      <ul
-                        className="list-group mt-2 col-6"
-                        style={{
-                          width: "400px",
-                          overflowY: "auto",
-                          maxHeight: "400px",
-                        }}
-                      >
-                        {products.map((productItem) => (
-                          <li
-                            key={productItem.id}
-                            className={
-                              productItem.observation
-                                ? "list-group-item observation d-flex align-items-center"
-                                : "list-group-item d-flex align-items-center"
-                            }
-                          >
-                            <input
-                              className="form-check-input me-1"
-                              type="checkbox"
-                              name="listGroupRadio"
-                              id={`product-${productItem.id}`}
-                              checked={productItem.isChecked}
-                              onChange={() =>
-                                handleCheckboxChange(
-                                  productItem.id,
-                                  productItem.isChecked
-                                )
-                              }
-                            />
-                            <img
-                              style={{
-                                width: "40px",
-                                height: "40px",
-                                objectFit: "cover",
-                                objectPosition: "center",
-                              }}
-                              src={`${import.meta.env.VITE_API_URL}/imgs/${
-                                productItem.Product.photo
-                              }`}
-                              alt=""
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`product-${productItem.id}`}
-                            >
-                              {productItem.Product.name}
-                            </label>{" "}
-                            <strong>Qntd:{productItem.quantity}</strong>
-                            {productItem.observation && (
-                              <button
-                                onClick={() => openObservation(productItem.id)}
-                                className="btn"
-                              >
-                                <i className="bi bi-envelope"></i>
-                              </button>
-                            )}
-                            <i
-                              onClick={() => handleDelete(productItem.id)}
-                              className="bi bi-trash"
-                            ></i>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </>
-                )}
+        )}
+        {originalProducts.length === 0 ? (
+          <>
+            <div className="container">
+              <div className="card">
+                <div className="card-header">
+                  <h1>Esta lista está vazia</h1>
+                </div>
+                <div className="card-body d-flex justify-content-center">
+                  <Link className="btn btn-all" to="/products">
+                    Adicionar Produto
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        ) : products.length === 0 ? (
+          <h1>Sem resultados</h1>
+        ) : (
+          <>
+            <div className="container d-flex gap-3 flex-column me-5">
+              <h1 className="mb-0">Preço Estimado: R$ {list?.totalPrice}</h1>
+              <div>
+                <button
+                  onClick={() => setModalFilter((prev) => !prev)}
+                  className="d-flex align-items-center button-filter"
+                >
+                  <i className="bi bi-sliders me-2"></i>
+                  <p className="mb-0">Buscar Produto</p>
+                </button>
+                <Link to="/products" className="btn btn-all">
+                  <i className="bi bi-cart-plus"></i>Adicionar Produto
+                </Link>
+              </div>
+            </div>
+            <div className="table-responsive">
+              <table
+                className="table border container"
+                style={{ width: "30%" }}
+              >
+                <thead>
+                  <tr>
+                    <th style={{ width: "5%" }}>-</th>
+                    <th style={{ width: "5%" }}>-</th>
+                    <th style={{ width: "5%" }}>Nome</th>
+                    <th style={{ width: "5%" }}>Qntd/Peso</th>
+                    <th style={{ width: "5%" }}>Opções</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((productItem) => (
+                    <>
+                      <tr
+                        key={productItem.id}
+                        className={productItem.observation ? "observation" : ""}
+                      >
+                        <td>
+                          <input
+                            className="form-check-input me-1"
+                            type="checkbox"
+                            id={`product-${productItem.id}`}
+                            checked={productItem.isChecked}
+                            onChange={() =>
+                              handleCheckboxChange(
+                                productItem.id,
+                                productItem.isChecked
+                              )
+                            }
+                          />
+                        </td>
+                        <td>
+                          <img
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              objectFit: "cover",
+                              objectPosition: "center",
+                            }}
+                            src={`${import.meta.env.VITE_API_URL}/imgs/${
+                              productItem.Product.photo
+                            }`}
+                            alt=""
+                          />
+                        </td>
+                        <td>
+                          <label
+                            className="form-check-label"
+                            htmlFor={`product-${productItem.id}`}
+                          >
+                            {productItem.Product.name}
+                          </label>
+                        </td>
+                        <td>
+                          <strong>{productItem.quantity}</strong>
+                        </td>
+                        <td>
+                          <i
+                            onClick={() =>
+                              setOptions((prev) =>
+                                prev === productItem.id ? null : productItem.id
+                              )
+                            }
+                            className="bi bi-three-dots-vertical"
+                          ></i>
+                          {options === productItem.id && (
+                            <div
+                              className="d-flex justify-content-center align-items-center"
+                              style={{ gap: "2px" }}
+                            >
+                              {productItem.observation && (
+                                <button
+                                  onClick={() =>
+                                    openObservation(productItem.id)
+                                  }
+                                  className="btn btn-primary"
+                                >
+                                  <i className="bi bi-envelope"></i>
+                                </button>
+                              )}
+                              <button className="btn btn-danger">
+                                <i
+                                  onClick={() => handleDelete(productItem.id)}
+                                  className="bi bi-trash"
+                                ></i>
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    </>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="card-footer">
+              <nav aria-label="...">
+                <ul className="pagination d-flex justify-content-center">
+                  <li className="page-item disabled">
+                    <a className="page-link">Previous</a>
+                  </li>
+                  <li className="page-item">
+                    <a className="page-link" onClick={() => setPage(1)}>
+                      1
+                    </a>
+                  </li>
+                  <li className="page-item">
+                    <a
+                      className="page-link"
+                      onClick={() => setPage(2)}
+                      aria-current="page"
+                    >
+                      2
+                    </a>
+                  </li>
+                  <li className="page-item">
+                    <a className="page-link" onClick={() => setPage(3)}>
+                      3
+                    </a>
+                  </li>
+                  <li className="page-item">
+                    <a className="page-link" onClick={() => setPage(page + 1)}>
+                      Next
+                    </a>
+                  </li>
+                  <li>
+                    {" "}
+                    <span>
+                      Página {page} de {totalPages}
+                    </span>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </>
+        )}
+      </>
     </>
   );
 };
