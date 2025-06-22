@@ -231,8 +231,13 @@ export const SelectedList = () => {
                           </label>
                         </td>
                         <td>
-                          <strong>{productItem.quantity}
-                             {['Carnes', 'Peixes'].includes(productItem.Product.category) ? ' KG' : ' Unidade(s)'}
+                          <strong>
+                            {productItem.quantity}
+                            {["Carnes", "Peixes"].includes(
+                              productItem.Product.category
+                            )
+                              ? " KG"
+                              : " Unidade(s)"}
                           </strong>
                         </td>
                         <td>
@@ -274,45 +279,50 @@ export const SelectedList = () => {
                 </tbody>
               </table>
             </div>
-            <div className="card-footer">
-              <nav aria-label="...">
-                <ul className="pagination d-flex justify-content-center">
-                  <li className="page-item disabled">
-                    <a className="page-link">Previous</a>
-                  </li>
-                  <li className={`page-item ${page === 1 ? 'active': ''}`}>
-                    <a className="page-link" onClick={() => setPage(1)}>
-                      1
-                    </a>
-                  </li>
-                  <li className={`page-item ${page === 2 ? 'active': ''}`}>
-                    <a
-                      className="page-link"
-                      onClick={() => setPage(2)}
-                      aria-current="page"
-                    >
-                      2
-                    </a>
-                  </li>
-                  <li className={`page-item ${page === 3 ? 'active': ''}`}>
-                    <a className="page-link" onClick={() => setPage(3)}>
-                      3
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" onClick={() => setPage(page + 1)}>
-                      Next
-                    </a>
-                  </li>
-                  <li>
-                    {" "}
-                    <span>
-                      Página {page} de {totalPages}
-                    </span>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+            {products.length >= 10 && (
+              <div className="card-footer">
+                <nav aria-label="...">
+                  <ul className="pagination d-flex justify-content-center">
+                    <li className="page-item disabled">
+                      <a className="page-link">Previous</a>
+                    </li>
+                    <li className={`page-item ${page === 1 ? "active" : ""}`}>
+                      <a className="page-link" onClick={() => setPage(1)}>
+                        1
+                      </a>
+                    </li>
+                    <li className={`page-item ${page === 2 ? "active" : ""}`}>
+                      <a
+                        className="page-link"
+                        onClick={() => setPage(2)}
+                        aria-current="page"
+                      >
+                        2
+                      </a>
+                    </li>
+                    <li className={`page-item ${page === 3 ? "active" : ""}`}>
+                      <a className="page-link" onClick={() => setPage(3)}>
+                        3
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a
+                        className="page-link"
+                        onClick={() => setPage(page + 1)}
+                      >
+                        Next
+                      </a>
+                    </li>
+                    <li>
+                      {" "}
+                      <span>
+                        Página {page} de {totalPages}
+                      </span>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            )}
           </>
         )}
       </>
