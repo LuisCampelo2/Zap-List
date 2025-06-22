@@ -283,6 +283,16 @@ export const SelectedList = () => {
               <div className="card-footer">
                 <nav aria-label="...">
                   <ul className="pagination d-flex justify-content-center">
+                    {page !== 1 && (
+                      <li>
+                        <a
+                          className="page-link"
+                          onClick={() => setPage(page - 1)}
+                        >
+                          Voltar
+                        </a>
+                      </li>
+                    )}
                     <li className={`page-item ${page === 1 ? "active" : ""}`}>
                       <a className="page-link" onClick={() => setPage(1)}>
                         1
@@ -302,14 +312,16 @@ export const SelectedList = () => {
                         3
                       </a>
                     </li>
-                    <li className="page-item">
-                      <a
-                        className="page-link"
-                        onClick={() => setPage(page + 1)}
-                      >
-                        Próxima
-                      </a>
-                    </li>
+                    {page !== totalPages && (
+                      <li className="page-item">
+                        <a
+                          className="page-link"
+                          onClick={() => setPage(page + 1)}
+                        >
+                          Próxima
+                        </a>
+                      </li>
+                    )}
                     <li>
                       {" "}
                       <span>
