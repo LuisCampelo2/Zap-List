@@ -279,13 +279,10 @@ export const SelectedList = () => {
                 </tbody>
               </table>
             </div>
-            {products.length >= 10 && (
+            {totalPages >= 1 && (
               <div className="card-footer">
                 <nav aria-label="...">
                   <ul className="pagination d-flex justify-content-center">
-                    <li className="page-item disabled">
-                      <a className="page-link">Previous</a>
-                    </li>
                     <li className={`page-item ${page === 1 ? "active" : ""}`}>
                       <a className="page-link" onClick={() => setPage(1)}>
                         1
@@ -310,7 +307,7 @@ export const SelectedList = () => {
                         className="page-link"
                         onClick={() => setPage(page + 1)}
                       >
-                        Next
+                        Próxima
                       </a>
                     </li>
                     <li>
