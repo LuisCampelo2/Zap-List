@@ -13,7 +13,6 @@ const ShoppingListProduct = sequelize.define(
     },
     quantity: {
       type: DataTypes.INTEGER,
-      defaultValue: 1,
     },
     isChecked: {
       type: DataTypes.BOOLEAN,

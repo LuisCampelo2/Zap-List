@@ -279,7 +279,7 @@ export const SelectedList = () => {
                 </tbody>
               </table>
             </div>
-            {totalPages >= 1 && (
+            {totalPages > 1 && (
               <div className="card-footer">
                 <nav aria-label="...">
                   <ul className="pagination d-flex justify-content-center">
