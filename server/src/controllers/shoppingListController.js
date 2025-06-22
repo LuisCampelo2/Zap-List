@@ -82,19 +82,17 @@ const getProductsShoppingList = async (req, res) => {
   const offset = (page - 1) * limit;
 
   try {
-    const { count, rows: products } = await ShoppingListProduct.findAndCountAll({
-      where: {
-        shoppingListId: id,
-      },
+    const whereProduct = {
+      name: { [Op.like]: `%${name}%` },
+      ...(category && { category }),
+    };
+
+    const queryOptions = {
+      where: { shoppingListId: id },
       include: [
         {
           model: Product,
-          where: {
-            name: {
-              [Op.like]: `%${name}%`,
-            },
-            ...(category && { category }),
-          },
+          where: whereProduct,
           attributes: ["id", "name", "category", "photo"],
         },
       ],
@@ -102,9 +100,15 @@ const getProductsShoppingList = async (req, res) => {
         [{ model: Product }, "category", "ASC"],
         [{ model: Product }, "name", "ASC"],
       ],
-      limit: Number(limit),
-      offset: Number(offset),
-    });
+    };
+
+    if (!name && !category) {
+      queryOptions.limit = Number(limit);
+      queryOptions.offset = Number(offset);
+    }
+
+    const { count, rows: products } = await ShoppingListProduct.findAndCountAll(queryOptions);
+
 
     const totalResult = await sequelize.query(`
 SELECT p.id, p.price, slp.quantity, (p.price * slp.quantity) AS total_item

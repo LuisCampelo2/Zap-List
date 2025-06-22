@@ -280,12 +280,12 @@ export const SelectedList = () => {
                   <li className="page-item disabled">
                     <a className="page-link">Previous</a>
                   </li>
-                  <li className="page-item">
+                  <li className={`page-item ${page === 1 ? 'active': ''}`}>
                     <a className="page-link" onClick={() => setPage(1)}>
                       1
                     </a>
                   </li>
-                  <li className="page-item">
+                  <li className={`page-item ${page === 2 ? 'active': ''}`}>
                     <a
                       className="page-link"
                       onClick={() => setPage(2)}
@@ -294,7 +294,7 @@ export const SelectedList = () => {
                       2
                     </a>
                   </li>
-                  <li className="page-item">
+                  <li className={`page-item ${page === 3 ? 'active': ''}`}>
                     <a className="page-link" onClick={() => setPage(3)}>
                       3
                     </a>
