@@ -36,7 +36,7 @@ export const Products = () => {
           `${import.meta.env.VITE_API_URL}/api/products`,
           {
             params: {
-              name: filters.name || undefined,
+              name: filters.name.trim() || undefined,
               category: filters.category || undefined,
               listId: listId || undefined,
             },

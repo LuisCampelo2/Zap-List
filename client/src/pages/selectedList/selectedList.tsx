@@ -34,7 +34,7 @@ export const SelectedList = () => {
           `${import.meta.env.VITE_API_URL}/api/list/${id}/productsList`,
           {
             params: {
-              name: filters.name || undefined,
+              name: filters.name.trim() || undefined,
               category: filters.category || undefined,
               page,
               limit: 10,
