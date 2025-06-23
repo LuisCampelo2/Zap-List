@@ -60,6 +60,7 @@ export const LoginPage = () => {
                 value={email}
                 className="form-control"
                 type="email"
+                required
               />
             </div>
             <div className="row">
@@ -69,6 +70,7 @@ export const LoginPage = () => {
                 value={password}
                 className="form-control"
                 type={showPassword ? "text" : "password"}
+                required
               />
                 {errorMessage && (
                 <div className="alert alert-danger">{errorMessage}</div>

@@ -59,6 +59,7 @@ export const RegisterPage = () => {
                 value={name}
                 className="form-control"
                 type="text"
+                required
               />
             </div>
             <div className="row">
@@ -68,6 +69,7 @@ export const RegisterPage = () => {
                 value={lastName}
                 className="form-control"
                 type="text"
+                required
               />
             </div>
             <div className="row">
@@ -77,6 +79,7 @@ export const RegisterPage = () => {
                 value={email}
                 className="form-control"
                 type="email"
+                required
               />
             </div>
             <div className="row">
@@ -86,6 +89,7 @@ export const RegisterPage = () => {
                 value={password}
                 className="form-control"
                 type={showPassword ? "text" : "password"}
+                required
               />
               <button
                 type="button"
