@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 type ProductsFilterProps = {
   nameFilter: string;
   categoryFilter: string;
-  loading:boolean
+  loading: boolean;
   onFilterChange: (filters: { name: string; category: string }) => void;
 };
 
@@ -16,28 +16,28 @@ export const ProductsFilter = ({
   const [localName, setLocalName] = useState(nameFilter);
   const [localCategory, setLocalCategory] = useState(categoryFilter);
 
-    useEffect(() => {
+  useEffect(() => {
     setLocalName(nameFilter);
   }, [nameFilter]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalName(e.target.value)
+    setLocalName(e.target.value);
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLocalCategory(e.target.value)
+    setLocalCategory(e.target.value);
   };
 
-  const handleSubmit = (e:React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onFilterChange({name:localName,category:localCategory})
-  }
+    onFilterChange({ name: localName, category: localCategory });
+  };
 
   const handleClearFilter = () => {
-    setLocalName('');
-    setLocalCategory('');
-    onFilterChange({ name: '', category: '' });
-  }
+    setLocalName("");
+    setLocalCategory("");
+    onFilterChange({ name: "", category: "" });
+  };
 
   return (
     <>
@@ -45,11 +45,12 @@ export const ProductsFilter = ({
         <div className="card card-filter">
           <div className="card-header card-header-filter">Buscar produto</div>
           <div className="card-body">
+            <i style={{ color: "green" }} className="bi bi-circle-fill"></i>
+             Produto já adicionado na lista
             <form onSubmit={handleSubmit} role="search">
               <div className="row">
                 <div className="container container-input">
-                  <i
-                    className="bi bi-search"></i>
+                  <i className="bi bi-search"></i>
                   <input
                     className="form-control input-search-products"
                     type="search"
@@ -98,9 +99,9 @@ export const ProductsFilter = ({
                   onClick={handleClearFilter}
                   className="btn btn-all flex-fill"
                 >
-                    Limpar Filtro
+                  Limpar Filtro
                 </button>
-                 <button
+                <button
                   className="btn btn-all flex-fill"
                   type="submit"
                   disabled={loading}
@@ -109,6 +110,7 @@ export const ProductsFilter = ({
                 </button>
               </div>
             </form>
+            <div className="row"></div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { ProductsFilter } from "../../components/productsFilter";
 import { Loader } from "../../components/loader";
 import { AddProductToShoppingList } from "../../components/addProductToShoppingList";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 export const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -13,6 +14,11 @@ export const Products = () => {
   const [nameInput, setNameInput] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
+  const [productInlist, setProductInList] = useState<number[]>([]);
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const listId = params.get("listId");
 
   // function wait(delay: number) {
   //   return new Promise((resolve) => {
@@ -32,20 +38,22 @@ export const Products = () => {
             params: {
               name: filters.name || undefined,
               category: filters.category || undefined,
+              listId: listId || undefined,
             },
             withCredentials: true,
           }
         );
-        setProducts(res.data);
+        setProducts(res.data.products);
+        setProductInList(res.data.productsInList);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
       } finally {
-       setLoadingSearch(false);
-      if (isFirstLoad) setLoadingPage(false);
+        setLoadingSearch(false);
+        if (isFirstLoad) setLoadingPage(false);
       }
     };
     fetchProdutos();
-  }, [filters,loadingPage]);
+  }, [filters, loadingPage, listId]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -115,12 +123,22 @@ export const Products = () => {
                       />
                     </div>
                     <div className="card-body">
+                      {productInlist &&
+                        productInlist.includes(productItem.id) && (
+                          <i
+                            style={{ color: "green" }}
+                            className="bi bi-circle-fill"
+                          ></i>
+                        )}
                       <h5 className="card-title">{productItem.name}</h5>
                       <p className="card-text">
                         Categoria: <strong>{productItem.category}</strong>
                       </p>
                       <p>
-                        <strong>Preço: R${productItem.price} por {productItem.unitOFMeasure}</strong>
+                        <strong>
+                          Preço: R${productItem.price} por{" "}
+                          {productItem.unitOFMeasure}
+                        </strong>
                         <p>Preços podem varias por marca.</p>
                       </p>
                       <button

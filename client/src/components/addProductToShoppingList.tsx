@@ -3,6 +3,8 @@ import { useState } from "react";
 import { type Product } from "../types/product";
 import { type ShoppingList } from "../types/shoppingList";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   product: Product;
@@ -16,6 +18,11 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
   const [lists, setLists] = useState<ShoppingList[]>([]);
   const [observation, setObservation] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const listId = params.get("listId");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setProductId(product.id);
@@ -47,7 +54,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/shopping-list-add-product`,
         {
-          shoppingListId,
+          shoppingListId: shoppingListId || listId,
           productId,
           quantity,
           observation,
@@ -58,6 +65,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
       setProductId(null);
       setQuantity(null);
       setObservation("");
+      navigate(0);
     } catch (error) {
       console.log(error);
     } finally {
@@ -97,30 +105,38 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
                   value={quantity ?? ""}
                   onChange={(e) => setQuantity(+e.target.value)}
                   step="1"
+                  required
                 />
-                <h5>Selecione a lista que quer adicionar o produto</h5>
-                <select
-                  className="form-select"
-                  aria-label="Default select example"
-                  value={shoppingListId ?? ""}
-                  onChange={(e) => setShoppingListId(+e.target.value)}
-                >
-                  <option value="">Selecione a lista de Compras</option>
-                  {lists.map((list) => (
-                    <option key={list.id} value={list.id}>
-                      {list.name}
-                    </option>
-                  ))}
-                </select>
-                <label htmlFor="">Deseja fazer observações?</label>
-                <textarea
-                  style={{ width: "100%", height: "200px", marginTop: "3px" }}
-                  placeholder={`Observações:\nEx: preferência de marca,\npeso do alimento que deseja...`}
-                  value={observation ?? ""}
-                  onChange={(e) => setObservation(e.target.value)}
-                  name=""
-                  id=""
-                ></textarea>
+                {!listId && (
+                  <>
+                    <h5>Selecione a lista que quer adicionar o produto</h5>
+                    <select
+                      className="form-select"
+                      aria-label="Default select example"
+                      value={shoppingListId ?? ""}
+                      onChange={(e) => setShoppingListId(+e.target.value)}
+                      required
+                    >
+                      <option value="">Selecione a lista de Compras</option>
+                      {lists.map((list) => (
+                        <option key={list.id} value={list.id}>
+                          {list.name}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                )}
+                <div className="row">
+                  <label htmlFor="">Deseja fazer observações?</label>
+                  <textarea
+                    style={{ width: "100%", height: "200px", marginTop: "3px" }}
+                    placeholder={`Observações:\nEx: preferência de marca,\npeso do alimento que deseja...`}
+                    value={observation ?? ""}
+                    onChange={(e) => setObservation(e.target.value)}
+                    name=""
+                    id=""
+                  ></textarea>
+                </div>
                 <div className="modal-footer">
                   <button
                     type="submit"

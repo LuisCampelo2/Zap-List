@@ -5,7 +5,7 @@ import cron from 'node-cron';
 
 const getAllProducts = async (req, res) => {
   try {
-    const { name = '', category = '' } = req.query;
+    const { name = '', category = '',listId} = req.query;
 
     const query = `
     SELECT * FROM Products
@@ -27,7 +27,24 @@ const getAllProducts = async (req, res) => {
       price: p.price !== null ? Number(p.price).toFixed(2).replace('.', ',') : null
     }));
 
-    res.status(200).json(formattedProducts);
+    let productsInList = [];
+
+    if (listId) {
+       const listProductsQuery = `
+        SELECT productId FROM ShoppingListProducts
+        WHERE shoppingListId = :listId
+      `;
+       const listProducts = await sequelize.query(listProductsQuery, {
+        replacements: { listId },
+        type: QueryTypes.SELECT,
+       });
+       productsInList = listProducts.map((p) => p.productId);
+    }
+
+    res.status(200).json({
+      products:formattedProducts,
+      productsInList:productsInList,
+    });
   } catch (error) {
     res.status(500).json({ message: "Erro ao listar os produtos", error });
   }

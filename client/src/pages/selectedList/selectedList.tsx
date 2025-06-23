@@ -147,7 +147,7 @@ export const SelectedList = () => {
                   <h1>Esta lista está vazia</h1>
                 </div>
                 <div className="card-body d-flex justify-content-center">
-                  <Link className="btn btn-all" to="/products">
+                  <Link className="btn btn-all" to={`/products?listId=${id}`}>
                     Adicionar Produto
                   </Link>
                 </div>
@@ -168,7 +168,7 @@ export const SelectedList = () => {
                   <i className="bi bi-sliders me-2"></i>
                   <p className="mb-0">Buscar Produto</p>
                 </button>
-                <Link to="/products" className="btn btn-all">
+                    <Link to={`/products?listId=${id}`} className="btn btn-all">
                   <i className="bi bi-cart-plus"></i>Adicionar Produto
                 </Link>
               </div>
