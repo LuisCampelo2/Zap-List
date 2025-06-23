@@ -11,6 +11,7 @@ export const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -29,6 +30,17 @@ export const LoginPage = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          setErrorMessage(error.response.data.message || "Erro no servidor.");
+        } else if (error.request) {
+          setErrorMessage("Servidor não respondeu. Tente novamente.");
+        } else {
+          setErrorMessage("Erro inesperado. Tente novamente.");
+        }
+      } else {
+        setErrorMessage("Erro desconhecido")
+      } 
     } finally {
       setLoading(false);
     }
@@ -58,13 +70,22 @@ export const LoginPage = () => {
                 className="form-control"
                 type={showPassword ? "text" : "password"}
               />
+                {errorMessage && (
+                <div className="alert alert-danger">{errorMessage}</div>
+              )}
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="btn btn-link d-flex position-absolute justify-content-end end-0"
-                style={{textDecoration:'none',color:'black',width:'10px'}}
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  width: "10px",
+                }}
               >
-                  <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                <i
+                  className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+                ></i>
               </button>
             </div>
           </div>

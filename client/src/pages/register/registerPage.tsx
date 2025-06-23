@@ -11,6 +11,7 @@ export const RegisterPage = () => {
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,6 +28,17 @@ export const RegisterPage = () => {
       navigate("/activation");
     } catch (error) {
       console.log(error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          setErrorMessage(error.response.data.message || "Erro no servidor.");
+        } else if (error.request) {
+          setErrorMessage("Servidor não respondeu. Tente novamente.");
+        } else {
+          setErrorMessage("Erro inesperado. Tente novamente.");
+        }
+      } else {
+        setErrorMessage("Erro desconhecido")
+      } 
     } finally {
       setLoading(false);
     }
@@ -90,6 +102,9 @@ export const RegisterPage = () => {
                 ></i>
               </button>
             </div>
+             {errorMessage && (
+                <div className="alert alert-danger">{errorMessage}</div>
+              )}
           </div>
           <div className="card-footer">
             <div className="row">
