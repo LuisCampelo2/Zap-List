@@ -45,8 +45,6 @@ export const ProductsFilter = ({
         <div className="card card-filter">
           <div className="card-header card-header-filter">Buscar produto</div>
           <div className="card-body">
-            <i style={{ color: "green" }} className="bi bi-circle-fill"></i>
-             Produto já adicionado na lista
             <form onSubmit={handleSubmit} role="search">
               <div className="row">
                 <div className="container container-input">

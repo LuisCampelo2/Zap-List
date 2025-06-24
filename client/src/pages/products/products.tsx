@@ -125,10 +125,9 @@ export const Products = () => {
                     <div className="card-body">
                       {productInlist &&
                         productInlist.includes(productItem.id) && (
-                          <i
-                            style={{ color: "green" }}
-                            className="bi bi-circle-fill"
-                          ></i>
+                          <div className="alert alert-success">
+                            Produto já adicionado a lista
+                          </div>
                         )}
                       <h5 className="card-title">{productItem.name}</h5>
                       <p className="card-text">
