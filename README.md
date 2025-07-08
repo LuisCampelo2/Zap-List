@@ -1,3 +1,5 @@
+# LInk do site: https://zaplist.shop/
+
 # 🛒 Lista de Compras – Aplicação Web Full Stack
 
 Aplicação completa para **gerenciamento de listas de compras**, com autenticação, banco de dados e painel interativo. Pensada para oferecer uma experiência simples e prática ao usuário, permitindo criar múltiplas listas, buscar produtos e organizá-los com facilidade.
