@@ -48,12 +48,3 @@ Aplicação completa para **gerenciamento de listas de compras**, com autentica�
 - **Nodemailer** – Envio automático de e-mails
 
 ---
-
-## 🚀 Como rodar o projeto localmente
-
-### 1. Backend
-
-```bash
-cd server
-npm install
-npm run start
