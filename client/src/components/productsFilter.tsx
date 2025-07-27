@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 type ProductsFilterProps = {
   nameFilter: string;
@@ -15,6 +16,7 @@ export const ProductsFilter = ({
 }: ProductsFilterProps) => {
   const [localName, setLocalName] = useState(nameFilter);
   const [localCategory, setLocalCategory] = useState(categoryFilter);
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setLocalName(nameFilter);
@@ -31,6 +33,23 @@ export const ProductsFilter = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onFilterChange({ name: localName, category: localCategory });
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      if (localName) {
+        params.set("name", localName);
+      } else {
+        params.delete("name");
+      }
+
+      if (localCategory) {
+        params.set("category", localCategory);
+      } else {
+        params.delete("category");
+      }
+
+      return params;
+    });
   };
 
   const handleClearFilter = () => {

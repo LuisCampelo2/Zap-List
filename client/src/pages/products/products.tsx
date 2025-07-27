@@ -10,7 +10,6 @@ export const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [addProductModal, setAddProductModal] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
-  const [filters, setFilters] = useState({ name: "", category: "" });
   const [nameInput, setNameInput] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
@@ -19,6 +18,16 @@ export const Products = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const listId = params.get("listId");
+
+  const getFiltersFromURL = () => {
+    const params = new URLSearchParams(location.search);
+    return {
+      name: params.get("name") || "",
+      category: params.get("category") || "",
+    };
+  };
+
+  const [filters, setFilters] = useState(getFiltersFromURL);
 
   // function wait(delay: number) {
   //   return new Promise((resolve) => {
