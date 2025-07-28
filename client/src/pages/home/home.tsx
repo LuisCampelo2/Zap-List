@@ -1,22 +1,55 @@
-import videoDesktop from "../../videos/VamosAsComprasDesktop.gif";
-import videoMobile from '../../videos/VamosAsComprasMobile.gif';
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { type Product } from "../../types/product";
 
 export const HomePage = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProdutos = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/products`,
+          {
+            withCredentials: true,
+          }
+        );
+        setProducts(res.data.products);
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+      }
+    };
+
+    fetchProdutos();
+  }, []);
   return (
     <>
-      <div className="home-container">
-        <img
-          className="video-desktop"
-          src={videoDesktop}
-        />
-        <img
-          className="video-mobile"
-          src={videoMobile}
-          alt="" />
-        <Link className="btn btn-video" to="/createList">
-          Começar Agora
-        </Link>
+      <div className="container container-home">
+        <h1>O que gostaria hoje?</h1>
+        <div className="row row-home">
+          {[...new Set(products.map((p) => p.category))].map(
+            (category, index) => (
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
+                <div className="card card-home">
+                  <div className="card-body">
+                    <img
+                      style={{
+                        width: "100%",
+                        height: "214px",
+                        objectPosition: "center",
+                      }}
+                      src={`/imgs/${category}.png`}
+                      alt=""
+                    />
+                  </div>
+                  <div className="card-footer">
+                    <p key={index}>{category}</p>
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+        </div>
       </div>
     </>
   );
