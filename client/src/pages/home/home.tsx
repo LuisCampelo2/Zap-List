@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { type Product } from "../../types/product";
+import { Link } from "react-router-dom";
 
 export const HomePage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -30,22 +31,24 @@ export const HomePage = () => {
           {[...new Set(products.map((p) => p.category))].map(
             (category, index) => (
               <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
-                <div className="card card-home">
-                  <div className="card-body">
-                    <img
-                      style={{
-                        width: "100%",
-                        height: "214px",
-                        objectPosition: "center",
-                      }}
-                      src={`/imgs/${category}.png`}
-                      alt=""
-                    />
+                <Link to={`/products?category=${category}`}>
+                  <div className="card card-home">
+                    <div className="card-body">
+                      <img
+                        style={{
+                          width: "100%",
+                          height: "214px",
+                          objectPosition: "center",
+                        }}
+                        src={`/imgs/${category}.png`}
+                        alt=""
+                      />
+                    </div>
+                    <div className="card-footer">
+                      <p key={index}>{category}</p>
+                    </div>
                   </div>
-                  <div className="card-footer">
-                    <p key={index}>{category}</p>
-                  </div>
-                </div>
+                </Link>
               </div>
             )
           )}
