@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { type Product } from "../../types/product";
 import { ProductsFilter } from "../../components/productsFilter";
-import { Loader } from "../../components/loader";
 import { AddProductToShoppingList } from "../../components/addProductToShoppingList";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -99,9 +98,7 @@ export const Products = () => {
           onClose={() => setAddProductModal(false)}
         />
       )}
-      {loadingPage ? (
-        <Loader />
-      ) : (
+      
         <>
           <ProductsFilter
             nameFilter={nameInput}
@@ -162,7 +159,7 @@ export const Products = () => {
             </div>
           </div>
         </>
-      )}
+      )
     </>
   );
 };

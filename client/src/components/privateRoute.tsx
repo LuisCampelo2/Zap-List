@@ -13,7 +13,7 @@ export const PrivateRoute = () => {
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
           withCredentials: true,
         });
-        if (res.status===200) {
+        if (res.status === 200) {
           setAuthenticated(true);
         } else {
           setAuthenticated(false);
@@ -28,7 +28,7 @@ export const PrivateRoute = () => {
     checkAuth();
   }, []);
 
-  if (loading) return <Loader/>;
+  if (loading) return <Loader />;
 
   return authenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
