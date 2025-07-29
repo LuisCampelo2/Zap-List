@@ -30,25 +30,21 @@ export const HomePage = () => {
         <div className="row row-home">
           {[...new Set(products.map((p) => p.category))].map(
             (category, index) => (
-              <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
-                <Link to={`/products?category=${category}`}>
-                  <div className="card card-home">
+              <div className="col-6 col-lg-3" key={index}>
+                <div className="card card-home">
+                  <Link to={`/products?category=${category}`}>
                     <div className="card-body">
                       <img
-                        style={{
-                          width: "100%",
-                          height: "214px",
-                          objectPosition: "center",
-                        }}
+                        className="imgs-category-home"
                         src={`/imgs/${category}.png`}
                         alt=""
                       />
                     </div>
                     <div className="card-footer">
-                      <p key={index}>{category}</p>
+                      <p>{category}</p>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               </div>
             )
           )}

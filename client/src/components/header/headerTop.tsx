@@ -27,7 +27,7 @@ export const HeaderTop = () => {
         </li>
 
         <Link className="navbar-brand" to="/">
-          <img className="rounded-circle logo-img" src={logo} alt="logo" />
+          <img className="logo-img" src={logo} alt="logo" />
         </Link>
       </ul>
     </>
