@@ -30,7 +30,7 @@ export const ModalConfirmationProduct = ({ shoppingProductId, onClose }: Props) 
 
   return (
     <>
-      <div className="modal show d-block">
+      <div className="modal-delete-product modal show d-block">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

@@ -5,6 +5,7 @@ import axios from "axios";
 import { ProductsFilter } from "../../components/productsFilter";
 import { ModalConfirmationProduct } from "../../components/modalConfirmationDeleteProduct";
 import { type ShoppingList } from "../../types/shoppingList";
+import { ModalOptions } from "../../components/modalOptions";
 
 export const SelectedList = () => {
   const { id } = useParams();
@@ -101,6 +102,10 @@ export const SelectedList = () => {
     }
   };
 
+  const handleModalOptions = (productItem: number) => {
+    setOptions((prev) => (prev === productItem ? null : productItem));
+  };
+
   return (
     <>
       {modalDelete && (
@@ -168,7 +173,7 @@ export const SelectedList = () => {
                   <i className="bi bi-sliders me-2"></i>
                   <p className="mb-0">Buscar Produto</p>
                 </button>
-                    <Link to={`/products?listId=${id}`} className="btn btn-all">
+                <Link to={`/products?listId=${id}`} className="btn btn-all">
                   <i className="bi bi-cart-plus"></i>Adicionar Produto
                 </Link>
               </div>
@@ -250,27 +255,14 @@ export const SelectedList = () => {
                             className="bi bi-three-dots-vertical"
                           ></i>
                           {options === productItem.id && (
-                            <div
-                              className="d-flex justify-content-center align-items-center"
-                              style={{ gap: "2px" }}
-                            >
-                              {productItem.observation && (
-                                <button
-                                  onClick={() =>
-                                    openObservation(productItem.id)
-                                  }
-                                  className="btn btn-primary"
-                                >
-                                  <i className="bi bi-envelope"></i>
-                                </button>
-                              )}
-                              <button className="btn btn-danger">
-                                <i
-                                  onClick={() => handleDelete(productItem.id)}
-                                  className="bi bi-trash"
-                                ></i>
-                              </button>
-                            </div>
+                            <ModalOptions
+                              productId={productItem.id}
+                              handleDelete={() => handleDelete(productItem.id)}
+                              handleObservation={() =>
+                                openObservation(productItem.id)
+                              }
+                              onClose={() => handleModalOptions(productItem.id)}
+                            />
                           )}
                         </td>
                       </tr>
