@@ -30,7 +30,7 @@ export const HomePage = () => {
         <div className="row row-home">
           {[...new Set(products.map((p) => p.category))].map(
             (category, index) => (
-              <div className="col-6 col-lg-3" key={index}>
+              <div className="col-12 col-lg-3 container" key={index}>
                 <div className="card card-home">
                   <Link to={`/products?category=${category}`}>
                     <div className="card-body">
