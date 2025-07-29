@@ -51,7 +51,7 @@ export const MyLists = () => {
     <>
       {lists.length === 0 && !loading ? (
         <>
-            <div className="container">
+          <div className="container">
             <div className="card">
               <div className="card-header">
                 <h1>Voce não tem listas no momento</h1>
@@ -72,28 +72,30 @@ export const MyLists = () => {
                 <h1>Histórico de listas</h1>
               </div>
             </section>
-            <ul className="list-group">
-              {lists.map((listName, index) => (
-                <li key={index} className="list-group-item">
-                  <Link className="lists-link" to={`/lists/${listName.id}`}>
-                    {listName.name}
-                  </Link>
-                  <i
-                    onClick={() => handleDelete(listName.id)}
-                    className="bi bi-trash"
-                  ></i>
-                </li>
-              ))}
-              {modalConfirmation && (
-                <ModalConfirmationList
-                  listId={selectedList}
-                  onClose={() => setModalConfirmation(false)}
-                />
-              )}
-              </ul>
-               <Link className="btn btn-all" to="/createList">
-                  Criar Lista nova
-                </Link>
+            <div className="container">
+              <div className="row">
+                {lists.map((listName, index) => (
+                  <div key={index} className="card">
+                    <Link className="lists-link" to={`/lists/${listName.id}`}>
+                      {listName.name}
+                    </Link>
+                    <i
+                      onClick={() => handleDelete(listName.id)}
+                      className="bi bi-trash"
+                    ></i>
+                  </div>
+                ))}
+                {modalConfirmation && (
+                  <ModalConfirmationList
+                    listId={selectedList}
+                    onClose={() => setModalConfirmation(false)}
+                  />
+                )}
+              </div>
+            </div>
+            <Link className="btn btn-all" to="/createList">
+              Criar Lista nova
+            </Link>
           </>
         )
       )}
