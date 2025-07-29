@@ -30,5 +30,5 @@ export const PrivateRoute = () => {
 
   if (loading) return <Loader/>;
 
-  return authenticated ? <Outlet /> : <Navigate to="/" replace />;
+  return authenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };

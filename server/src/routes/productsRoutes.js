@@ -4,7 +4,7 @@ const router = express.Router();
 import { authMiddleWare } from '../middleware/authMiddleware.js';
 
 
-router.get('/products', authMiddleWare.middleWare, productController.getAllProducts); 
+router.get('/products', productController.getAllProducts); 
 router.get('/scrapping-price', authMiddleWare.middleWare, productController.scrappingPrice);
 
 export default router;

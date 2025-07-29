@@ -27,7 +27,7 @@ export const LoginPage = () => {
         }
       );
       dispatch(setUser(res.data.user));
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error)) {

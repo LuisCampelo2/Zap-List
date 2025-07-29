@@ -20,12 +20,13 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />}>
-            <Route index element={<LoginPage />} />
+            <Route index element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/activation" element={<ActivationAccount />} />
             <Route path="/activate/:token" element={<AcctivateAccount />} />
             <Route element={<PrivateRoute />}>
-              <Route path="/home" element={<HomePage />} />
+              
               <Route path="/lists" element={<MyLists />} />
               <Route path="/lists/:id" element={<SelectedList />} />
               <Route path="/createList" element={<ShoppingListForm />} />
