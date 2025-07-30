@@ -1,20 +1,26 @@
-.lists-link{
-  text-decoration: none;
-  color: black;
-  font-size: 30px;
+.card-lists {
+  background: repeating-linear-gradient(white, white 24px, #cce0ff 25px);
+  border-left: 5px solid red; 
+  padding: 20px;
+  margin: 20px auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  line-height: 25px;
+  border-radius: 8px;
+  height: 520px;
+  transition: transform 0.3s ease;
+
+  &:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 8pc 16px rgba(0, 0, 6, 0.2);
+  }
 }
 
-.list-group-item{
-  display: flex;
-  justify-content: space-between;
-}
-
-.bi-trash{
+.bi-trash {
   cursor: pointer;
   width: 30px;
   height: 30px;
 
-  &:hover{
+  &:hover {
     color: red;
   }
 }

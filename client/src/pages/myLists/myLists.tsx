@@ -69,20 +69,28 @@ export const MyLists = () => {
           <>
             <section>
               <div className="container text-center">
-                <h1>Histórico de listas</h1>
+                <h1>Minhas Listas</h1>
               </div>
             </section>
-            <div className="container">
+            <div className="container container-lists">
+              <Link className="btn btn-all" to="/createList">
+                Criar Lista nova
+              </Link>
               <div className="row">
                 {lists.map((listName, index) => (
-                  <div key={index} className="card">
-                    <Link className="lists-link" to={`/lists/${listName.id}`}>
-                      {listName.name}
+                  <div className="col-12 col-lg-4 container">
+                    <Link to={`/lists/${listName.id}`}>
+                      <div key={index} className="card card-lists">
+                        <h1>{listName.name}</h1>
+                        <h1>Clique para ver mais</h1>
+                      </div>
                     </Link>
-                    <i
+                    <button
+                      className="btn-danger"
                       onClick={() => handleDelete(listName.id)}
-                      className="bi bi-trash"
-                    ></i>
+                    >
+                      Excluir Lista
+                    </button>
                   </div>
                 ))}
                 {modalConfirmation && (
@@ -93,9 +101,6 @@ export const MyLists = () => {
                 )}
               </div>
             </div>
-            <Link className="btn btn-all" to="/createList">
-              Criar Lista nova
-            </Link>
           </>
         )
       )}
