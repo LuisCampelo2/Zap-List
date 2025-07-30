@@ -180,7 +180,7 @@ export const SelectedList = () => {
             </div>
             <div className="table-responsive">
               <table
-                className="table border container"
+                className="table container table-container"
                 style={{ width: "30%" }}
               >
                 <thead>
@@ -257,6 +257,7 @@ export const SelectedList = () => {
                           {options === productItem.id && (
                             <ModalOptions
                               productId={productItem.id}
+                              product={productItem}
                               handleDelete={() => handleDelete(productItem.id)}
                               handleObservation={() =>
                                 openObservation(productItem.id)

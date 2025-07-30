@@ -1,3 +1,14 @@
+.table-container{
+  border-left: 5px solid red; 
+  padding: 20px;
+  margin: 20px auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  line-height: 25px;
+  border-radius: 8px;
+  height: 520px;
+  transition: transform 0.3s ease;
+}
+
 .observation > td {
   background-color: rgba(255, 255, 0, 0.3);
   border: 1px solid rgba(255, 255, 0, 0.4);
