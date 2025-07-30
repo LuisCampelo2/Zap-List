@@ -5,6 +5,19 @@ export const HomePage = () => {
     <>
       <div className="container container-home">
         <h1>O que gostaria hoje?</h1>
+        <div className="d-flex gap-3">
+          <Link to={"/lists"}>
+            <button className="btn btn-all">
+              Ver Minhas listas de compras
+            </button>
+          </Link>
+          <Link to={"/products"}>
+            <button className="btn btn-all">
+              Ver todos os produtos disponiveis
+            </button>
+          </Link>
+        </div>
+
         <div className="row row-home">
           <div className="col-12 col-lg-3 container">
             <div className="card card-home">
