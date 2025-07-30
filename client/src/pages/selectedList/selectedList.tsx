@@ -254,17 +254,23 @@ export const SelectedList = () => {
                             }
                             className="bi bi-three-dots-vertical"
                           ></i>
-                          {options === productItem.id && (
-                            <ModalOptions
-                              productId={productItem.id}
-                              product={productItem}
-                              handleDelete={() => handleDelete(productItem.id)}
-                              handleObservation={() =>
-                                openObservation(productItem.id)
-                              }
-                              onClose={() => handleModalOptions(productItem.id)}
-                            />
-                          )}
+                          {options === productItem.id &&
+                            !modalObservation &&
+                            !modalDelete && (
+                              <ModalOptions
+                                productId={productItem.id}
+                                product={productItem}
+                                handleDelete={() =>
+                                  handleDelete(productItem.id)
+                                }
+                                handleObservation={() =>
+                                  openObservation(productItem.id)
+                                }
+                                onClose={() =>
+                                  handleModalOptions(productItem.id)
+                                }
+                              />
+                            )}
                         </td>
                       </tr>
                     </>
