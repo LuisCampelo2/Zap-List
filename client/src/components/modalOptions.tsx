@@ -17,7 +17,7 @@ export const ModalOptions = ({
 }: OptionsProps) => {
   return (
     <>
-      <div className="modal show d-block">
+      <div className="modal">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
