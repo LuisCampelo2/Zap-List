@@ -2,50 +2,59 @@ import { QueryTypes } from "sequelize";
 import sequelize from "../utils/db.js";
 import puppeteer from 'puppeteer';
 import cron from 'node-cron';
+import Product from "../models/product.js";
+import { Op } from 'sequelize';
 
 const getAllProducts = async (req, res) => {
   try {
-    const { name = '', category = '',listId} = req.query;
+    const { name = '', category = '', listId, page = 1, limit = 20 } = req.query;
 
-    const query = `
-    SELECT * FROM Products
-    WHERE name LIKE :name
-    AND (:category = '' OR category= :category)
-    ORDER BY category, name
-    `;
+    const offset = (page - 1) * Number(limit);
 
-    const products = await sequelize.query(query, {
-      replacements: {
-        name: `%${name}%`,
-        category,
-      },
-      type: QueryTypes.SELECT,
+    const where = {
+       name: { [Op.like]: `%${name}%` },
+            ...(category && { category }),
+    };
+
+
+    const { count, rows: products } = await Product.findAndCountAll({
+      where,
+      limit: Number(limit),
+      offset: Number(offset),
+      order: [["category", "ASC"], ["name", "ASC"]],
     });
 
-    const formattedProducts = products.map(p => ({
-      ...p,
-      price: p.price !== null ? Number(p.price).toFixed(2).replace('.', ',') : null
-    }));
-
+      const formattedProducts = products.map((p) => ({
+      ...p.toJSON(),
+      price:
+        p.price !== null
+          ? Number(p.price).toFixed(2).replace(".", ",")
+          : null,
+      }));
+    
     let productsInList = [];
 
     if (listId) {
-       const listProductsQuery = `
+      const listProductsQuery = `
         SELECT productId FROM ShoppingListProducts
         WHERE shoppingListId = :listId
       `;
-       const listProducts = await sequelize.query(listProductsQuery, {
+      const listProducts = await sequelize.query(listProductsQuery, {
         replacements: { listId },
         type: QueryTypes.SELECT,
-       });
-       productsInList = listProducts.map((p) => p.productId);
+      });
+      productsInList = listProducts.map((p) => p.productId);
     }
 
     res.status(200).json({
-      products:formattedProducts,
-      productsInList:productsInList,
+      products: formattedProducts,
+      productsInList: productsInList,
+      totalItems: count,
+      totalPages: Math.ceil(count / Number(limit)),
+      currentPage: Number(page),
     });
   } catch (error) {
+    console.error("Erro ao listar os produtos:", error);
     res.status(500).json({ message: "Erro ao listar os produtos", error });
   }
 };

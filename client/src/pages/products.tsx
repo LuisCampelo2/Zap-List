@@ -13,6 +13,8 @@ export const Products = () => {
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [productInlist, setProductInList] = useState<number[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -47,21 +49,27 @@ export const Products = () => {
               name: filters.name.trim() || undefined,
               category: filters.category || undefined,
               listId: listId || undefined,
+              page,
+              limit: 20,
             },
             withCredentials: true,
           }
         );
+        setTotalPages(res.data.totalPages);
         setProducts(res.data.products);
         setProductInList(res.data.productsInList);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
+        if (axios.isAxiosError(error)) {
+          console.error("Axios error:", error.response?.data || error.message);
+        }
       } finally {
         setLoadingSearch(false);
         if (isFirstLoad) setLoadingPage(false);
       }
     };
     fetchProdutos();
-  }, [filters, loadingPage, listId]);
+  }, [loadingPage, listId, page]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -98,67 +106,119 @@ export const Products = () => {
           onClose={() => setAddProductModal(false)}
         />
       )}
-      
-        <>
-          <ProductsFilter
-            nameFilter={nameInput}
-            categoryFilter={filters.category}
-            onFilterChange={handleFilterChange}
-            loading={loadingSearch}
-          />
-          <div className="container">
-            <div className="row">
-              <a href="#" className="upHeaderPage">
-                <i className="bi bi-arrow-up"></i>
-              </a>
-              {products.map((productItem, index) => (
-                <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
-                  <div className="card">
-                    <div className="card-header">
-                      <img
-                        style={{
-                          width: "100%",
-                          height: "214px",
-                          objectPosition: "center",
-                        }}
-                        src={`${import.meta.env.VITE_API_URL}/imgs/${
-                          productItem.photo
-                        }`}
-                        className="card-img-top"
-                        alt={productItem.name}
-                      />
-                    </div>
-                    <div className="card-body">
-                      {productInlist &&
-                        productInlist.includes(productItem.id) && (
-                          <div className="alert alert-success">
-                            Produto já adicionado a lista
-                          </div>
-                        )}
-                      <h5 className="card-title">{productItem.name}</h5>
-                      <p className="card-text">
-                        Categoria: <strong>{productItem.category}</strong>
-                      </p>
-                      <p>
-                        <strong>
-                          Preço: R${productItem.price} por{" "}
-                          {productItem.unitOFMeasure}
-                        </strong>
-                        <p>Preços podem varias por marca.</p>
-                      </p>
-                      <button
-                        className="btn btn-all"
-                        onClick={() => handleAddProductModal(productItem)}
-                      >
-                        Adicionar a lista
-                      </button>
-                    </div>
+      <>
+        <ProductsFilter
+          nameFilter={nameInput}
+          categoryFilter={filters.category}
+          onFilterChange={handleFilterChange}
+          loading={loadingSearch}
+        />
+        <div className="container">
+          <div className="row">
+            <a href="#" className="upHeaderPage">
+              <i className="bi bi-arrow-up"></i>
+            </a>
+            {products.map((productItem, index) => (
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={index}>
+                <div className="card">
+                  <div className="card-header">
+                    <img
+                      style={{
+                        width: "100%",
+                        height: "214px",
+                        objectPosition: "center",
+                      }}
+                      src={`${import.meta.env.VITE_API_URL}/imgs/${
+                        productItem.photo
+                      }`}
+                      className="card-img-top"
+                      alt={productItem.name}
+                    />
+                  </div>
+                  <div className="card-body">
+                    {productInlist &&
+                      productInlist.includes(productItem.id) && (
+                        <div className="alert alert-success">
+                          Produto já adicionado a lista
+                        </div>
+                      )}
+                    <h5 className="card-title">{productItem.name}</h5>
+                    <p className="card-text">
+                      Categoria: <strong>{productItem.category}</strong>
+                    </p>
+                    <p>
+                      <strong>
+                        Preço: R${productItem.price} por{" "}
+                        {productItem.unitOFMeasure}
+                      </strong>
+                      <p>Preços podem varias por marca.</p>
+                    </p>
+                    <button
+                      className="btn btn-all"
+                      onClick={() => handleAddProductModal(productItem)}
+                    >
+                      Adicionar a lista
+                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-        </>
+          {totalPages > 1 && (
+            <div className="card-footer">
+              <nav aria-label="...">
+                <ul className="pagination d-flex justify-content-center">
+                  {page !== 1 && (
+                    <li>
+                      <a
+                        className="page-link"
+                        onClick={() => setPage(page - 1)}
+                      >
+                        Voltar
+                      </a>
+                    </li>
+                  )}
+                  <li className={`page-item ${page === 1 ? "active" : ""}`}>
+                    <a className="page-link" onClick={() => setPage(1)}>
+                      1
+                    </a>
+                  </li>
+                  <li className={`page-item ${page === 2 ? "active" : ""}`}>
+                    <a
+                      className="page-link"
+                      onClick={() => setPage(2)}
+                      aria-current="page"
+                    >
+                      2
+                    </a>
+                  </li>
+                  <li className={`page-item ${page === 3 ? "active" : ""}`}>
+                    <a className="page-link" onClick={() => setPage(3)}>
+                      3
+                    </a>
+                  </li>
+                  {page !== totalPages && (
+                    <li className="page-item">
+                      <a
+                        className="page-link"
+                        onClick={() => setPage(page + 1)}
+                      >
+                        Próxima
+                      </a>
+                    </li>
+                  )}
+                  <li>
+                    {" "}
+                    <span>
+                      Página {page} de {totalPages}
+                    </span>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          )}
+        </div>
+      </>
       )
     </>
   );
