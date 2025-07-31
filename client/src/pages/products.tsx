@@ -69,6 +69,7 @@ export const Products = () => {
       }
     };
     fetchProdutos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingPage, listId, page]);
 
   useEffect(() => {
@@ -115,7 +116,14 @@ export const Products = () => {
         />
         <div className="container">
           <div className="row">
-            <a href="#" className="upHeaderPage">
+            <a
+              href="#"
+              className="upHeaderPage"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            >
               <i className="bi bi-arrow-up"></i>
             </a>
             {products.map((productItem, index) => (
