@@ -1,11 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { type ShoppingListProducts } from "../../types/shoppingListProduct";
+import { type ShoppingListProducts } from "../types/shoppingListProduct";
 import axios from "axios";
-import { ProductsFilter } from "../../components/productsFilter";
-import { ModalConfirmationProduct } from "../../components/modalConfirmationDeleteProduct";
-import { type ShoppingList } from "../../types/shoppingList";
-import { ModalOptions } from "../../components/modalOptions";
+import { ProductsFilter } from "../components/productsFilter";
+import { ModalConfirmationProduct } from "../components/modalConfirmationDeleteProduct";
+import { type ShoppingList } from "../types/shoppingList";
+import { ModalOptions } from "../components/modalOptions";
 
 export const SelectedList = () => {
   const { id } = useParams();

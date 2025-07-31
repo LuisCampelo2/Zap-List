@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { type ShoppingList } from "../../types/shoppingList";
+import { type ShoppingList } from "../types/shoppingList";
 
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { ModalConfirmationList } from "../../components/modalConfirmationDeleteList";
+import { ModalConfirmationList } from "../components/modalConfirmationDeleteList";
 
 export const MyLists = () => {
   const [lists, setLists] = useState<ShoppingList[]>([]);

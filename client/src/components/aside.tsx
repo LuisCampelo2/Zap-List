@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { type RootState } from "../../store/store";
+import { type RootState } from "../store/store";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setUser, clearUser } from "../../slices/userSlice";
+import { setUser, clearUser } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 

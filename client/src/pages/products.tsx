@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { type Product } from "../../types/product";
-import { ProductsFilter } from "../../components/productsFilter";
-import { AddProductToShoppingList } from "../../components/addProductToShoppingList";
+import { type Product } from "../types/product";
+import { ProductsFilter } from "../components/productsFilter";
+import { AddProductToShoppingList } from "../components/addProductToShoppingList";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 

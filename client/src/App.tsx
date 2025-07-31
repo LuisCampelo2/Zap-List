@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { HeaderTop } from "./components/header/headerTop";
+import { HeaderTop } from "./components/headerTop";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./styles/main.scss";

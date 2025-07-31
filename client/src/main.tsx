@@ -1,18 +1,18 @@
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.tsx";
-import { HomePage } from "./pages/home/home.tsx";
-import { MyLists } from "./pages/myLists/myLists.tsx";
-import { Products } from "./pages/products/products.tsx";
-import { ShoppingListForm } from "./pages/create-list/createList.tsx";
-import { SelectedList } from "./pages/selectedList/selectedList.tsx";
+import { HomePage } from "./pages/home.tsx";
+import { MyLists } from "./pages/myLists.tsx";
+import { Products } from "./pages/products.tsx";
+import { ShoppingListForm } from "./pages/createList.tsx";
+import { SelectedList } from "./pages/selectedList.tsx";
 import { PrivateRoute } from "./components/privateRoute.tsx";
-import { LoginPage } from "./pages/login/loginPage.tsx";
-import { RegisterPage } from "./pages/register/registerPage.tsx";
+import { LoginPage } from "./pages/loginPage.tsx";
+import { RegisterPage } from "./pages/registerPage.tsx";
 import { store } from "./store/store.ts";
 import { Provider } from "react-redux";
-import { AcctivateAccount } from "./pages/acctivateAccount/acctivateAccount.tsx";
-import { ActivationAccount } from "./pages/acctivationAccount/acctivationAccount.tsx";
+import { AcctivateAccount } from "./pages/acctivateAccount.tsx";
+import { ActivationAccount } from "./pages/acctivationAccount.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <>
@@ -26,7 +26,6 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/activation" element={<ActivationAccount />} />
             <Route path="/activate/:token" element={<AcctivateAccount />} />
             <Route element={<PrivateRoute />}>
-              
               <Route path="/lists" element={<MyLists />} />
               <Route path="/lists/:id" element={<SelectedList />} />
               <Route path="/createList" element={<ShoppingListForm />} />
