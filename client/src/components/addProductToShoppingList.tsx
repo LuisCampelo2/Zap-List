@@ -88,7 +88,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">
+            <div className="modal-body d-block">
               <img
                 style={{ objectFit: "cover", width: "100%" }}
                 src={`${import.meta.env.VITE_API_URL}/imgs/${product.photo}`}
