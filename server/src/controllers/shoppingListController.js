@@ -24,7 +24,8 @@ const getAllShoppingList = async (req, res) => {
   console.log(req.user)
   try {
     const shoppingList = await ShoppingList.findAll({
-      where: { userId: req.user.id }
+      where: { userId: req.user.id },
+      order:[['id','DESC']]
     });
     res.status(200).json(shoppingList);
   } catch (error) {
