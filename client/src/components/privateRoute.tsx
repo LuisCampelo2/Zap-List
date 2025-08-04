@@ -19,7 +19,34 @@ export const PrivateRoute = () => {
           setAuthenticated(false);
         }
       } catch (err) {
-        console.log(err);
+        if (axios.isAxiosError(err)) {
+          if (err.response?.status === 401) {
+            try {
+              await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/refresh`,
+                null,
+                {
+                  withCredentials: true,
+                }
+              );
+
+              const retry = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/me`,
+                {
+                  withCredentials: true,
+                }
+              );
+
+              if (retry.status === 200) {
+                setAuthenticated(true);
+                return;
+              }
+            } catch (refreshError) {
+              console.log("Erro ao tentar renovar token:", refreshError);
+            }
+          }
+        }
+
         setAuthenticated(false);
       } finally {
         setLoading(false);

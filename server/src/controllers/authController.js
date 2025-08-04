@@ -77,6 +77,7 @@ const login = async (req, res) => {
     const normalizedUser = userService.normalizedUser(user);
 
     const accessToken = jwtService.sign(normalizedUser);
+    const refreshToken = jwtService.signRefresh(normalizedUser);
 
     res.cookie('accessToken', accessToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -85,7 +86,20 @@ const login = async (req, res) => {
       httpOnly: true,
       domain: process.env.FRONTEND_DOMAIN,
     })
-    return res.json({ accessToken, user: normalizedUser, message: 'Login realizado com sucesso' });
+
+     res.cookie('refreshToken', refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      domain: process.env.FRONTEND_DOMAIN,
+     });
+    
+    return res.json({
+      accessToken,
+      user: normalizedUser,
+      message: 'Login realizado com sucesso'
+    });
 
   } catch (error) {
     console.log(error);
@@ -108,9 +122,48 @@ const logout = async (req, res) => {
   }
 }
 
+const refresh = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'Refresh token não encontrado' });
+    }
+
+    const decoded = jwtService.verifyRefresh(refreshToken);
+
+    if (!decoded) {
+      return res.status(403).json({ message: 'Refresh token inválido ou expirado' });
+    }
+
+    const user = await userService.findByEmail(decoded.email);
+
+    if (!user || user.activationToken !== null) {
+      return res.status(401).json({ message: 'Usuário inválido ou inativo' });
+    }
+
+    const normalizedUser = userService.normalizedUser(user);
+    const newAccessToken = jwtService.sign(normalizedUser);
+
+    res.cookie('accessToken', newAccessToken, {
+      maxAge: 15 * 60 * 1000,
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      domain: process.env.FRONTEND_DOMAIN,
+    });
+
+    return res.json({ accessToken: newAccessToken, user: normalizedUser });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Erro ao renovar token' });
+  }
+};
 export const authController = {
   register,
   activate,
   login,
   logout,
+  refresh,
 }
