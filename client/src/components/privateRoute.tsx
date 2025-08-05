@@ -47,6 +47,7 @@ export const PrivateRoute = () => {
             }
           }
         }
+        setAuthenticated(false);
       } finally {
         setLoading(false);
       }
