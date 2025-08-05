@@ -3,6 +3,7 @@ import type React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { registerApi } from "../api/auth";
 
 export const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -18,12 +19,7 @@ export const RegisterPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
-        email,
-        password,
-        name,
-        lastName,
-      });
+      registerApi(email, password, name, lastName);
       console.log("Cadastro feito com sucesso!");
       navigate("/activation");
     } catch (error) {
