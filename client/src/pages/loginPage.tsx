@@ -5,7 +5,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
+import { loginApi } from "../api/auth";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +20,7 @@ export const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await login(email, password);
+      const res = await loginApi(email, password);
       dispatch(setUser(res.data.user));
       navigate("/");
     } catch (error) {

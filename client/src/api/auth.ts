@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const login = async (email: string, password: string) => {
+export const loginApi = async (email: string, password: string) => {
   const res = await axios.post(
     `${import.meta.env.VITE_API_URL}/api/login`,
     { email, password },
@@ -9,4 +9,10 @@ export const login = async (email: string, password: string) => {
     }
   );
   return res;
+};
+
+export const logoutApi = async () => {
+  await axios.post(`${import.meta.env.VITE_API_URL}/api/logout`, null, {
+    withCredentials: true,
+  });
 };

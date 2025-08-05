@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setUser, clearUser } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { logoutApi } from "../api/auth";
 
 type Props = {
   onClose: () => void;
@@ -32,9 +33,7 @@ export const Aside = ({ onClose }: Props) => {
 
   const logout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/logout`, null, {
-        withCredentials: true,
-      });
+      logoutApi();
       dispatch(clearUser());
       navigate("/");
     } catch (error) {
