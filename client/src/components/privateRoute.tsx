@@ -42,12 +42,11 @@ export const PrivateRoute = () => {
                 return;
               }
             } catch (refreshError) {
+              setAuthenticated(false);
               console.log("Erro ao tentar renovar token:", refreshError);
             }
           }
         }
-
-        setAuthenticated(false);
       } finally {
         setLoading(false);
       }
