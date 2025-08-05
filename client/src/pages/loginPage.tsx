@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { login } from "../api/auth";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -19,13 +20,7 @@ export const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/login`,
-        { email, password },
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await login(email, password);
       dispatch(setUser(res.data.user));
       navigate("/");
     } catch (error) {
