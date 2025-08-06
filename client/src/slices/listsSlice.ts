@@ -17,6 +17,19 @@ export const fetchLists = createAsyncThunk("lists/fetchLists", async () => {
   }
 });
 
+export const deleteList = createAsyncThunk(
+  "list/deleteList",
+  async (listId: number | null) => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/list-delete/${listId}`,
+        { withCredentials: true }
+      );
+    } catch (error) {
+      console.log(error);
+    } 
+  }
+);
 
 interface ListsState {
   lists: ShoppingList[];
@@ -33,11 +46,7 @@ const initialState: ListsState = {
 const listsSlice = createSlice({
   name: "lists",
   initialState,
-  reducers: {
-    setLists: (state, action)=>{
-      state.lists = action.payload;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchLists.pending, (state) => {
@@ -55,5 +64,4 @@ const listsSlice = createSlice({
   },
 });
 
-export const { setLists } = listsSlice.actions;
 export default listsSlice.reducer;
