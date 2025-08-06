@@ -1,4 +1,4 @@
-import {createAsyncThunk,createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { type Product } from "../types/product";
 
@@ -9,15 +9,18 @@ type Filters = {
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchPorducts",
-  async ({
-    filters,
-    listId,
-    page,
-  }: {
-    filters: Filters;
-    listId: number;
-    page: number;
-  }) => {
+  async (
+    {
+      filters,
+      listId,
+      page,
+    }: {
+      filters: Filters;
+      listId: number;
+      page: number;
+    },
+    thunkAPI
+  ) => {
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/products`,
@@ -35,12 +38,16 @@ export const fetchProducts = createAsyncThunk(
       return {
         products: res.data.products,
         totalPages: res.data.totalPages,
-        productsInlist:res.data.productsInList,
-      }
+        productsInlist: res.data.productsInList,
+      };
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
       if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data || error.message);
+        if (error.response) {
+          return thunkAPI.rejectWithValue(
+            error.response?.data.message || "Erro no servidor:"
+          );
+        }
       }
     }
   }
@@ -58,10 +65,10 @@ interface ProductsState {
 
 const initialState: ProductsState = {
   products: [],
-  productInList:[],
+  productInList: [],
   totalPages: 0,
   page: 1,
-  limit:20,
+  limit: 20,
   error: null,
   loading: false,
 };
