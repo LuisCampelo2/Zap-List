@@ -1,32 +1,30 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteProductInList } from "../slices/listProductsSlice";
+import { type RootState, type AppDispatch } from "../store/store";
 
 interface Props {
-  shoppingProductId: number | null
-  
+  shoppingProductId: number | null;
+
   onClose: () => void;
 }
 
-export const ModalConfirmationProduct = ({ shoppingProductId, onClose }: Props) => {
+export const ModalConfirmationProduct = ({
+  shoppingProductId,
+  onClose,
+}: Props) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const loading = useSelector((state: RootState) => state.listProduct.loading);
+  const dispatch = useDispatch<AppDispatch>();
 
-  
   const handleDelete = async () => {
-    setLoading(true);
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/product-list-delete/${shoppingProductId}`, {
-        withCredentials:true
-      })
+    const res = await dispatch(
+      deleteProductInList({ shoppingProductId: Number(shoppingProductId) })
+    );
+    if (deleteProductInList.fulfilled.match(res)) {
       navigate(0);
-    } catch (error) {
-      console.log(error);
-    } finally {
-       setLoading(false);
     }
-    
-  }
+  };
 
   return (
     <>
@@ -44,7 +42,10 @@ export const ModalConfirmationProduct = ({ shoppingProductId, onClose }: Props) 
               ></button>
             </div>
             <div className="modal-body">
-              <p>Tem certeza que deseja excluir o produto da sua lista de compras?</p>
+              <p>
+                Tem certeza que deseja excluir o produto da sua lista de
+                compras?
+              </p>
             </div>
             <div className="modal-footer">
               <button
@@ -59,9 +60,9 @@ export const ModalConfirmationProduct = ({ shoppingProductId, onClose }: Props) 
                 onClick={handleDelete}
                 type="button"
                 className="btn btn-success"
-                 disabled={loading}
+                disabled={loading}
               >
-                  {loading ? "Excluindo..." : "Excluir"}
+                {loading ? "Excluindo..." : "Excluir"}
               </button>
             </div>
           </div>

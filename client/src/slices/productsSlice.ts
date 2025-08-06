@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { type Product } from "../types/product";
 
+
 type Filters = {
   name: string;
   category: string;
@@ -92,7 +93,7 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
+      })
   },
 });
 

@@ -36,6 +36,38 @@ export const addProductToList = createAsyncThunk(
   }
 );
 
+export const deleteProductInList = createAsyncThunk(
+  "products/deleteProduct",
+  async (
+    {
+      shoppingProductId,
+    }: {
+      shoppingProductId: number;
+    },
+    thunkAPI
+  ) => {
+    try {
+      await axios.delete(
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/product-list-delete/${shoppingProductId}`,
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return thunkAPI.rejectWithValue(
+            error.response?.data.message || "Erro ao deletar produto:"
+          );
+        }
+      }
+    }
+  }
+);
+
 interface ListProductsState {
   list: ShoppingListProducts;
   products: Product[];
@@ -73,6 +105,17 @@ const listProductSlice = createSlice({
             state.loading = false;
           })
           .addCase(addProductToList.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
+          })
+     .addCase(deleteProductInList.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(deleteProductInList.fulfilled, (state) => {
+            state.loading = false;
+          })
+          .addCase(deleteProductInList.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
           });
