@@ -49,16 +49,56 @@ export const login = createAsyncThunk(
   }
 );
 
+export const register = createAsyncThunk(
+  "user/register",
+  async (
+    {
+      email,
+      password,
+      name,
+      lastName,
+    }: {
+      email: string;
+      password: string;
+      name: string;
+      lastName: string;
+    },
+    thunkAPI
+  ) => {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/register`,
+        {
+          email,
+          password,
+          name,
+          lastName,
+        }
+      );
+
+      await thunkAPI.dispatch(getUser());
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return thunkAPI.rejectWithValue(
+            error.response?.data.message || "Erro no servidor:"
+          );
+        }
+      }
+    }
+  }
+);
+
 type UserState = {
   user: User | null;
   error: string | null;
-  loading:boolean
+  loading: boolean;
 };
 
 const initialState: UserState = {
   user: null,
   error: null,
-  loading:false,
+  loading: false,
 };
 
 const userSlice = createSlice({
@@ -83,7 +123,7 @@ const userSlice = createSlice({
         state.error = action.payload as string;
         state.loading = false;
       })
-    .addCase(login.pending, (state) => {
+      .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
@@ -93,7 +133,18 @@ const userSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
-      });
+      })
+     .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.error = action.payload as string;
+        state.loading = false;
+      })
   },
 });
 

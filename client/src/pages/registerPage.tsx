@@ -1,42 +1,35 @@
 import { useState } from "react";
 import type React from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { registerApi } from "../api/auth";
+import { register } from "../slices/userSlice";
+import { type RootState, type AppDispatch } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [loading, setLoading] = useState(false);
+  const loading = useSelector((state: RootState) => state.user.loading);
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const errorMessage = useSelector((state: RootState) => state.user.error);
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      registerApi(email, password, name, lastName);
-      console.log("Cadastro feito com sucesso!");
+
+    const res = await dispatch(
+      register({
+        email,
+        password,
+        name,
+        lastName,
+      })
+    );
+    if (register.fulfilled.match(res)) {
       navigate("/activation");
-    } catch (error) {
-      console.log(error);
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          setErrorMessage(error.response.data.message || "Erro no servidor.");
-        } else if (error.request) {
-          setErrorMessage("Servidor não respondeu. Tente novamente.");
-        } else {
-          setErrorMessage("Erro inesperado. Tente novamente.");
-        }
-      } else {
-        setErrorMessage("Erro desconhecido")
-      } 
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -102,9 +95,9 @@ export const RegisterPage = () => {
                 ></i>
               </button>
             </div>
-             {errorMessage && (
-                <div className="alert alert-danger">{errorMessage}</div>
-              )}
+            {errorMessage && (
+              <div className="alert alert-danger">{errorMessage}</div>
+            )}
           </div>
           <div className="card-footer">
             <div className="row">
