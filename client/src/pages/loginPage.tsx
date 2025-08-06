@@ -1,45 +1,30 @@
 import type React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { setUser } from "../slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginApi } from "../api/auth";
+import { type AppDispatch, type RootState } from "../store/store";
+import { login } from "../slices/userSlice";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const loading = useSelector((state: RootState) => state.user.loading);
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const dispatch = useDispatch();
+  const errorMessage = useSelector((state: RootState) => state.user.error);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await loginApi(email, password);
-      dispatch(setUser(res.data.user));
+
+    const res = await dispatch(login({ email, password }))
+    
+    if (login.fulfilled.match(res)) {
       navigate("/");
-    } catch (error) {
-      console.log(error);
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          setErrorMessage(error.response.data.message || "Erro no servidor.");
-        } else if (error.request) {
-          setErrorMessage("Servidor não respondeu. Tente novamente.");
-        } else {
-          setErrorMessage("Erro inesperado. Tente novamente.");
-        }
-      } else {
-        setErrorMessage("Erro desconhecido")
-      } 
-    } finally {
-      setLoading(false);
-    }
+    }  
   };
+
   return (
     <div className="container container-auth">
       <div className="card">
@@ -67,7 +52,7 @@ export const LoginPage = () => {
                 type={showPassword ? "text" : "password"}
                 required
               />
-                {errorMessage && (
+              {errorMessage && (
                 <div className="alert alert-danger">{errorMessage}</div>
               )}
               <button

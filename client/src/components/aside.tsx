@@ -1,12 +1,10 @@
-import { Link } from "react-router-dom";
-import { type RootState } from "../store/store";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { setUser, clearUser } from "../slices/userSlice";
+import { type RootState,type AppDispatch } from "../store/store";
+import { useSelector,useDispatch } from "react-redux";
+import { clearUser, getUser } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { logoutApi } from "../api/auth";
+import { Link } from "react-router-dom";
 
 type Props = {
   onClose: () => void;
@@ -14,21 +12,11 @@ type Props = {
 
 export const Aside = ({ onClose }: Props) => {
   const user = useSelector((state: RootState) => state.user.user);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
-          withCredentials: true,
-        });
-        dispatch(setUser(res.data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUser();
+    dispatch(getUser());
   }, [dispatch]);
 
   const logout = async () => {
@@ -56,12 +44,10 @@ export const Aside = ({ onClose }: Props) => {
             <Link className="nav-item-aside" to="/products">
               Produtos
             </Link>
-            <Link
-              className="nav-item-aside"
-              to="createList">
+            <Link className="nav-item-aside" to="createList">
               Criar Lista
             </Link>
-             <a
+            <a
               onClick={logout}
               className="nav-item-aside"
               aria-current="page"
