@@ -1,10 +1,11 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { type Product } from "../types/product";
-import { type ShoppingList } from "../types/shoppingList";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useSelector,useDispatch } from "react-redux";
+import { useLocation,useNavigate } from "react-router-dom";
+import { type RootState, type AppDispatch } from "../store/store";
+import { fetchLists } from "../slices/listsSlice";
+
 
 interface Props {
   product: Product;
@@ -15,7 +16,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
   const [shoppingListId, setShoppingListId] = useState<number | null>(null);
   const [productId, setProductId] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
-  const [lists, setLists] = useState<ShoppingList[]>([]);
+  const lists = useSelector((state: RootState) => state.lists.lists);
   const [observation, setObservation] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -23,28 +24,12 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
   const params = new URLSearchParams(location.search);
   const listId = params.get("listId");
   const navigate = useNavigate();
+   const dispatch = useDispatch<AppDispatch>(); 
 
   useEffect(() => {
     setProductId(product.id);
-    const fetchLists = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/lists`,
-          {
-            withCredentials: true,
-          }
-        );
-        if (!res || res.status !== 200) {
-          throw new Error(`Erro HTTP: ${res?.status}`);
-        } else {
-          setLists(res.data);
-        }
-      } catch (error) {
-        console.error("Erro ao buscar listas:", error);
-      }
-    };
-    fetchLists();
-  }, [product.id]);
+    dispatch(fetchLists());
+  }, [product.id,dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
