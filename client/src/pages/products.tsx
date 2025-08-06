@@ -2,23 +2,29 @@ import { useEffect, useState } from "react";
 import { type Product } from "../types/product";
 import { ProductsFilter } from "../components/productsFilter";
 import { AddProductToShoppingList } from "../components/addProductToShoppingList";
-import axios from "axios";
+import { fetchProducts } from "../slices/productsSlice";
 import { useLocation } from "react-router-dom";
+import { type RootState, type AppDispatch } from "../store/store";
+import { useSelector, useDispatch } from "react-redux";
 
 export const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [addProductModal, setAddProductModal] = useState(false);
-  const [products, setProducts] = useState<Product[]>([]);
+  const products = useSelector((state: RootState) => state.products.products);
   const [nameInput, setNameInput] = useState("");
-  const [loadingSearch, setLoadingSearch] = useState(false);
-  const [loadingPage, setLoadingPage] = useState(false);
-  const [productInlist, setProductInList] = useState<number[]>([]);
+  const loading = useSelector((state: RootState) => state.products.loading);
+  const productInList = useSelector(
+    (state: RootState) => state.products.productInList
+  );
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const totalPages = useSelector(
+    (state: RootState) => state.products.totalPages
+  );
 
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const listId = params.get("listId");
+  const dispatch = useDispatch<AppDispatch>();
 
   const getFiltersFromURL = () => {
     const params = new URLSearchParams(location.search);
@@ -30,47 +36,16 @@ export const Products = () => {
 
   const [filters, setFilters] = useState(getFiltersFromURL);
 
-  // function wait(delay: number) {
-  //   return new Promise((resolve) => {
-  //     setTimeout(resolve, delay);
-  //   });
-  // }
-
   useEffect(() => {
-    const fetchProdutos = async () => {
-      const isFirstLoad = loadingPage;
-      if (isFirstLoad) setLoadingPage(true);
-      setLoadingSearch(true);
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/products`,
-          {
-            params: {
-              name: filters.name.trim() || undefined,
-              category: filters.category || undefined,
-              listId: listId || undefined,
-              page,
-              limit: 20,
-            },
-            withCredentials: true,
-          }
-        );
-        setTotalPages(res.data.totalPages);
-        setProducts(res.data.products);
-        setProductInList(res.data.productsInList);
-      } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
-        if (axios.isAxiosError(error)) {
-          console.error("Axios error:", error.response?.data || error.message);
-        }
-      } finally {
-        setLoadingSearch(false);
-        if (isFirstLoad) setLoadingPage(false);
-      }
-    };
-    fetchProdutos();
+    dispatch(
+      fetchProducts({
+        filters: filters,
+        listId: Number(listId),
+        page,
+      })
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingPage, listId, page]);
+  }, [dispatch]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -112,7 +87,7 @@ export const Products = () => {
           nameFilter={nameInput}
           categoryFilter={filters.category}
           onFilterChange={handleFilterChange}
-          loading={loadingSearch}
+          loading={loading}
         />
         <div className="container">
           <div className="row">
@@ -144,8 +119,8 @@ export const Products = () => {
                     />
                   </div>
                   <div className="card-body">
-                    {productInlist &&
-                      productInlist.includes(productItem.id) && (
+                    {productInList &&
+                      productInList.includes(productItem.id) && (
                         <div className="alert alert-success">
                           Produto já adicionado a lista
                         </div>
@@ -227,7 +202,6 @@ export const Products = () => {
           )}
         </div>
       </>
-      )
     </>
   );
 };
