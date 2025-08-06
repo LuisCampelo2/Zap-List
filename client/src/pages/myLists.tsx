@@ -1,46 +1,19 @@
 import { useEffect, useState } from "react";
-import { type ShoppingList } from "../types/shoppingList";
-
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { ModalConfirmationList } from "../components/modalConfirmationDeleteList";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLists } from "../slices/listsSlice";
+import { type RootState, type AppDispatch } from "../store/store";
 
 export const MyLists = () => {
-  const [lists, setLists] = useState<ShoppingList[]>([]);
-  const [loading, setLoading] = useState(false);
+  const lists = useSelector((state: RootState) => state.lists.lists);
   const [modalConfirmation, setModalConfirmation] = useState(false);
   const [selectedList, setSelectList] = useState<number | null>(null);
-
-  function wait(delay: number) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, delay);
-    });
-  }
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    setLoading(true);
-    const fetchLists = async () => {
-      await wait(500);
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/lists`,
-          {
-            withCredentials: true,
-          }
-        );
-        if (!res || res.status !== 200) {
-          throw new Error(`Erro HTTP: ${res?.status}`);
-        } else {
-          setLists(res.data);
-        }
-      } catch (error) {
-        console.error("Erro ao buscar listas:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLists();
-  }, []);
+    dispatch(fetchLists());
+  }, [dispatch]);
 
   const handleDelete = (id: number) => {
     setSelectList(id);
@@ -49,7 +22,7 @@ export const MyLists = () => {
 
   return (
     <>
-      {lists.length === 0 && !loading ? (
+      {lists.length === 0 ? (
         <>
           <div className="container">
             <div className="card">
@@ -65,7 +38,6 @@ export const MyLists = () => {
           </div>
         </>
       ) : (
-        !loading && (
           <>
             <section>
               <div className="container text-center">
@@ -102,7 +74,6 @@ export const MyLists = () => {
               </div>
             </div>
           </>
-        )
       )}
     </>
   );

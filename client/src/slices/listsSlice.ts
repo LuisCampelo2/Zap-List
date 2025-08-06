@@ -17,6 +17,7 @@ export const fetchLists = createAsyncThunk("lists/fetchLists", async () => {
   }
 });
 
+
 interface ListsState {
   lists: ShoppingList[];
   loading: boolean;
