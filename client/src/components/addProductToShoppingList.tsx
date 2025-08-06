@@ -1,11 +1,10 @@
-import axios from "axios";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { type Product } from "../types/product";
-import { useLocation, useNavigate } from "react-router-dom"
-import { useSelector,useDispatch } from "react-redux";;
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { type RootState, type AppDispatch } from "../store/store";
 import { fetchLists } from "../slices/listsSlice";
-
+import { addProductToList } from "../slices/listProductsSlice";
 
 interface Props {
   product: Product;
@@ -17,45 +16,37 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
   const [productId, setProductId] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
   const lists = useSelector((state: RootState) => state.lists.lists);
+  const loading = useSelector((state: RootState) => state.listProduct.loading);
   const [observation, setObservation] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const listId = params.get("listId");
   const navigate = useNavigate();
-   const dispatch = useDispatch<AppDispatch>(); 
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setProductId(product.id);
     dispatch(fetchLists());
-  }, [product.id,dispatch]);
+  }, [product.id, dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/shopping-list-add-product`,
-        {
-          shoppingListId: shoppingListId || listId,
-          productId,
-          quantity,
-          observation,
-        }
-      );
-      onClose();
-      setShoppingListId(null);
-      setProductId(null);
-      setQuantity(null);
-      setObservation("");
-      navigate(0);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(
+      addProductToList({
+        listIdParams: Number(listId) || undefined,
+        selectedShoppingListId: shoppingListId || undefined,
+        productId,
+        quantity,
+        observation,
+      })
+    );
+    onClose();
+    setShoppingListId(null);
+    setProductId(null);
+    setQuantity(null);
+    setObservation("");
+    navigate(0);
   };
 
   return (
