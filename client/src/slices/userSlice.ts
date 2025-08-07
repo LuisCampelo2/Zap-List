@@ -2,48 +2,40 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { type User } from "../types/user";
 import axios from "axios";
 
-export const getUser = createAsyncThunk("user/getUser", async () => {
+export const getUser = createAsyncThunk("user/getUser", async (_, thunkAPI) => {
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
       withCredentials: true,
     });
-    return res.data;
+      return res.data;
   } catch (error) {
     console.log(error);
-  }
-});
-
-export const checkAuth = createAsyncThunk(
-  "user/checkAuth",
-  async (_, thunkAPI) => {
-    const res = await thunkAPI.dispatch(getUser());
-
-    if (getUser.fulfilled.match(res)) {
-      return res.payload;
-    }
-
-    if (getUser.rejected.match(res)) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
       try {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/refresh`, null, {
+        await thunkAPI.dispatch(refresh()).unwrap();
+        const retry = await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
           withCredentials: true,
         });
-
-        const retry = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/me`,
-          {
-            withCredentials: true,
-          }
-        );
         return retry.data;
       } catch (refreshError) {
         console.log(refreshError);
-        return thunkAPI.rejectWithValue("Sessao expirada.Faça login novamente");
+        return thunkAPI.rejectWithValue("Sessão expirada. Faça login novamente.");
       }
     }
-
-    return thunkAPI.rejectWithValue("Erro ao verificar autenticação");
   }
-);
+});
+
+export const refresh = createAsyncThunk("user/refresh", async (_, thunkAPI) => {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/refresh`, null, {
+      withCredentials: true,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+    return thunkAPI.rejectWithValue("Sessao expirada");
+  }
+});
 
 export const login = createAsyncThunk(
   "user/login",
@@ -59,7 +51,8 @@ export const login = createAsyncThunk(
           withCredentials: true,
         }
       );
-      await thunkAPI.dispatch(getUser());
+      const res = await thunkAPI.dispatch(getUser());
+      return res.payload;
     } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error)) {
@@ -175,9 +168,23 @@ const userSlice = createSlice({
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.authenticated = true;
         state.loading = false;
       })
       .addCase(getUser.rejected, (state, action) => {
+        state.error = action.payload as string;
+        state.loading = false;
+        state.user = null;
+        state.authenticated = false;
+      })
+      .addCase(refresh.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(refresh.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(refresh.rejected, (state,action) => {
         state.error = action.payload as string;
         state.loading = false;
       })
@@ -187,6 +194,7 @@ const userSlice = createSlice({
       })
       .addCase(login.fulfilled, (state) => {
         state.loading = false;
+        state.authenticated = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.error = action.payload as string;
@@ -203,18 +211,6 @@ const userSlice = createSlice({
         state.error = action.payload as string;
         state.loading = false;
       })
-      .addCase(checkAuth.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(checkAuth.fulfilled, (state) => {
-        state.loading = false;
-        state.authenticated = true;
-      })
-      .addCase(checkAuth.rejected, (state, action) => {
-        state.error = action.payload as string;
-        state.loading = false;
-      });
   },
 });
 

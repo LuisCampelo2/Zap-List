@@ -87,14 +87,14 @@ const login = async (req, res) => {
       domain: process.env.FRONTEND_DOMAIN,
     })
 
-     res.cookie('refreshToken', refreshToken, {
-      maxAge: 7 * 24 * 60 * 60 * 1000, 
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
       domain: process.env.FRONTEND_DOMAIN,
-     });
-    
+    });
+
     return res.json({
       accessToken,
       user: normalizedUser,
@@ -103,7 +103,21 @@ const login = async (req, res) => {
 
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: 'Erro interno no servidor' });
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      domain: process.env.FRONTEND_DOMAIN,
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      domain: process.env.FRONTEND_DOMAIN,
+    });
+
+    return res.status(500).json({ message: 'Erro interno ao tentar fazer login' });
+
   }
 }
 

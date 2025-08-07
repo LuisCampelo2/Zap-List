@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import { Loader } from "./loader";
-import { checkAuth } from "../slices/userSlice";
+import { getUser } from "../slices/userSlice";
 import { type AppDispatch, type RootState } from "../store/store";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,7 +14,7 @@ export const PrivateRoute = () => {
 
   useEffect(() => {
     if (!authenticated && !loading) {
-      dispatch(checkAuth());
+      dispatch(getUser());
     }
   }, [dispatch, authenticated, loading]);
 
