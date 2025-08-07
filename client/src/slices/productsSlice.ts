@@ -77,7 +77,11 @@ const initialState: ProductsState = {
 const productsSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    setPage: (state, action) => {
+      state.page = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
@@ -97,4 +101,5 @@ const productsSlice = createSlice({
   },
 });
 
+export const { setPage } = productsSlice.actions;
 export default productsSlice.reducer;

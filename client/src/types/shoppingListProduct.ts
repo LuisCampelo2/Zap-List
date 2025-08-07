@@ -10,5 +10,6 @@ export interface ShoppingListProducts{
   productId: Product["id"];
   observation: string | null;
   photo: Product["photo"];
-  Product: Product;
+  totalPrice: number;
+  Product: Product | null;
 }

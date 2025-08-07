@@ -6,6 +6,7 @@ import { fetchProducts } from "../slices/productsSlice";
 import { useLocation } from "react-router-dom";
 import { type RootState, type AppDispatch } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
+import { setPage } from "../slices/productsSlice";
 
 export const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -16,7 +17,10 @@ export const Products = () => {
   const productInList = useSelector(
     (state: RootState) => state.products.productInList
   );
-  const [page, setPage] = useState(1);
+  const page = useSelector(
+    (state: RootState) => state.products.page
+  );
+
   const totalPages = useSelector(
     (state: RootState) => state.products.totalPages
   );
@@ -44,8 +48,8 @@ export const Products = () => {
         page,
       })
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch,page]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -162,21 +166,21 @@ export const Products = () => {
                     </li>
                   )}
                   <li className={`page-item ${page === 1 ? "active" : ""}`}>
-                    <a className="page-link" onClick={() => setPage(1)}>
+                    <a className="page-link" onClick={() => dispatch(setPage(1))}>
                       1
                     </a>
                   </li>
                   <li className={`page-item ${page === 2 ? "active" : ""}`}>
                     <a
                       className="page-link"
-                      onClick={() => setPage(2)}
+                      onClick={() => dispatch(setPage(2))}
                       aria-current="page"
                     >
                       2
                     </a>
                   </li>
                   <li className={`page-item ${page === 3 ? "active" : ""}`}>
-                    <a className="page-link" onClick={() => setPage(3)}>
+                    <a className="page-link" onClick={() => dispatch(setPage(3))}>
                       3
                     </a>
                   </li>
@@ -184,7 +188,7 @@ export const Products = () => {
                     <li className="page-item">
                       <a
                         className="page-link"
-                        onClick={() => setPage(page + 1)}
+                        onClick={() => dispatch(setPage(page + 1))}
                       >
                         Próxima
                       </a>
