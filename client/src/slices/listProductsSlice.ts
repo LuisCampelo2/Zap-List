@@ -17,7 +17,7 @@ export const addProductToList = createAsyncThunk(
     productId: number | null;
     quantity: number | null;
     observation: string | null;
-    }) => {
+  }) => {
     const shoppingListId = listIdParams || selectedShoppingListId;
 
     try {
@@ -82,9 +82,20 @@ const initialState: ListProductsState = {
     quantity: null,
     isChecked: false,
     shoppingListId: 0,
-    productId:0,
+    productId: 0,
     observation: null,
     photo: "",
+    Product: {
+      id: 0,
+      name: "",
+      photo: "",
+      category: "",
+      quantity: 0,
+      isChecked: false,
+      observation: "",
+      price: 0,
+      unitOFMeasure: 0,
+    },
   },
   products: [],
   loading: false,
@@ -97,29 +108,29 @@ const listProductSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-          .addCase(addProductToList.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-          })
-          .addCase(addProductToList.fulfilled, (state) => {
-            state.loading = false;
-          })
-          .addCase(addProductToList.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload as string;
-          })
-     .addCase(deleteProductInList.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-          })
-          .addCase(deleteProductInList.fulfilled, (state) => {
-            state.loading = false;
-          })
-          .addCase(deleteProductInList.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload as string;
-          });
-      },
-})
+      .addCase(addProductToList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addProductToList.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(addProductToList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(deleteProductInList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProductInList.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteProductInList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  },
+});
 
 export default listProductSlice.reducer;

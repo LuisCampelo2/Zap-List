@@ -5,7 +5,6 @@ export interface Product {
   category: string;
   quantity: number;
   isChecked: boolean;
-  Product: Product;
   observation: string | null;
   price: number | null;
   unitOFMeasure: number | null;
