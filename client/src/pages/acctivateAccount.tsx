@@ -1,26 +1,20 @@
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { activate } from "../slices/userSlice";
+import { useDispatch } from "react-redux";
+import { type AppDispatch } from "../store/store";
 
 
 export const AcctivateAccount = () => {
   const { token } = useParams();
+   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const activateUser = async () => {
-      try {
-        await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/activation/${token}`
-        );
-        
-      } catch (error) {
-        console.error("Erro na ativação:", error);
-      }
-    };
-
-    activateUser();
-  }, [token]);
+    dispatch((activate({
+      token: token
+    })))
+  }, [dispatch,token]);
 
   return (
     <>

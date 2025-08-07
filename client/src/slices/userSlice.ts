@@ -66,18 +66,42 @@ export const register = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/register`,
-        {
-          email,
-          password,
-          name,
-          lastName,
-        }
-      );
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
+        email,
+        password,
+        name,
+        lastName,
+      });
 
       await thunkAPI.dispatch(getUser());
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return thunkAPI.rejectWithValue(
+            error.response?.data.message || "Erro no servidor:"
+          );
+        }
+      }
+    }
+  }
+);
+
+export const activate = createAsyncThunk(
+  "user/activate",
+  async (
+    {
+      token,
+    }: {
+      token: string | undefined;
+    },
+    thunkAPI
+  ) => {
+    try {
+      await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/activation/${token}`
+      );
+    } catch (error) {
+      console.error("Erro na ativação:", error);
       if (axios.isAxiosError(error)) {
         if (error.response) {
           return thunkAPI.rejectWithValue(
@@ -134,7 +158,7 @@ const userSlice = createSlice({
         state.error = action.payload as string;
         state.loading = false;
       })
-     .addCase(register.pending, (state) => {
+      .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
@@ -144,7 +168,7 @@ const userSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
-      })
+      });
   },
 });
 
