@@ -13,6 +13,38 @@ export const getUser = createAsyncThunk("user/getUser", async () => {
   }
 });
 
+export const checkAuth = createAsyncThunk(
+  "user/checkAuth",
+  async (_, thunkAPI) => {
+    const res = await thunkAPI.dispatch(getUser());
+
+    if (getUser.fulfilled.match(res)) {
+      return res.payload;
+    }
+
+    if (getUser.rejected.match(res)) {
+      try {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/refresh`, null, {
+          withCredentials: true,
+        });
+
+        const retry = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/me`,
+          {
+            withCredentials: true,
+          }
+        );
+        return retry.data;
+      } catch (refreshError) {
+        console.log(refreshError);
+        return thunkAPI.rejectWithValue("Sessao expirada.Faça login novamente");
+      }
+    }
+
+    return thunkAPI.rejectWithValue("Erro ao verificar autenticação");
+  }
+);
+
 export const login = createAsyncThunk(
   "user/login",
   async (
@@ -115,12 +147,14 @@ export const activate = createAsyncThunk(
 
 type UserState = {
   user: User | null;
+  authenticated: boolean;
   error: string | null;
   loading: boolean;
 };
 
 const initialState: UserState = {
   user: null,
+  authenticated: false,
   error: null,
   loading: false,
 };
@@ -166,6 +200,18 @@ const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(register.rejected, (state, action) => {
+        state.error = action.payload as string;
+        state.loading = false;
+      })
+      .addCase(checkAuth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(checkAuth.fulfilled, (state) => {
+        state.loading = false;
+        state.authenticated = true;
+      })
+      .addCase(checkAuth.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
       });

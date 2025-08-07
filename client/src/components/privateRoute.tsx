@@ -1,59 +1,22 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
 import { Loader } from "./loader";
+import { checkAuth } from "../slices/userSlice";
+import { type AppDispatch, type RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export const PrivateRoute = () => {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const authenticated = useSelector(
+    (state: RootState) => state.user.authenticated
+  );
+  const loading = useSelector((state: RootState) => state.user.loading);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/me`, {
-          withCredentials: true,
-        });
-        if (res.status === 200) {
-          setAuthenticated(true);
-        } else {
-          setAuthenticated(false);
-        }
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          if (err.response?.status === 401) {
-            try {
-              await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/refresh`,
-                null,
-                {
-                  withCredentials: true,
-                }
-              );
-
-              const retry = await axios.get(
-                `${import.meta.env.VITE_API_URL}/api/me`,
-                {
-                  withCredentials: true,
-                }
-              );
-
-              if (retry.status === 200) {
-                setAuthenticated(true);
-                return;
-              }
-            } catch (refreshError) {
-              setAuthenticated(false);
-              console.log("Erro ao tentar renovar token:", refreshError);
-            }
-          }
-        }
-        setAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuth();
-  }, []);
+    if (!authenticated && !loading) {
+      dispatch(checkAuth());
+    }
+  }, [dispatch, authenticated, loading]);
 
   if (loading) return <Loader />;
 
