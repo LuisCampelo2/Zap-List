@@ -1,24 +1,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { createList } from "../slices/listsSlice";
+import { type AppDispatch } from "../store/store";
 
 export const ShoppingListForm = () => {
   const [name, setName] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/shopping-lists`,
-        { name },
-        { withCredentials: true }
-      );
+    const res = await dispatch(createList({ name }));
+
+    if (createList.fulfilled.match(res)) {
       navigate("/lists");
       setName("");
-    } catch (erro) {
-      console.log(erro);
     }
   };
 

@@ -31,6 +31,25 @@ export const deleteList = createAsyncThunk(
   }
 );
 
+export const createList = createAsyncThunk(
+  "list/createList",
+  async ({
+    name
+  }: {
+      name: string;
+  }) => {
+     try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/shopping-lists`,
+        { name },
+        { withCredentials: true }
+      );
+    } catch (erro) {
+      console.log(erro);
+    }
+  }
+)
+
 interface ListsState {
   lists: ShoppingList[];
   loading: boolean;
