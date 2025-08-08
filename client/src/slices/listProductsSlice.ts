@@ -65,7 +65,7 @@ export const addProductToList = createAsyncThunk(
     observation: string | null;
     }) => {
     try {
-      await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/shopping-list-add-product`,
         {
           shoppingListId:listId,
@@ -74,8 +74,10 @@ export const addProductToList = createAsyncThunk(
           observation,
         }
       );
+      return res.data;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 );

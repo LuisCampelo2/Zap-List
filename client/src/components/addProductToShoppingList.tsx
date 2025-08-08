@@ -29,26 +29,31 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
     console.log(location.search);
     setProductId(product.id);
     dispatch(fetchLists());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id, dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const selectedList = listId !== null ? Number(listId) : Number(shoppingListId);
-    dispatch(
-      addProductToList({
-        listId:selectedList,
-        productId,
-        quantity,
-        observation,
-      })
-    );
-    onClose();
-    setShoppingListId(null);
-    setProductId(null);
-    setQuantity(null);
-    setObservation("");
-    navigate(0);
+    const selectedList =
+      listId !== null ? Number(listId) : Number(shoppingListId);
+    try {
+      await dispatch(
+        addProductToList({
+          listId: selectedList,
+          productId,
+          quantity,
+          observation,
+        })
+      ).unwrap();
+      onClose();
+      setShoppingListId(null);
+      setProductId(null);
+      setQuantity(null);
+      setObservation("");
+      navigate(0);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
