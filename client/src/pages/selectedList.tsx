@@ -1,13 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { ProductsFilter } from "../components/productsFilter";
 import { ModalConfirmationProduct } from "../components/modalConfirmationDeleteProduct";
 import { ModalOptions } from "../components/modalOptions";
 import { type RootState, type AppDispatch } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProductsList } from "../slices/listProductsSlice";
-import { setPage, setProducts } from "../slices/listProductsSlice";
+import { fetchProductsList, checkBoxChange } from "../slices/listProductsSlice";
+import { setPage } from "../slices/listProductsSlice";
 
 export const SelectedList = () => {
   const { id } = useParams();
@@ -23,9 +22,7 @@ export const SelectedList = () => {
   const products = useSelector(
     (state: RootState) => state.listProduct.products
   );
-  const loading = useSelector(
-    (state: RootState) => state.listProduct.loading
-  );
+  const loading = useSelector((state: RootState) => state.listProduct.loading);
   const list = useSelector((state: RootState) => state.listProduct.list);
   const page = useSelector((state: RootState) => state.listProduct.page);
   const totalPages = useSelector(
@@ -56,29 +53,6 @@ export const SelectedList = () => {
 
   const openObservation = (productId: number) => {
     setModalObservation((prev) => (prev === productId ? null : productId));
-  };
-
-  const handleCheckboxChange = async (
-    id: number,
-    currentIsChecked: boolean
-  ) => {
-    const newIsChecked = !currentIsChecked;
-
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id ? { ...product, isChecked: newIsChecked } : product
-      )
-    );
-
-    try {
-      await axios.patch(
-        `${import.meta.env.VITE_API_URL}/api/checked/${id}`,
-        { isChecked: newIsChecked },
-        { withCredentials: true }
-      );
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleModalOptions = (productItem: number) => {
@@ -175,14 +149,20 @@ export const SelectedList = () => {
                   >
                     <td>
                       <input
-                        className="form-check-input me-1"
+                        className={
+                          productItem.isChecked
+                            ? "bg-success-subtle"
+                            : ""
+                        }
                         type="checkbox"
                         id={`product-${productItem.id}`}
                         checked={productItem.isChecked}
                         onChange={() =>
-                          handleCheckboxChange(
-                            productItem.id,
-                            productItem.isChecked
+                          dispatch(
+                            checkBoxChange({
+                              id: productItem.id,
+                              isChecked: productItem.isChecked,
+                            })
                           )
                         }
                       />

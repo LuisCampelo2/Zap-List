@@ -3,13 +3,11 @@ import type { ShoppingList } from "./shoppingList";
 
 export interface ShoppingListProducts{
   id: number;
-  name: ShoppingList["name"];
   quantity: number | null;
   isChecked: boolean;
-  shoppingListId: ShoppingList["id"]
-  productId: Product["id"];
-  observation: string | null;
-  photo: Product["photo"];
-  totalPrice: number;
-  Product: Product | null;
+  shoppingListId: number;
+  productId: number;
+  observation?: string | null;
+  Product: Product;
+  ShoppingList: ShoppingList;
 }

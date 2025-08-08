@@ -3,9 +3,6 @@ export interface Product {
   name: string;
   photo: string;
   category: string;
-  quantity: number;
-  isChecked: boolean;
-  observation: string | null;
   price: number | null;
   unitOFMeasure: number | null;
 }

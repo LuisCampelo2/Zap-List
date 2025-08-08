@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { type ShoppingListProducts } from "../types/shoppingListProduct";
-import { type Product } from "../types/product";
+import { type ShoppingList } from "../types/shoppingList";
 
 type Filters = {
   name: string;
@@ -36,7 +36,7 @@ export const fetchProductsList = createAsyncThunk(
         }
       );
       console.log("Dados recebidos:", res.data);
-      return  {
+      return {
         products: res.data.products,
         totalPages: res.data.totalPages,
         currentPage: res.data.currentPage,
@@ -116,45 +116,57 @@ export const deleteProductInList = createAsyncThunk(
   }
 );
 
+export const checkBoxChange = createAsyncThunk(
+  "listProduct/checkbox",
+  async (
+    {
+      id,
+      isChecked,
+    }: {
+      id: number;
+      isChecked: boolean;
+    },
+    thunkAPI
+  ) => {
+    const newIsChecked = !isChecked;
+
+    try {
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/api/checked/${id}`,
+        { isChecked: newIsChecked },
+        { withCredentials: true }
+      );
+      return {
+        id,
+        isChecked: newIsChecked,
+      };
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue("Erro");
+    }
+  }
+);
+
 interface ListProductsState {
-  list: ShoppingListProducts;
-  products: Product[];
+  list: ShoppingList;
+  products: ShoppingListProducts[];
   totalPages: number;
   page: number;
   loading: boolean;
   error: string | null;
-
 }
 
 const initialState: ListProductsState = {
   list: {
     id: 0,
     name: "",
-    quantity: null,
-    isChecked: false,
-    shoppingListId: 0,
-    productId: 0,
-    observation: null,
-    photo: "",
-    totalPrice:0,
-    Product: {
-      id: 0,
-      name: "",
-      photo: "",
-      category: "",
-      quantity: 0,
-      isChecked: false,
-      observation: "",
-      price: 0,
-      unitOFMeasure: 0,
-    },
+    totalPrice: 0,
   },
   products: [],
   loading: false,
   error: null,
   page: 1,
   totalPages: 0,
-
 };
 
 const listProductSlice = createSlice({
@@ -166,7 +178,7 @@ const listProductSlice = createSlice({
     },
     setProducts: (state, action) => {
       state.products = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -184,6 +196,21 @@ const listProductSlice = createSlice({
       .addCase(fetchProductsList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(checkBoxChange.pending, (state, action) => {
+        const { id, isChecked } = action.meta.arg;
+        const index = state.products.findIndex((p) => p.id === id);
+        if (index !== -1) {
+          state.products[index].isChecked = !isChecked;
+        }
+      })
+      .addCase(checkBoxChange.fulfilled, (state, action) => {
+        const updatedProduct = action.payload;
+        state.products = state.products.map((product) =>
+          product.id === updatedProduct.id
+            ? { ...product, isChecked: updatedProduct.isChecked }
+            : product
+        );
       })
       .addCase(addProductToList.pending, (state) => {
         state.loading = true;
@@ -210,5 +237,5 @@ const listProductSlice = createSlice({
   },
 });
 
-export const { setPage,setProducts } = listProductSlice.actions;
+export const { setPage, setProducts } = listProductSlice.actions;
 export default listProductSlice.reducer;
