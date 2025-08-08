@@ -34,11 +34,10 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const listIdParamNumber = listId !== null ? Number(listId) : undefined;
+    const selectedList = listId !== null ? Number(listId) : Number(shoppingListId);
     dispatch(
       addProductToList({
-        listIdParams:listIdParamNumber,
-        selectedShoppingListId: shoppingListId || listIdParamNumber,
+        listId:selectedList,
         productId,
         quantity,
         observation,

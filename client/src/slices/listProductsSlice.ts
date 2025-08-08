@@ -54,24 +54,21 @@ export const fetchProductsList = createAsyncThunk(
 export const addProductToList = createAsyncThunk(
   "listsProduct/addProduct",
   async ({
-    listIdParams,
-    selectedShoppingListId,
+    listId,
     productId,
     quantity,
     observation,
   }: {
-    listIdParams?: number;
-    selectedShoppingListId?: number;
+    listId: number;
     productId: number | null;
     quantity: number | null;
     observation: string | null;
     }) => {
-    const shoppingListId = listIdParams || selectedShoppingListId;
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/shopping-list-add-product`,
         {
-          shoppingListId:shoppingListId,
+          shoppingListId:listId,
           productId,
           quantity,
           observation,
