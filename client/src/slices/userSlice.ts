@@ -73,6 +73,15 @@ export const login = createAsyncThunk(
     }
   }
 );
+export const logout = createAsyncThunk("user/logout", async () => {
+  try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/logout`, null, {
+    withCredentials: true,
+  });
+  } catch (error) {
+    console.log(error);
+  }
+})
 
 export const register = createAsyncThunk(
   "user/register",
@@ -155,11 +164,7 @@ const initialState: UserState = {
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {
-    clearUser: (state) => {
-      state.user = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getUser.pending, (state) => {
@@ -200,6 +205,11 @@ const userSlice = createSlice({
         state.error = action.payload as string;
         state.loading = false;
       })
+      .addCase(logout.fulfilled, (state) => {
+        state.loading = false;
+        state.authenticated = false;
+        state.user = null;
+      })
       .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -214,5 +224,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { clearUser } = userSlice.actions;
+
 export default userSlice.reducer;

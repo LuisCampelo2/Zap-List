@@ -130,6 +130,14 @@ const logout = async (req, res) => {
       domain: process.env.FRONTEND_DOMAIN,
     });
 
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      domain: process.env.FRONTEND_DOMAIN,
+    });
+
+
     res.sendStatus(204);
   } catch (error) {
     res.status(401).send({ message: error.message });

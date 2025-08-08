@@ -1,9 +1,9 @@
-import { type RootState,type AppDispatch } from "../store/store";
-import { useSelector,useDispatch } from "react-redux";
-import { clearUser, getUser } from "../slices/userSlice";
+import { type RootState, type AppDispatch } from "../store/store";
+import { useSelector, useDispatch } from "react-redux";
+import { getUser } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { logoutApi } from "../api/auth";
+import { logout } from "../slices/userSlice";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -19,10 +19,9 @@ export const Aside = ({ onClose }: Props) => {
     dispatch(getUser());
   }, [dispatch]);
 
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
-      logoutApi();
-      dispatch(clearUser());
+      await dispatch(logout());
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -48,7 +47,7 @@ export const Aside = ({ onClose }: Props) => {
               Criar Lista
             </Link>
             <a
-              onClick={logout}
+              onClick={() => handleLogout()}
               className="nav-item-aside"
               aria-current="page"
               href="#"
