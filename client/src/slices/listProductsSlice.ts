@@ -60,8 +60,8 @@ export const addProductToList = createAsyncThunk(
     quantity,
     observation,
   }: {
-    listIdParams?: number;
-    selectedShoppingListId?: number;
+    listIdParams?: number | null;
+    selectedShoppingListId?: number | null;
     productId: number | null;
     quantity: number | null;
     observation: string | null;
