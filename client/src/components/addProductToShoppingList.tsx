@@ -37,6 +37,7 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
     const listIdParamNumber = listId !== null ? Number(listId) : undefined;
     dispatch(
       addProductToList({
+        listIdParams:listIdParamNumber,
         selectedShoppingListId: shoppingListId || listIdParamNumber,
         productId,
         quantity,
