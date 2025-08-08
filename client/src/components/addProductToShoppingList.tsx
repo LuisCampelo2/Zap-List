@@ -26,8 +26,10 @@ export const AddProductToShoppingList = ({ product, onClose }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
+    console.log(location.search);
     setProductId(product.id);
     dispatch(fetchLists());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id, dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
