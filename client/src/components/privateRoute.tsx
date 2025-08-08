@@ -18,7 +18,7 @@ export const PrivateRoute = () => {
     }
   }, [dispatch, authenticated, loading]);
 
-  if (loading) return <Loader />;
+  if (loading || authenticated === null) return <Loader />;
 
   return authenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };

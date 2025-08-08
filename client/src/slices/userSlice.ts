@@ -138,16 +138,16 @@ export const activate = createAsyncThunk(
   }
 );
 
-type UserState = {
+interface UserState {
   user: User | null;
-  authenticated: boolean;
+  authenticated: boolean | null;
   error: string | null;
   loading: boolean;
 };
 
 const initialState: UserState = {
   user: null,
-  authenticated: false,
+  authenticated: null,
   error: null,
   loading: false,
 };
