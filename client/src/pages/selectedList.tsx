@@ -33,7 +33,7 @@ export const SelectedList = () => {
 
   useEffect(() => {
     dispatch(fetchProductsList({ id: Number(id), filters, page }));
-  }, [page, filters, id, dispatch]);
+  }, [page, id, dispatch]);
 
   const handleFilterChange = (newFilters: {
     name: string;
