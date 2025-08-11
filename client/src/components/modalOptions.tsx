@@ -13,7 +13,6 @@ export const ModalOptions = ({
   handleDelete,
   handleObservation,
   onClose,
-  product,
 }: OptionsProps) => {
   return (
     <>
@@ -31,15 +30,13 @@ export const ModalOptions = ({
               ></button>
             </div>
             <div className="modal-body">
-              {product.observation && (
+              
                 <button
                   onClick={() => handleObservation(productId)}
                   className="btn btn-primary"
                 >
                   <i className="bi bi-envelope"></i>
                 </button>
-              )}
-
               <button className="btn btn-danger">
                 <i
                   onClick={() => handleDelete(productId)}

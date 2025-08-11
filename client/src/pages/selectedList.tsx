@@ -6,6 +6,7 @@ import { type RootState, type AppDispatch } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProductsList, checkBoxChange } from "../slices/listProductsSlice";
 import { setPage } from "../slices/listProductsSlice";
+import { ModalObservation } from "../components/modalObservation";
 
 export const SelectedList = () => {
   const { id } = useParams();
@@ -74,25 +75,11 @@ export const SelectedList = () => {
         />
       )}
       {modalObservation && (
-        <div className="container modal-observation">
-          <div className="card card-observation">
-            <div className="d-flex card-header observation-header">
-              <i
-                onClick={() => setModalObservation(null)}
-                className="bi bi-x-lg"
-              ></i>
-              Observações
-            </div>
-            <div className="card-body">
-              {products.map(
-                (productItem) =>
-                  modalObservation === productItem.id && (
-                    <div>{productItem.observation}</div>
-                  )
-              )}
-            </div>
-          </div>
-        </div>
+        <ModalObservation
+          products={products}
+          modalObservation={modalObservation}
+          setModalObservation={setModalObservation}
+        />
       )}
       <>
         {products.length === 0 && (
