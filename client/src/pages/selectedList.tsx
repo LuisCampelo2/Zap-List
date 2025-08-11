@@ -28,12 +28,16 @@ export const SelectedList = () => {
   const totalPages = useSelector(
     (state: RootState) => state.listProduct.totalPages
   );
-  const [modalFilter, setModalFilter] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(fetchProductsList({ id: Number(id), filters, page }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, id, dispatch]);
+
+  const filteredProducts = products.filter((item) =>
+    item.Product.name.toLowerCase().includes(nameInput.toLowerCase())
+  );
 
   const handleFilterChange = (newFilters: {
     name: string;
@@ -89,14 +93,6 @@ export const SelectedList = () => {
         </div>
       )}
       <>
-        {modalFilter && (
-          <ProductsFilter
-            nameFilter={nameInput}
-            categoryFilter={filters.category}
-            onFilterChange={handleFilterChange}
-            loading={loading}
-          />
-        )}
         {products.length === 0 && (
           <div className="container">
             <div className="card">
@@ -111,176 +107,185 @@ export const SelectedList = () => {
             </div>
           </div>
         )}
-        <div className="container d-flex gap-3 flex-column me-5">
-          <h1 className="mb-0">Preço Estimado: R$ {list?.totalPrice}</h1>
-          <div>
-            <button
-              onClick={() => setModalFilter((prev) => !prev)}
-              className="d-flex align-items-center button-filter"
-            >
-              <i className="bi bi-sliders me-2"></i>
-              <p className="mb-0">Buscar Produto</p>
-            </button>
-            <Link to={`/products?listId=${id}`} className="btn btn-all">
-              <i className="bi bi-cart-plus"></i>Adicionar Produto
-            </Link>
-          </div>
-        </div>
-        <div className="table-responsive">
-          <table
-            className="table container table-container"
-            style={{ width: "30%" }}
-          >
-            <thead>
-              <tr>
-                <th style={{ width: "5%" }}>-</th>
-                <th style={{ width: "5%" }}>-</th>
-                <th style={{ width: "5%" }}>Nome</th>
-                <th style={{ width: "5%" }}>Qntd/Peso</th>
-                <th style={{ width: "5%" }}>Opções</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((productItem) => (
-                <>
-                  <tr
-                    key={productItem.id}
-                    className={productItem.observation ? "observation" : ""}
-                  >
-                    <td>
-                      <input
-                        className={
-                          productItem.isChecked
-                            ? "bg-success-subtle"
-                            : ""
-                        }
-                        type="checkbox"
-                        id={`product-${productItem.id}`}
-                        checked={productItem.isChecked}
-                        onChange={() =>
-                          dispatch(
-                            checkBoxChange({
-                              id: productItem.id,
-                              isChecked: productItem.isChecked,
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td>
-                      <img
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          objectFit: "cover",
-                          objectPosition: "center",
-                        }}
-                        src={`${import.meta.env.VITE_API_URL}/imgs/${
-                          productItem.Product.photo
-                        }`}
-                        alt=""
-                      />
-                    </td>
-                    <td>
-                      <label
-                        className="form-check-label"
-                        htmlFor={`product-${productItem.id}`}
+        <div className="container">
+          <div className="card">
+            <div className="card-header">
+              <h1 className="col-12">Preço Estimado: R$ {list?.totalPrice}</h1>
+              <Link to={`/products?listId=${id}`} className="btn btn-all">
+                <i className="bi bi-cart-plus"></i>Adicionar Produto
+              </Link>
+              <div className="row">
+                <input
+                  id="nameInput"
+                  type="text"
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  placeholder="Buscar produto..."
+                />
+              </div>
+            </div>
+            <div className="card-body">
+              <div className="table-responsive">
+                <table
+                  className="table table-container"
+                  style={{ width: "30%" }}
+                >
+                  <tbody>
+                    {filteredProducts.map((productItem) => (
+                      <>
+                        <tr
+                          key={productItem.id}
+                          className={
+                            productItem.observation ? "observation" : ""
+                          }
+                        >
+                          <td>
+                            <input
+                              className={
+                                productItem.isChecked ? "bg-success-subtle" : ""
+                              }
+                              type="checkbox"
+                              id={`product-${productItem.id}`}
+                              checked={productItem.isChecked}
+                              onChange={() =>
+                                dispatch(
+                                  checkBoxChange({
+                                    id: productItem.id,
+                                    isChecked: productItem.isChecked,
+                                  })
+                                )
+                              }
+                            />
+                          </td>
+                          <td>
+                            <img
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                objectFit: "cover",
+                                objectPosition: "center",
+                              }}
+                              src={`${import.meta.env.VITE_API_URL}/imgs/${
+                                productItem.Product.photo
+                              }`}
+                              alt=""
+                            />
+                          </td>
+                          <td>
+                            <label
+                              className="form-check-label"
+                              htmlFor={`product-${productItem.id}`}
+                            >
+                              {productItem.Product.name}
+                            </label>
+                          </td>
+                          <td>
+                            <strong>
+                              {productItem.quantity}
+                              {["Carnes", "Peixes"].includes(
+                                productItem.Product.category
+                              )
+                                ? " KG"
+                                : " Unidade(s)"}
+                            </strong>
+                          </td>
+                          <td>
+                            <i
+                              onClick={() =>
+                                setOptions((prev) =>
+                                  prev === productItem.id
+                                    ? null
+                                    : productItem.id
+                                )
+                              }
+                              className="bi bi-three-dots-vertical"
+                            ></i>
+                            {options === productItem.id &&
+                              !modalObservation &&
+                              !modalDelete && (
+                                <ModalOptions
+                                  productId={productItem.id}
+                                  product={productItem}
+                                  handleDelete={() =>
+                                    handleDelete(productItem.id)
+                                  }
+                                  handleObservation={() =>
+                                    openObservation(productItem.id)
+                                  }
+                                  onClose={() =>
+                                    handleModalOptions(productItem.id)
+                                  }
+                                />
+                              )}
+                          </td>
+                        </tr>
+                      </>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {totalPages > 1 && (
+              <div className="card-footer">
+                <nav aria-label="...">
+                  <ul className="pagination d-flex justify-content-center">
+                    {page !== 1 && (
+                      <li>
+                        <a
+                          className="page-link"
+                          onClick={() => dispatch(setPage(page - 1))}
+                        >
+                          Voltar
+                        </a>
+                      </li>
+                    )}
+                    <li className={`page-item ${page === 1 ? "active" : ""}`}>
+                      <a
+                        className="page-link"
+                        onClick={() => dispatch(setPage(1))}
                       >
-                        {productItem.Product.name}
-                      </label>
-                    </td>
-                    <td>
-                      <strong>
-                        {productItem.quantity}
-                        {["Carnes", "Peixes"].includes(
-                          productItem.Product.category
-                        )
-                          ? " KG"
-                          : " Unidade(s)"}
-                      </strong>
-                    </td>
-                    <td>
-                      <i
-                        onClick={() =>
-                          setOptions((prev) =>
-                            prev === productItem.id ? null : productItem.id
-                          )
-                        }
-                        className="bi bi-three-dots-vertical"
-                      ></i>
-                      {options === productItem.id &&
-                        !modalObservation &&
-                        !modalDelete && (
-                          <ModalOptions
-                            productId={productItem.id}
-                            product={productItem}
-                            handleDelete={() => handleDelete(productItem.id)}
-                            handleObservation={() =>
-                              openObservation(productItem.id)
-                            }
-                            onClose={() => handleModalOptions(productItem.id)}
-                          />
-                        )}
-                    </td>
-                  </tr>
-                </>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {totalPages > 1 && (
-          <div className="card-footer">
-            <nav aria-label="...">
-              <ul className="pagination d-flex justify-content-center">
-                {page !== 1 && (
-                  <li>
-                    <a
-                      className="page-link"
-                      onClick={() => dispatch(setPage(page - 1))}
-                    >
-                      Voltar
-                    </a>
-                  </li>
-                )}
-                <li className={`page-item ${page === 1 ? "active" : ""}`}>
-                  <a className="page-link" onClick={() => dispatch(setPage(1))}>
-                    1
-                  </a>
-                </li>
-                <li className={`page-item ${page === 2 ? "active" : ""}`}>
-                  <a
-                    className="page-link"
-                    onClick={() => dispatch(setPage(2))}
-                    aria-current="page"
-                  >
-                    2
-                  </a>
-                </li>
-                <li className={`page-item ${page === 3 ? "active" : ""}`}>
-                  <a className="page-link" onClick={() => dispatch(setPage(3))}>
-                    3
-                  </a>
-                </li>
-                {page !== totalPages && (
-                  <li className="page-item">
-                    <a
-                      className="page-link"
-                      onClick={() => dispatch(setPage(page + 1))}
-                    >
-                      Próxima
-                    </a>
-                  </li>
-                )}
-                <li>
-                  {" "}
-                  <span>
-                    Página {page} de {totalPages}
-                  </span>
-                </li>
-              </ul>
-            </nav>
+                        1
+                      </a>
+                    </li>
+                    <li className={`page-item ${page === 2 ? "active" : ""}`}>
+                      <a
+                        className="page-link"
+                        onClick={() => dispatch(setPage(2))}
+                        aria-current="page"
+                      >
+                        2
+                      </a>
+                    </li>
+                    <li className={`page-item ${page === 3 ? "active" : ""}`}>
+                      <a
+                        className="page-link"
+                        onClick={() => dispatch(setPage(3))}
+                      >
+                        3
+                      </a>
+                    </li>
+                    {page !== totalPages && (
+                      <li className="page-item">
+                        <a
+                          className="page-link"
+                          onClick={() => dispatch(setPage(page + 1))}
+                        >
+                          Próxima
+                        </a>
+                      </li>
+                    )}
+                    <li>
+                      {" "}
+                      <span>
+                        Página {page} de {totalPages}
+                      </span>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </>
     </>
   );
