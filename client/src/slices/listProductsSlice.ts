@@ -3,7 +3,6 @@ import axios from "axios";
 import { type ShoppingListProducts } from "../types/shoppingListProduct";
 import { type ShoppingList } from "../types/shoppingList";
 
-
 export const fetchProductsList = createAsyncThunk(
   "listsProduct/fetchProducts",
   async (
@@ -24,7 +23,7 @@ export const fetchProductsList = createAsyncThunk(
       console.log("Dados recebidos:", res.data);
       return {
         products: res.data.products,
-        list:res.data.list,
+        list: res.data.list,
       };
     } catch (err) {
       console.log(err);
@@ -47,12 +46,12 @@ export const addProductToList = createAsyncThunk(
     productId: number | null;
     quantity: number | null;
     observation: string | null;
-    }) => {
+  }) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/shopping-list-add-product`,
         {
-          shoppingListId:listId,
+          shoppingListId: listId,
           productId,
           quantity,
           observation,
@@ -85,6 +84,44 @@ export const deleteProductInList = createAsyncThunk(
           withCredentials: true,
         }
       );
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return thunkAPI.rejectWithValue(
+            error.response?.data.message || "Erro ao deletar produto:"
+          );
+        }
+      }
+    }
+  }
+);
+
+export const updateObservation = createAsyncThunk(
+  "products/updateObservation",
+  async (
+    {
+      observation,
+      shoppingProduct,
+    }: {
+      observation: string | null;
+      shoppingProduct: number;
+    },
+    thunkAPI
+  ) => {
+    try {
+      console.log(shoppingProduct);
+      const res = await axios.patch(
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/product-list-update/${shoppingProduct}`,
+        {
+          observation,
+        },
+        { withCredentials: true }
+      );
+
+      return res.data.product;
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError(error)) {
@@ -185,12 +222,26 @@ const listProductSlice = createSlice({
         }
       })
       .addCase(checkBoxChange.fulfilled, (state, action) => {
+        console.log(action.payload);
         const updatedProduct = action.payload;
         state.products = state.products.map((product) =>
           product.id === updatedProduct.id
             ? { ...product, isChecked: updatedProduct.isChecked }
             : product
         );
+      })
+      .addCase(updateObservation.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateObservation.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedProduct = action.payload;
+        const index = state.products.findIndex(
+          (p) => p.id === updatedProduct.id
+        );
+        if (index !== -1) {
+          state.products[index].observation = updatedProduct.observation;
+        }
       })
       .addCase(addProductToList.pending, (state) => {
         state.loading = true;

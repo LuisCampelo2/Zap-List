@@ -2,7 +2,6 @@ import ShoppingList from "../models/shoppingList.js";
 import Product from "../models/product.js";
 import ShoppingListProduct from '../models/shoppingListProducts.js'
 import sequelize from "../utils/db.js";
-import { Model, Op, where } from "sequelize";
 import QueryTypes from "sequelize";
 
 
@@ -15,6 +14,23 @@ const updateCheck = async (req, res) => {
 
     product.isChecked = isChecked;
     await product.save();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const updateObservation = async (req, res) => {
+  const { id } = req.params;
+  const { observation } = req.body;
+  try {
+    console.log(id);
+    const product = await ShoppingListProduct.findByPk(id);
+      if (!product) {
+      return res.status(404).json({ message: "Produto não encontrado" });
+    }
+    product.observation = observation;
+    await product.save();
+    return res.status(200).json({product:product})
   } catch (error) {
     console.log(error);
   }
@@ -162,4 +178,5 @@ export const shoppingListController = {
   deleteList,
   deleteProductList,
   updateCheck,
+  updateObservation,
 };

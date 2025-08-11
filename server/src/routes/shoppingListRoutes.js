@@ -10,5 +10,6 @@ router.get('/list/:id/productsList', authMiddleWare.middleWare, shoppingListCont
 router.delete('/list-delete/:id', authMiddleWare.middleWare, shoppingListController.deleteList);
 router.delete('/product-list-delete/:id', authMiddleWare.middleWare, shoppingListController.deleteProductList);
 router.patch('/checked/:id', authMiddleWare.middleWare, shoppingListController.updateCheck);
+router.patch('/product-list-update/:id', authMiddleWare.middleWare, shoppingListController.updateObservation);
 
 export default router;
