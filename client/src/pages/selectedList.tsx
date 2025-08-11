@@ -37,7 +37,12 @@ export const SelectedList = () => {
   const paginatedProducts = filteredProducts.slice(
   (page - 1) * limitProducts,
   page * limitProducts
-);
+  );
+  
+  
+  const handleModalOptions = (productItem: number) => {
+    setOptions((prev) => (prev === productItem ? null : productItem));
+  };
 
   const handleDelete = (productId: number) => {
     setSelectedProductId(productId);
@@ -48,9 +53,10 @@ export const SelectedList = () => {
     setModalObservation((prev) => (prev === productId ? null : productId));
   };
 
-  const handleModalOptions = (productItem: number) => {
-    setOptions((prev) => (prev === productItem ? null : productItem));
-  };
+  const handleSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPage(1));
+    setNameInput(e.target.value);
+  }
 
   return (
     <>
@@ -109,7 +115,7 @@ export const SelectedList = () => {
                   id="nameInput"
                   type="text"
                   value={nameInput}
-                  onChange={(e) => setNameInput(e.target.value)}
+                  onChange={(e)=>handleSearch(e)}
                   placeholder="Buscar produto..."
                 />
               </div>
