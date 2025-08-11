@@ -27,9 +27,17 @@ export const SelectedList = () => {
   useEffect(() => {
     dispatch(fetchProductsList({ id: Number(id) }));
   }, [page, id, dispatch]);
+  
+  const normalizedString = (str:string) => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "")
+      .toLowerCase();
+  }
 
   const filteredProducts = products.filter((item) =>
-    item.Product.name.toLowerCase().includes(nameInput.toLowerCase())
+    normalizedString(item.Product.name).includes(normalizedString(nameInput))
   );
 
   const totalPages = Math.ceil(filteredProducts.length / limitProducts)
@@ -110,8 +118,9 @@ export const SelectedList = () => {
               <Link to={`/products?listId=${id}`} className="btn btn-all">
                 <i className="bi bi-cart-plus"></i>Adicionar Produto
               </Link>
-              <div className="row">
-                <input
+              <div>
+                  <input
+                  className="input-products-selected-list"
                   id="nameInput"
                   type="text"
                   value={nameInput}
