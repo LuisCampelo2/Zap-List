@@ -2,7 +2,7 @@ import ShoppingList from "../models/shoppingList.js";
 import Product from "../models/product.js";
 import ShoppingListProduct from '../models/shoppingListProducts.js'
 import sequelize from "../utils/db.js";
-import { Op } from "sequelize";
+import { Model, Op, where } from "sequelize";
 import QueryTypes from "sequelize";
 
 
@@ -25,7 +25,7 @@ const getAllShoppingList = async (req, res) => {
   try {
     const shoppingList = await ShoppingList.findAll({
       where: { userId: req.user.id },
-      order:[['id','DESC']]
+      order: [['id', 'DESC']]
     });
     res.status(200).json(shoppingList);
   } catch (error) {
@@ -78,38 +78,15 @@ const addProductToShopping = async (req, res) => {
 
 const getProductsShoppingList = async (req, res) => {
   const { id } = req.params;
-  const { name = '', category = '', page = 1, limit = 7 } = req.query;
-  
-  const offset = (page - 1) * limit;
 
   try {
-    const whereProduct = {
-      name: { [Op.like]: `%${name}%` },
-      ...(category && { category }),
-    };
-
-    const queryOptions = {
+    const products = await ShoppingListProduct.findAll({
       where: { shoppingListId: id },
-      include: [
-        {
-          model: Product,
-          where: whereProduct,
-          attributes: ["id", "name", "category", "photo"],
-        },
-      ],
-      order: [
-        [{ model: Product }, "category", "ASC"],
-        [{ model: Product }, "name", "ASC"],
-      ],
-    };
-
-    if (!name && !category) {
-      queryOptions.limit = Number(limit);
-      queryOptions.offset = Number(offset);
-    }
-
-    const { count, rows: products } = await ShoppingListProduct.findAndCountAll(queryOptions);
-
+      include: [{
+        model: Product,
+        as: 'Product'
+      }]
+    })
 
     const totalResult = await sequelize.query(`
 SELECT p.id, p.price, slp.quantity, (p.price * slp.quantity) AS total_item
@@ -121,16 +98,11 @@ SELECT p.id, p.price, slp.quantity, (p.price * slp.quantity) AS total_item
       type: QueryTypes.SELECT,
     });
 
-    console.log(totalResult);
-
-
     const flatTotalResult = Array.isArray(totalResult[0]) ? totalResult[0] : totalResult;
 
     const total_price = flatTotalResult.reduce((sum, item) => {
       return sum + Number(item.total_item || 0);
     }, 0);
-
-
 
     await sequelize.query(`
   UPDATE ShoppingLists SET totalPrice = :totalPrice WHERE id = :id
@@ -138,18 +110,17 @@ SELECT p.id, p.price, slp.quantity, (p.price * slp.quantity) AS total_item
       replacements: { totalPrice: total_price, id },
     });
 
-    const updatedList = await ShoppingList.findByPk(id);
 
-    return res.status(200).json({
-      products:products,
-      totalItems: count,
-      totalPages: Math.ceil(count / limit),
-      currentPage: Number(page),
-      updatedList: updatedList
-    });
+
+    const list = await ShoppingList.findByPk(id);
+
+
+    res.status(200).json({
+      products: products,
+      list: list
+    })
   } catch (error) {
-    console.error("Erro ao buscar produtos da lista:", error);
-    return res.status(500).json({ message: "Erro ao buscar produtos", error });
+    res.status(500).json({ error: 'Erro ao buscar produtos na lista' });
   }
 };
 

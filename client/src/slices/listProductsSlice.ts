@@ -3,22 +3,14 @@ import axios from "axios";
 import { type ShoppingListProducts } from "../types/shoppingListProduct";
 import { type ShoppingList } from "../types/shoppingList";
 
-type Filters = {
-  name: string;
-  category: string;
-};
 
 export const fetchProductsList = createAsyncThunk(
   "listsProduct/fetchProducts",
   async (
     {
       id,
-      filters,
-      page,
     }: {
       id: number;
-      filters: Filters;
-      page: number;
     },
     thunkAPI
   ) => {
@@ -26,21 +18,13 @@ export const fetchProductsList = createAsyncThunk(
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/list/${id}/productsList`,
         {
-          params: {
-            name: filters.name.trim() || undefined,
-            category: filters.category || undefined,
-            page,
-            limit: 10,
-          },
           withCredentials: true,
         }
       );
       console.log("Dados recebidos:", res.data);
       return {
         products: res.data.products,
-        totalPages: res.data.totalPages,
-        currentPage: res.data.currentPage,
-        updatedList: res.data.updatedList,
+        list:res.data.list,
       };
     } catch (err) {
       console.log(err);
@@ -186,9 +170,7 @@ const listProductSlice = createSlice({
       })
       .addCase(fetchProductsList.fulfilled, (state, action) => {
         state.products = action.payload.products;
-        state.totalPages = action.payload.totalPages;
-        state.list = action.payload.updatedList;
-        state.page = action.payload.currentPage;
+        state.list = action.payload.list;
         state.loading = false;
       })
       .addCase(fetchProductsList.rejected, (state, action) => {

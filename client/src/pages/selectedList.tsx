@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ProductsFilter } from "../components/productsFilter";
 import { ModalConfirmationProduct } from "../components/modalConfirmationDeleteProduct";
 import { ModalOptions } from "../components/modalOptions";
 import { type RootState, type AppDispatch } from "../store/store";
@@ -10,7 +9,6 @@ import { setPage } from "../slices/listProductsSlice";
 
 export const SelectedList = () => {
   const { id } = useParams();
-
   const [options, setOptions] = useState<number | null>(null);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null
@@ -18,37 +16,28 @@ export const SelectedList = () => {
   const [modalDelete, setModalDelete] = useState(false);
   const [modalObservation, setModalObservation] = useState<number | null>(null);
   const [nameInput, setNameInput] = useState("");
-  const [filters, setFilters] = useState({ name: "", category: "" });
   const products = useSelector(
     (state: RootState) => state.listProduct.products
   );
-  const loading = useSelector((state: RootState) => state.listProduct.loading);
-  const list = useSelector((state: RootState) => state.listProduct.list);
   const page = useSelector((state: RootState) => state.listProduct.page);
-  const totalPages = useSelector(
-    (state: RootState) => state.listProduct.totalPages
-  );
+  const list=useSelector((state: RootState)=>state.listProduct.list)
+  const limitProducts = 10;
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchProductsList({ id: Number(id), filters, page }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch(fetchProductsList({ id: Number(id) }));
   }, [page, id, dispatch]);
 
   const filteredProducts = products.filter((item) =>
     item.Product.name.toLowerCase().includes(nameInput.toLowerCase())
   );
 
-  const handleFilterChange = (newFilters: {
-    name: string;
-    category: string;
-  }) => {
-    setFilters({
-      name: newFilters.name,
-      category: newFilters.category,
-    });
-    setNameInput(newFilters.name);
-  };
+  const totalPages = Math.ceil(filteredProducts.length / limitProducts)
+
+  const paginatedProducts = filteredProducts.slice(
+  (page - 1) * limitProducts,
+  page * limitProducts
+);
 
   const handleDelete = (productId: number) => {
     setSelectedProductId(productId);
@@ -107,10 +96,11 @@ export const SelectedList = () => {
             </div>
           </div>
         )}
-        <div className="container">
+        {products.length !== 0 && (
+           <div className="container">
           <div className="card">
             <div className="card-header">
-              <h1 className="col-12">Preço Estimado: R$ {list?.totalPrice}</h1>
+              <h1 className="col-12">Preço Estimado: R$ {list.totalPrice ?? 0}</h1>
               <Link to={`/products?listId=${id}`} className="btn btn-all">
                 <i className="bi bi-cart-plus"></i>Adicionar Produto
               </Link>
@@ -131,7 +121,7 @@ export const SelectedList = () => {
                   style={{ width: "30%" }}
                 >
                   <tbody>
-                    {filteredProducts.map((productItem) => (
+                    {paginatedProducts.map((productItem) => (
                       <>
                         <tr
                           key={productItem.id}
@@ -286,6 +276,8 @@ export const SelectedList = () => {
             )}
           </div>
         </div>
+        )}
+       
       </>
     </>
   );
