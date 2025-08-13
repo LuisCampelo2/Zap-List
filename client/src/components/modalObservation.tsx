@@ -47,46 +47,63 @@ export const ModalObservation = ({
   return (
     <>
       {textArea ? (
-        <form onSubmit={handleSubmit}>
-          <textarea
-            placeholder={`Observações:\nEx: preferência de marca,\npeso do alimento que deseja...`}
-            value={observation ?? ""}
-            onChange={(e) => setObservation(e.target.value)}
-            name=""
-            id=""
-          ></textarea>
-          <button disabled={loading} type="submit">
-            Confirmar alteração
-          </button>
-          <button type="button" onClick={() => setTextArea(false)}>
-            Fechar
-          </button>
-        </form>
+        <div className="container modal-observation">
+          <div className="card card-observation">
+            <div className="card-body d-flex justify-content-center">
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+ <textarea
+                  className="text-area-observation"
+                  placeholder={`Observações:\nEx: preferência de marca,\npeso do alimento que deseja...`}
+                  value={observation ?? ""}
+                  onChange={(e) => setObservation(e.target.value)}
+                  name=""
+                  id=""
+                ></textarea>
+                </div>
+               
+                <div className="card-footer d-flex gap-3">
+                  <button
+                    className="btn btn-danger"
+                    type="button"
+                    onClick={() => setTextArea(false)}
+                  >
+                    Fechar
+                  </button>
+                  <button
+                    className="btn btn-success"
+                    disabled={loading}
+                    type="submit"
+                  >
+                    Confirmar alteração
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="container modal-observation">
           <div className="card card-observation">
-            <div className="d-flex card-header observation-header">
+            <div className="d-flex card-header observation-header justify-content-between">
               <i
                 onClick={() => setModalObservation(null)}
                 className="bi bi-x-lg"
               ></i>
-              Observações
+              Observações{" "}
+              <i
+                onClick={() => setTextArea(true)}
+                className="bi bi-pencil"
+              ></i>
             </div>
             <div className="card-body">
               {hasObservation ? (
                 <>
                   <div>{productItem?.observation}</div>
-                  <i onClick={() => setTextArea(true)} className="bi bi-pencil">
-                    Editar Observação
-                  </i>
                 </>
               ) : (
                 <>
-                  <h1>Sem Observações</h1>
-
-                  <i onClick={() => setTextArea(true)} className="bi bi-pencil">
-                    Criar Observação
-                  </i>
+                  <p>Sem Observações</p>
                 </>
               )}
             </div>
