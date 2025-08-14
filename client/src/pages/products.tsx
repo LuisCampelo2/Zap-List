@@ -45,6 +45,7 @@ export const Products = () => {
   );
 
   useEffect(() => {
+    setNameInput(params.get("category") || "");
     dispatch(
       fetchProducts({
         listId: Number(listId),
