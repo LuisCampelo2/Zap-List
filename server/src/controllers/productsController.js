@@ -3,26 +3,14 @@ import sequelize from "../utils/db.js";
 import puppeteer from 'puppeteer';
 import cron from 'node-cron';
 import Product from "../models/product.js";
-import { Op } from 'sequelize';
+
 
 const getAllProducts = async (req, res) => {
   try {
-    const { name = '', category = '', listId, page = 1, limit = 20 } = req.query;
+    const { listId } = req.query;
 
-    const offset = (page - 1) * Number(limit);
+    const products = await Product.findAll();
 
-    const where = {
-       name: { [Op.like]: `%${name}%` },
-            ...(category && { category }),
-    };
-
-
-    const { count, rows: products } = await Product.findAndCountAll({
-      where,
-      limit: Number(limit),
-      offset: Number(offset),
-      order: [["category", "ASC"], ["name", "ASC"]],
-    });
 
       const formattedProducts = products.map((p) => ({
       ...p.toJSON(),
@@ -49,9 +37,6 @@ const getAllProducts = async (req, res) => {
     res.status(200).json({
       products: formattedProducts,
       productsInList: productsInList,
-      totalItems: count,
-      totalPages: Math.ceil(count / Number(limit)),
-      currentPage: Number(page),
     });
   } catch (error) {
     console.error("Erro ao listar os produtos:", error);

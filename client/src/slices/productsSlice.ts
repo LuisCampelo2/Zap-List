@@ -3,22 +3,14 @@ import axios from "axios";
 import { type Product } from "../types/product";
 
 
-type Filters = {
-  name: string;
-  category: string;
-};
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchPorducts",
   async (
     {
-      filters,
       listId,
-      page,
     }: {
-      filters: Filters;
       listId: number;
-      page: number;
     },
     thunkAPI
   ) => {
@@ -27,18 +19,13 @@ export const fetchProducts = createAsyncThunk(
         `${import.meta.env.VITE_API_URL}/api/products`,
         {
           params: {
-            name: filters.name.trim() || undefined,
-            category: filters.category || undefined,
             listId: listId || undefined,
-            page,
-            limit: 20,
           },
           withCredentials: true,
         }
       );
       return {
         products: res.data.products,
-        totalPages: res.data.totalPages,
         productsInlist: res.data.productsInList,
       };
     } catch (error) {
@@ -90,7 +77,6 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.products = action.payload?.products;
-        state.totalPages = action.payload?.totalPages;
         state.productInList = action.payload?.productsInlist;
         state.loading = false;
       })
