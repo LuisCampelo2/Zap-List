@@ -30,18 +30,17 @@ export const ModalOptions = ({
               ></button>
             </div>
             <div className="modal-body">
-              
-                <button
-                  onClick={() => handleObservation(productId)}
-                  className="btn btn-primary"
-                >
-                  <i className="bi bi-envelope"></i>
-                </button>
-              <button className="btn btn-danger">
-                <i
-                  onClick={() => handleDelete(productId)}
-                  className="bi bi-trash"
-                ></i>
+              <button
+                onClick={() => handleObservation(productId)}
+                className="btn btn-primary"
+              >
+                <i className="bi bi-envelope"></i>
+              </button>
+              <button
+                onClick={() => handleDelete(productId)}
+                className="btn btn-danger"
+              >
+                <i className="bi bi-trash"></i>
               </button>
             </div>
           </div>
