@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { type RootState, type AppDispatch } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
 import { setPage } from "../slices/productsSlice";
+import { ProductsFilter } from "../components/productsFilter";
 
 export const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -16,7 +17,7 @@ export const Products = () => {
     (state: RootState) => state.products.productInList
   );
   const page = useSelector((state: RootState) => state.products.page);
-
+  const search = useSelector((state: RootState) => state.products.search);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const listId = params.get("listId");
@@ -70,15 +71,13 @@ export const Products = () => {
           onClose={() => setAddProductModal(false)}
         />
       )}
-      <>
-        <input
-          className="input-products-selected-list"
-          id="nameInput"
-          type="text"
-          value={nameInput}
-          onChange={(e) => handleSearch(e)}
-          placeholder="Buscar produto..."
+      {search && (
+        <ProductsFilter
+          nameInput={nameInput}
+          handleSearch={handleSearch}
         />
+      )}
+      <>
         <div className="container">
           <div className="row">
             <a

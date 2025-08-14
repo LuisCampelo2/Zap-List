@@ -41,6 +41,7 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+
 interface ProductsState {
   products: Product[];
   productInList: number[];
@@ -49,6 +50,7 @@ interface ProductsState {
   limit: number;
   error: string | null;
   loading: boolean;
+  search: boolean;
 }
 
 const initialState: ProductsState = {
@@ -59,6 +61,7 @@ const initialState: ProductsState = {
   limit: 20,
   error: null,
   loading: false,
+  search: false,
 };
 
 const productsSlice = createSlice({
@@ -67,7 +70,10 @@ const productsSlice = createSlice({
   reducers: {
     setPage: (state, action) => {
       state.page = action.payload;
-    }
+    },
+    setSearch: (state) => {
+      state.search = !state.search;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -87,5 +93,5 @@ const productsSlice = createSlice({
   },
 });
 
-export const { setPage } = productsSlice.actions;
+export const { setPage,setSearch } = productsSlice.actions;
 export default productsSlice.reducer;

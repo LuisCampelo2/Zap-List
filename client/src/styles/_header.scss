@@ -1,5 +1,6 @@
 .nav {
   display: flex;
+  justify-content:space-between;
   border: none;
   align-items: center;
   height: 70px;
@@ -14,11 +15,7 @@
 }
 
 .logo-img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
   width: 130px;
-  transform: translate(-50%, -50%);
 }
 
 .nav-link {
